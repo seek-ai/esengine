@@ -1,4 +1,10 @@
 class BaseDocument(object):
+    def _initialize_multi_fields(self):
+        for key, field_class in self.__class__._fields.items():
+            if field_class._multi:
+                setattr(self, key, [])
+            else:
+                setattr(self, key, None)
 
     def __init__(self, *args, **kwargs):
         klass = self.__class__.__name__
@@ -6,12 +12,7 @@ class BaseDocument(object):
             raise ValueError('{} have no __doc_type__ field'.format(klass))
         if not hasattr(self, '__index__'):
             raise ValueError('{} have no __index__ field'.format(klass))
-        # Initialize multi fields
-        for key, field_class in self.__class__._fields.items():
-            if field_class._multi:
-                setattr(self, key, [])
-            else:
-                setattr(self, key, None)
+        self._initialize_multi_fields()
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
