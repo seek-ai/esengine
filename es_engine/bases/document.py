@@ -6,6 +6,12 @@ class BaseDocument(object):
             raise ValueError('{} have no __doc_type__ field'.format(klass))
         if not hasattr(self, '__index__'):
             raise ValueError('{} have no __index__ field'.format(klass))
+        # Initialize multi fields
+        for key, field_class in self.__class__._fields.items():
+            if field_class._multi:
+                setattr(self, key, [])
+            else:
+                setattr(self, key, None)
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
