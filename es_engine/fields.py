@@ -29,13 +29,17 @@ class DateField(BaseField):
                     values.append(elem)
                 elif isinstance(elem, basestring):
                     date = datetime.strptime(elem, "%Y-%m-%d %H:%M:%S")
-                    values.append(self.__type__(date))
+                    values.append(date)
                 else:
-                    values.append(self.__type__(elem))
+                    raise ValueError('Expected str or date. {} found'.format(
+                        elem.__class__)
+                    )
             return values
         else:
             if isinstance(serialized, self.__type__):
                 return serialized
             elif isinstance(serialized, basestring):
                 return datetime.strptime(serialized, "%Y-%m-%d %H:%M:%S")
-            return self.__type__(serialized)
+            raise ValueError('Expected str or date. {} found'.format(
+                serialized.__class__)
+            )
