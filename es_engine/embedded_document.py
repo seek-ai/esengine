@@ -17,11 +17,10 @@ class EmbeddedDocument(BaseField):
         return result
 
     def to_dict(self, value):
-        if value is None:
-            return value
-        if self._multi:
-            return [self._to_dict_element(elem) for elem in value]
-        return self._to_dict_element(value)
+        if value is not None:
+            if self._multi:
+                return [self._to_dict_element(elem) for elem in value]
+            return self._to_dict_element(value)
 
     def _validate_element(self, field_name, elem):
         if not isinstance(elem, EmbeddedDocument):
