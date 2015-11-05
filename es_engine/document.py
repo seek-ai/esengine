@@ -17,7 +17,7 @@ class Document(BaseDocument):
     @classmethod
     def get(cls, es, id=None, ids=None):
         if id is not None and ids is not None:
-            raise
+            raise ValueError('id and ids can not be passed together.')
         if id is not None:
             res = es.get(index=cls.__index__,
                          doc_type=cls.__doc_type__,
@@ -38,7 +38,8 @@ class Document(BaseDocument):
             resp = es.search(
                 index=cls.__index__,
                 doc_type=cls.__doc_type__,
-                body=query
+                body=query,
+                size=len(ids)
             )
             result = []
             for obj in resp['hits']['hits']:
