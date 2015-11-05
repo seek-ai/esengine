@@ -83,3 +83,26 @@ def test_doc_get_ids():
     docs = Doc.get(MockES(), ids=MockES.test_ids)
     for doc in docs:
         assert doc.id in MockES.test_ids
+
+
+def mock_bulk(es, updates):
+    assert updates == [
+        {
+            '_op_type': 'index',
+            '_index': Doc.__index__,
+            '_type': Doc.__doc_type__,
+            '_id': doc,
+            'doc': {'id': doc}
+        }
+        for doc in MockES.test_ids
+    ]
+
+
+def test_save_all():
+    import elasticsearch.helpers as eh
+    eh.bulk = mock_bulk
+    docs = [
+        Doc(id=doc)
+        for doc in MockES.test_ids
+    ]
+    Doc.save_all(MockES(), docs)
