@@ -15,7 +15,7 @@ for item in parse_requirements('requirements.txt'):
 
 
 setup(
-    name='es_engine',
+    name='esengine',
     version="0.0.1",
     url='https://github.com/catholabs/ESengine',
     license='CATHO LICENSE',
