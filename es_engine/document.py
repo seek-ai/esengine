@@ -2,20 +2,36 @@ import elasticsearch.helpers as eh
 
 from es_engine.bases.document import BaseDocument
 from es_engine.bases.metaclass import ModelMetaclass
+from es_engine.utils import validate_client
 
 
 class Document(BaseDocument):
     __metaclass__ = ModelMetaclass
 
-    def save(self, es):
+    @classmethod
+    def get_es(cls, es):
+        """
+        This proxy-method allows the client overwrite
+        and the use of a default client for a document.
+        Document transport methods should use cls.get_es(es).method()
+        This method also validades that the connection is a valid ES client.
+        :return: elasticsearch.ElasticSearch() instance or equivalent client
+        """
+        validate_client(es)
+        return es
+
+    def save(self, es=None):
         doc = self.to_dict()
-        es.index(index=self.__index__,
-                 doc_type=self.__doc_type__,
-                 id=self.id,
-                 body=doc)
+        self.get_es(es).index(
+            index=self.__index__,
+            doc_type=self.__doc_type__,
+            id=self.id,
+            body=doc
+        )
 
     @classmethod
-    def get(cls, es, id=None, ids=None):
+    def get(cls, id=None, ids=None, es=None):
+        es = cls.get_es(es)
         if id is not None and ids is not None:
             raise ValueError('id and ids can not be passed together.')
         if id is not None:
@@ -47,7 +63,7 @@ class Document(BaseDocument):
             return result
 
     @classmethod
-    def save_all(cls, es, docs):
+    def save_all(cls, docs, es=None):
         updates = [
             {
                 '_op_type': 'index',
@@ -58,4 +74,4 @@ class Document(BaseDocument):
             }
             for doc in docs
         ]
-        eh.bulk(es, updates)
+        eh.bulk(cls.get_es(es), updates)

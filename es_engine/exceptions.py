@@ -1,3 +1,7 @@
+class ClientError(Exception):
+    pass
+
+
 class RequiredField(Exception):
     pass
 

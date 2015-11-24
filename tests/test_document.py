@@ -65,22 +65,22 @@ class MockES(object):
 
 
 def test_document_save():
-    Doc(id=MockES.test_id).save(MockES())
+    Doc(id=MockES.test_id).save(es=MockES())
 
 
 def test_raise_when_pass_id_and_ids_to_doc_get():
     with pytest.raises(ValueError) as ex:
-        Doc.get(MockES(), id=1, ids=[1, 2])
+        Doc.get(id=1, ids=[1, 2], es=MockES())
     assert str(ex.value) == 'id and ids can not be passed together.'
 
 
 def test_doc_get():
-    doc = Doc.get(MockES(), id=MockES.test_id)
+    doc = Doc.get(id=MockES.test_id, es=MockES())
     assert doc.id == MockES.test_id
 
 
 def test_doc_get_ids():
-    docs = Doc.get(MockES(), ids=MockES.test_ids)
+    docs = Doc.get(ids=MockES.test_ids, es=MockES())
     for doc in docs:
         assert doc.id in MockES.test_ids
 
@@ -105,4 +105,4 @@ def test_save_all():
         Doc(id=doc)
         for doc in MockES.test_ids
     ]
-    Doc.save_all(MockES(), docs)
+    Doc.save_all(docs, es=MockES())

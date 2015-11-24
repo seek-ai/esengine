@@ -1,3 +1,6 @@
+# coding: utf-8
+
+import pip
 from pip.req import parse_requirements
 
 try:
@@ -7,11 +10,20 @@ except ImportError:
 
 links = []
 requires = []
-for item in parse_requirements('requirements.txt'):
-    if item.url:
-        links.append(str(item.url))
-    if item.req:
-        requires.append(str(item.req))
+
+try:
+    for item in parse_requirements('requirements.txt'):
+        if item.url:
+            links.append(str(item.url))
+        if item.req:
+            requires.append(str(item.req))
+except Exception:
+    for item in parse_requirements('requirements.txt',
+                                   session=pip.download.PipSession()):
+       if item.link:
+           links.append(str(item.link))
+       if item.req:
+           requires.append(str(item.req))
 
 
 setup(
