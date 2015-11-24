@@ -71,7 +71,7 @@ Person.search(query, size=10, es=es)
 
 # Default connection
 
-By default ES engine does not try to implicit create a connection for you, but you can do it easily:
+By default ES engine does not try to implicit create a connection for you, but you can easily achieve this overwriting the **get_es** method and returning a default connection or using any kind of technique as RoundRobin or Mocking for tests
 
 ```python
 
