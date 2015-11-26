@@ -1,7 +1,10 @@
+import warnings
 from es_engine.fields import StringField
 
 
 class BaseDocument(object):
+    __strict__ = False
+
     def _initialize_multi_fields(self):
         for key, field_class in self.__class__._fields.items():
             if field_class._multi:
@@ -9,18 +12,18 @@ class BaseDocument(object):
             else:
                 setattr(self, key, None)
 
-    def initialize_id_field(self):
-        if not 'id' in self.__class__._fields:
-            id_field = StringField()
-            self.__class__._fields["id"] = id_field
-
     def __init__(self, *args, **kwargs):
         klass = self.__class__.__name__
         if not hasattr(self, '__doc_type__'):
             raise ValueError('{} have no __doc_type__ field'.format(klass))
         if not hasattr(self, '__index__'):
             raise ValueError('{} have no __index__ field'.format(klass))
-        self.initialize_id_field()
+        id_field = self.__class__._fields.get("id")
+        if id_field and not isinstance(id_field, StringField):
+            warnings.warn(
+                'To avoid mapping problems, '
+                'it is recommended to define the id field as a StringField'
+            )
         self._initialize_multi_fields()
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
@@ -32,17 +35,19 @@ class BaseDocument(object):
 
     def to_dict(self):
         result = {}
-        for field_name, field_class in self._fields.iteritems():
+        for field_name, field_instance in self._fields.iteritems():
             value = getattr(self, field_name)
-            field_class.validate(field_name, value)
-            result.update({field_name: field_class.to_dict(value)})
+            if value is not None and not self.__strict__:
+                value = field_instance.from_dict(value)
+            field_instance.validate(field_name, value)
+            result.update({field_name: field_instance.to_dict(value)})
         return result
 
     @classmethod
     def from_dict(cls, dct):
         params = {}
-        for field_name, field_class in cls._fields.iteritems():
+        for field_name, field_instance in cls._fields.iteritems():
             serialized = dct.get(field_name)
-            value = field_class.from_dict(serialized)
+            value = field_instance.from_dict(serialized)
             params[field_name] = value
         return cls(**params)

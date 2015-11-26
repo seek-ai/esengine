@@ -7,6 +7,7 @@ from es_engine.utils import validate_client
 
 class Document(BaseDocument):
     __metaclass__ = ModelMetaclass
+    __autoid__ = True
 
     @classmethod
     def get_es(cls, es):

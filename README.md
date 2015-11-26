@@ -61,6 +61,8 @@ class Person(Document):
     
 ```
 
+> If you do not specify an "id" field, ESEngine will automatically add "id" as StringField. It is recommended that when specifying you use StringField for ids.
+
 # Indexing
 
 ```python

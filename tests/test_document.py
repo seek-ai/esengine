@@ -19,6 +19,9 @@ class MockES(object):
         assert kwargs['doc_type'] == Doc.__doc_type__
         assert kwargs['id'] == self.test_id
         assert 'body' in kwargs
+        kwargs['created'] = True
+        kwargs['_id'] = self.test_id
+        return kwargs
 
     def get(self, *args, **kwargs):
         assert kwargs['index'] == Doc.__index__

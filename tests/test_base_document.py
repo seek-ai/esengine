@@ -121,6 +121,7 @@ def test_doc_to_dict_call_validate():
     class Doc(BaseDocument):
         __doc_type__ = 'test'
         __index__ = 'test'
+        __strict__ = True
         _fields = {
             'multiple': BaseField(field_type=int, multi=True),
             'simple': BaseField(field_type=int)
