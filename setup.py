@@ -1,29 +1,9 @@
 # coding: utf-8
 
-import pip
-from pip.req import parse_requirements
-
 try:
     from setuptools import setup, find_packages
 except ImportError:
     from distutils.core import setup, find_packages
-
-links = []
-requires = []
-
-try:
-    for item in parse_requirements('requirements.txt'):
-        if item.url:
-            links.append(str(item.url))
-        if item.req:
-            requires.append(str(item.req))
-except Exception:
-    for item in parse_requirements('requirements.txt',
-                                   session=pip.download.PipSession()):
-       if item.link:
-           links.append(str(item.link))
-       if item.req:
-           requires.append(str(item.req))
 
 
 setup(
@@ -39,6 +19,10 @@ setup(
     include_package_data=True,
     zip_safe=False,
     platforms='any',
-    install_requires=requires,
-    dependency_links=links
+    extras_require={
+        "es0": ["elasticsearch<1.0.0"],
+        "es1": ["elasticsearch>=1.0.0,<2.0.0"],
+        "es2": ["elasticsearch>=2.0.0,<3.0.0"]
+    },
+    tests_require=["pytest==2.8.2", "pytest-cov==2.2.0"]
 )

@@ -3,6 +3,40 @@ ElasticSearch ODM (Object Document Mapper) based in MongoEngine
 
 # install
 
+ESEngine depends on elasticsearch Python library so the instalation depends on the version of elasticsearch you are using
+
+
+## Elasticsearch 2.x
+
+```bash
+pip install esengine[es2]
+```
+
+## Elasticsearch 1.x
+
+```bash
+pip install esengine[es1]
+```
+
+## Elasticsearch 0.90.x
+
+```bash
+pip install esengine[es0]
+```
+
+The above command will install esengine and the elasticsearch library specific for you ES version.
+
+
+> Alternatively you can install elasticsearch library before esengine
+
+pip install ``<version-specific-es>`` 
+
+- for 2.0 + use "elasticsearch>=2.0.0,<3.0.0"
+- for 1.0 + use "elasticsearch>=1.0.0,<2.0.0"
+- under 1.0 use "elasticsearch<1.0.0"
+
+Then install esengine
+
 ```bash
 pip install esengine
 ```
