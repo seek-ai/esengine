@@ -1,3 +1,6 @@
+from es_engine.fields import StringField
+
+
 class BaseDocument(object):
     def _initialize_multi_fields(self):
         for key, field_class in self.__class__._fields.items():
@@ -6,12 +9,18 @@ class BaseDocument(object):
             else:
                 setattr(self, key, None)
 
+    def initialize_id_field(self):
+        if not 'id' in self.__class__._fields:
+            id_field = StringField()
+            self.__class__._fields["id"] = id_field
+
     def __init__(self, *args, **kwargs):
         klass = self.__class__.__name__
         if not hasattr(self, '__doc_type__'):
             raise ValueError('{} have no __doc_type__ field'.format(klass))
         if not hasattr(self, '__index__'):
             raise ValueError('{} have no __index__ field'.format(klass))
+        self.initialize_id_field()
         self._initialize_multi_fields()
         for key, value in kwargs.iteritems():
             setattr(self, key, value)

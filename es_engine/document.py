@@ -22,12 +22,14 @@ class Document(BaseDocument):
 
     def save(self, es=None):
         doc = self.to_dict()
-        self.get_es(es).index(
+        saved_document = self.get_es(es).index(
             index=self.__index__,
             doc_type=self.__doc_type__,
             id=self.id,
             body=doc
         )
+        if saved_document.get('created'):
+            self.id = saved_document['_id']
 
     @classmethod
     def get(cls, id=None, ids=None, es=None):
