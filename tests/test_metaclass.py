@@ -30,3 +30,25 @@ def test_has_typefield_if_is_EmbeddedDocument(): # noqa
     )
     assert hasattr(obj, '__type__')
     assert getattr(obj, '__type__') is obj
+
+
+def test_id_injected_when_autoid():
+    class Base(object):
+        __metaclass__ = ModelMetaclass
+        __autoid__ = True
+
+    class Derived(Base):
+        pass
+
+    assert hasattr(Derived, 'id')
+
+
+def test_id_not_injected_when_not_autoid():
+    class Base(object):
+        __metaclass__ = ModelMetaclass
+        __autoid__ = False
+
+    class Derived(Base):
+        pass
+
+    assert not hasattr(Derived, 'id')

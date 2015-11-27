@@ -127,17 +127,18 @@ class Person(Document):
         es = es or ElasticSearch(host='host', port=port)
         validate_client(es)
         return es
-        
+```
         
 # Now you can use the document transport methods ommiting ES instance
 
+
+```python
 person = Person(id=1234, name="Gonzo")
 person.save()
          
 Person.get(id=1234)
 
 Person.filter(name="Gonzo")
-
 ```
 
 # Contribute
