@@ -8,7 +8,7 @@ class ModelMetaclass(type):
         attrs['_fields'] = {}
         for base in bases:
             if hasattr(base, '_autoid'):
-                if base._autoid and not 'id' in attrs:
+                if base._autoid and 'id' not in attrs:
                     attrs['id'] = StringField()
                 break
         for key, value in attrs.iteritems():

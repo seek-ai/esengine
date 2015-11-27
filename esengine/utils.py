@@ -16,7 +16,10 @@ def validate_client(es):
         raise ClientError("ES client cannot be Nonetype")
 
     try:
-        if not callable(es.index) or not callable(es.search) or not callable(es.get):
-            raise ClientError("index or search or get Interface is not callable")
+        if not callable(es.index) or not callable(es.search) or \
+                not callable(es.get):
+            raise ClientError(
+                "index or search or get Interface is not callable"
+            )
     except AttributeError as e:
         raise ClientError(str(e))
