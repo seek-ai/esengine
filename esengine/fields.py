@@ -1,5 +1,9 @@
-from datetime import datetime
+__all__ = [
+    'IntegerField', 'StringField', 'FloatField',
+    'DateField', 'BooleanField', 'GeoField'
+]
 
+from datetime import datetime
 from esengine.bases.field import BaseField
 
 
@@ -13,6 +17,14 @@ class StringField(BaseField):
 
 class FloatField(BaseField):
     _type = float
+
+
+class BooleanField(BaseField):
+    _type = bool
+
+
+class GeoField(FloatField):
+    _multi = True
 
 
 class DateField(BaseField):
