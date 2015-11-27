@@ -1,9 +1,9 @@
 import warnings
-from es_engine.fields import StringField
+from esengine.fields import StringField
 
 
 class BaseDocument(object):
-    __strict__ = False
+    _strict = False
 
     def _initialize_multi_fields(self):
         for key, field_class in self.__class__._fields.items():
@@ -14,10 +14,10 @@ class BaseDocument(object):
 
     def __init__(self, *args, **kwargs):
         klass = self.__class__.__name__
-        if not hasattr(self, '__doc_type__'):
-            raise ValueError('{} have no __doc_type__ field'.format(klass))
-        if not hasattr(self, '__index__'):
-            raise ValueError('{} have no __index__ field'.format(klass))
+        if not hasattr(self, '_doctype'):
+            raise ValueError('{} have no _doctype attribute'.format(klass))
+        if not hasattr(self, '_index'):
+            raise ValueError('{} have no _index attribute'.format(klass))
         id_field = self.__class__._fields.get("id")
         if id_field and not isinstance(id_field, StringField):
             warnings.warn(
@@ -37,7 +37,7 @@ class BaseDocument(object):
         result = {}
         for field_name, field_instance in self._fields.iteritems():
             value = getattr(self, field_name)
-            if value is not None and not self.__strict__:
+            if value is not None and not self._strict:
                 value = field_instance.from_dict(value)
             field_instance.validate(field_name, value)
             result.update({field_name: field_instance.to_dict(value)})

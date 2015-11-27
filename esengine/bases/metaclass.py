@@ -1,5 +1,5 @@
-from es_engine.fields import StringField
-from es_engine.bases.field import BaseField
+from esengine.fields import StringField
+from esengine.bases.field import BaseField
 
 
 class ModelMetaclass(type):
@@ -7,8 +7,8 @@ class ModelMetaclass(type):
     def __new__(mcls, name, bases, attrs):  # noqa
         attrs['_fields'] = {}
         for base in bases:
-            if hasattr(base, '__autoid__'):
-                if base.__autoid__ and not 'id' in attrs:
+            if hasattr(base, '_autoid'):
+                if base._autoid and not 'id' in attrs:
                     attrs['id'] = StringField()
                 break
         for key, value in attrs.iteritems():
@@ -16,5 +16,5 @@ class ModelMetaclass(type):
                 attrs['_fields'][key] = value
         cls = type.__new__(mcls, name, bases, attrs)
         if any(x.__name__ == 'EmbeddedDocument' for x in bases):
-            cls.__type__ = cls
+            cls._type = cls
         return cls

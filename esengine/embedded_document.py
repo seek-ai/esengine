@@ -1,9 +1,9 @@
 from collections import Iterable
 
-from es_engine.bases.field import BaseField
-from es_engine.bases.metaclass import ModelMetaclass
-from es_engine.exceptions import RequiredField, InvalidMultiField
-from es_engine.exceptions import FieldTypeMismatch
+from esengine.bases.field import BaseField
+from esengine.bases.metaclass import ModelMetaclass
+from esengine.exceptions import RequiredField, InvalidMultiField
+from esengine.exceptions import FieldTypeMismatch
 
 
 class EmbeddedDocument(BaseField):
@@ -24,7 +24,7 @@ class EmbeddedDocument(BaseField):
 
     def _validate_element(self, field_name, elem):
         if not isinstance(elem, EmbeddedDocument):
-            raise FieldTypeMismatch(field_name, self.__class__.__type__,
+            raise FieldTypeMismatch(field_name, self.__class__._type,
                                     elem.__class__)
         for field_name, field_class in self._fields.iteritems():
             value = getattr(elem, field_name)

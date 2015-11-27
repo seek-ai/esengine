@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from es_engine.exceptions import ClientError
+from esengine.exceptions import ClientError
 
 
 def validate_client(es):

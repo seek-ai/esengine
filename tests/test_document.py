@@ -1,12 +1,12 @@
 import pytest
 
-from es_engine.document import Document
-from es_engine.fields import IntegerField
+from esengine.document import Document
+from esengine.fields import IntegerField
 
 
 class Doc(Document):
-        __index__ = 'index'
-        __doc_type__ = 'doc_type'
+        _index = 'index'
+        _doctype = 'doc_type'
         id = IntegerField()
 
 
@@ -15,8 +15,8 @@ class MockES(object):
     test_ids = [100, 101]
 
     def index(self, *args, **kwargs):
-        assert kwargs['index'] == Doc.__index__
-        assert kwargs['doc_type'] == Doc.__doc_type__
+        assert kwargs['index'] == Doc._index
+        assert kwargs['doc_type'] == Doc._doctype
         assert kwargs['id'] == self.test_id
         assert 'body' in kwargs
         kwargs['created'] = True
@@ -24,8 +24,8 @@ class MockES(object):
         return kwargs
 
     def get(self, *args, **kwargs):
-        assert kwargs['index'] == Doc.__index__
-        assert kwargs['doc_type'] == Doc.__doc_type__
+        assert kwargs['index'] == Doc._index
+        assert kwargs['doc_type'] == Doc._doctype
         assert kwargs['id'] == self.test_id
         return {
             '_source': {
@@ -34,8 +34,8 @@ class MockES(object):
         }
 
     def search(self, *args, **kwargs):
-        assert kwargs['index'] == Doc.__index__
-        assert kwargs['doc_type'] == Doc.__doc_type__
+        assert kwargs['index'] == Doc._index
+        assert kwargs['doc_type'] == Doc._doctype
         assert kwargs['size'] == len(self.test_ids)
         query = {
             "query": {
@@ -92,8 +92,8 @@ def mock_bulk(es, updates):
     assert updates == [
         {
             '_op_type': 'index',
-            '_index': Doc.__index__,
-            '_type': Doc.__doc_type__,
+            '_index': Doc._index,
+            '_type': Doc._doctype,
             '_id': doc,
             'doc': {'id': doc}
         }

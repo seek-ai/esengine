@@ -45,7 +45,7 @@ pip install esengine
 
 ```python
 from elasticsearch import ElasticSearch
-from es_engine import Document, StringField
+from esengine import Document, StringField
 
 es = ElasticSearch(host='host', port=port)
 ```
@@ -54,8 +54,8 @@ es = ElasticSearch(host='host', port=port)
 
 ```python
 class Person(Document):
-    __doc_type__ = "person"
-    __index__ = "universe"
+    _doctype = "person"
+    _index = "universe"
     
     name = StringField()
     
@@ -112,13 +112,13 @@ By default ES engine does not try to implicit create a connection for you, but y
 ```python
 
 from elasticsearch import ElasticSearch
-from es_engine import Document, StringField
-from es_engine.utils import validate_client
+from esengine import Document, StringField
+from esengine.utils import validate_client
 
 
 class Person(Document):
-    __doc_type__ = "person"
-    __index__ = "universe"
+    _doctype = "person"
+    _index = "universe"
     
     name = StringField()
     

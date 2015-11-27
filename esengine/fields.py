@@ -1,22 +1,22 @@
 from datetime import datetime
 
-from es_engine.bases.field import BaseField
+from esengine.bases.field import BaseField
 
 
 class IntegerField(BaseField):
-    __type__ = int
+    _type = int
 
 
 class StringField(BaseField):
-    __type__ = unicode
+    _type = unicode
 
 
 class FloatField(BaseField):
-    __type__ = float
+    _type = float
 
 
 class DateField(BaseField):
-    __type__ = datetime
+    _type = datetime
 
     def to_dict(self, value):
         return value.strftime("%Y-%m-%d %H:%M:%S")
@@ -25,7 +25,7 @@ class DateField(BaseField):
         if self._multi:
             values = []
             for elem in serialized:
-                if isinstance(elem, self.__type__):
+                if isinstance(elem, self._type):
                     values.append(elem)
                 elif isinstance(elem, basestring):
                     date = datetime.strptime(elem, "%Y-%m-%d %H:%M:%S")
@@ -36,7 +36,7 @@ class DateField(BaseField):
                     )
             return values
         else:
-            if isinstance(serialized, self.__type__):
+            if isinstance(serialized, self._type):
                 return serialized
             elif isinstance(serialized, basestring):
                 return datetime.strptime(serialized, "%Y-%m-%d %H:%M:%S")

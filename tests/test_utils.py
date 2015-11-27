@@ -1,6 +1,6 @@
 import pytest
-from es_engine.utils import validate_client
-from es_engine.exceptions import ClientError
+from esengine.utils import validate_client
+from esengine.exceptions import ClientError
 
 
 class InvalidInterfaceClient(object):

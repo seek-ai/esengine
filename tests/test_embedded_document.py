@@ -1,9 +1,9 @@
 import pytest
 
-from es_engine.embedded_document import EmbeddedDocument
-from es_engine.exceptions import RequiredField, InvalidMultiField
-from es_engine.exceptions import FieldTypeMismatch
-from es_engine.fields import IntegerField
+from esengine.embedded_document import EmbeddedDocument
+from esengine.exceptions import RequiredField, InvalidMultiField
+from esengine.exceptions import FieldTypeMismatch
+from esengine.fields import IntegerField
 
 
 class TowFields(EmbeddedDocument):
@@ -59,7 +59,7 @@ def test_raise_when_multi_fild_type_missmatch():
         field.validate(field_name, [10, 'asdf'])
     assert str(ex.value) == "`{}` expected `{}`, actual `<type 'int'>`".format(
         field_name,
-        TowFields.__type__
+        TowFields._type
     )
 
 

@@ -1,13 +1,13 @@
 import elasticsearch.helpers as eh
 
-from es_engine.bases.document import BaseDocument
-from es_engine.bases.metaclass import ModelMetaclass
-from es_engine.utils import validate_client
+from esengine.bases.document import BaseDocument
+from esengine.bases.metaclass import ModelMetaclass
+from esengine.utils import validate_client
 
 
 class Document(BaseDocument):
     __metaclass__ = ModelMetaclass
-    __autoid__ = True
+    _autoid = True
 
     @classmethod
     def get_es(cls, es):
@@ -24,8 +24,8 @@ class Document(BaseDocument):
     def save(self, es=None):
         doc = self.to_dict()
         saved_document = self.get_es(es).index(
-            index=self.__index__,
-            doc_type=self.__doc_type__,
+            index=self._index,
+            doc_type=self._doctype,
             id=self.id,
             body=doc
         )
@@ -38,8 +38,8 @@ class Document(BaseDocument):
         if id is not None and ids is not None:
             raise ValueError('id and ids can not be passed together.')
         if id is not None:
-            res = es.get(index=cls.__index__,
-                         doc_type=cls.__doc_type__,
+            res = es.get(index=cls._index,
+                         doc_type=cls._doctype,
                          id=id)
             return cls.from_dict(dct=res['_source'])
         if ids is not None:
@@ -55,8 +55,8 @@ class Document(BaseDocument):
                     }
                 }}
             resp = es.search(
-                index=cls.__index__,
-                doc_type=cls.__doc_type__,
+                index=cls._index,
+                doc_type=cls._doctype,
                 body=query,
                 size=len(ids)
             )
@@ -70,8 +70,8 @@ class Document(BaseDocument):
         updates = [
             {
                 '_op_type': 'index',
-                '_index': cls.__index__,
-                '_type': cls.__doc_type__,
+                '_index': cls._index,
+                '_type': cls._doctype,
                 '_id': doc.id,
                 'doc': doc.to_dict()
             }
