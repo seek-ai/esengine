@@ -8,7 +8,7 @@ except ImportError:
 
 setup(
     name='esengine',
-    version="0.0.1",
+    version="0.0.2",
     url='https://github.com/catholabs/ESengine',
     license='CATHO LICENSE',
     author="Catholabs",

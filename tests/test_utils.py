@@ -10,6 +10,7 @@ class InvalidInterfaceClient(object):
 class InvalidClient(object):
     index = 1
     search = 2
+    get = 3
 
 
 class Client(object):
@@ -18,6 +19,9 @@ class Client(object):
 
     def search(self, query):
         return query
+
+    def get(self, *args, **kwargs):
+        return {"_id": 1}
 
 
 def test_valid_es_client():

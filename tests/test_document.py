@@ -2,6 +2,7 @@ import pytest
 
 from esengine.document import Document
 from esengine.fields import IntegerField
+from esengine.exceptions import ClientError
 
 
 class Doc(Document):
@@ -109,3 +110,24 @@ def test_save_all():
         for doc in MockES.test_ids
     ]
     Doc.save_all(docs, es=MockES())
+
+
+def test_client_not_defined():
+    doc = Doc(id=MockES.test_id)
+    with pytest.raises(ClientError):
+        doc.save()
+
+def test_default_client():
+    class DocWithDefaultClient(Doc):
+        @classmethod
+        def get_es(cls, es):
+            return es or MockES()
+
+    try:
+        doc = DocWithDefaultClient(id=MockES.test_id)
+        doc.save()
+        DocWithDefaultClient.get(id=MockES.test_id)
+    except ClientError:
+        pytest.fail("Doc has no default connection")
+
+
