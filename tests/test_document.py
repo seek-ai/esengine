@@ -1,7 +1,7 @@
 import pytest
 
 from esengine.document import Document
-from esengine.fields import IntegerField
+from esengine.fields import IntegerField, StringField, FloatField
 from esengine.exceptions import ClientError
 
 
@@ -9,6 +9,16 @@ class Doc(Document):
         _index = 'index'
         _doctype = 'doc_type'
         id = IntegerField()
+
+
+class DocWithDefaultClient(Doc):
+    id = IntegerField()  # ID hould be inherited
+    document_id = StringField()
+    house_number = IntegerField()
+    height = FloatField()
+    @classmethod
+    def get_es(cls, es):
+        return es or MockES()
 
 
 class MockES(object):
@@ -118,12 +128,6 @@ def test_client_not_defined():
         doc.save()
 
 def test_default_client():
-    class DocWithDefaultClient(Doc):
-        id = IntegerField()
-        @classmethod
-        def get_es(cls, es):
-            return es or MockES()
-
     try:
         doc = DocWithDefaultClient(id=MockES.test_id)
         doc.save()
@@ -132,3 +136,27 @@ def test_default_client():
         pytest.fail("Doc has no default connection")
 
 
+def test_compare_attributed_values_against_fields():
+    doc = DocWithDefaultClient(id=MockES.test_id)
+    doc.document_id = 123456
+    doc.house_number = "42"
+
+    with pytest.raises(KeyError):  # invalid field
+        doc.name = 'Bruno'
+    with pytest.raises(ValueError):  # uncastable
+        doc.height = "2 mtrs"
+
+    # TODO: commented asserts will be possible when move to descriptors
+    # Because only with descriptors we can overwrite compare methods
+    assert doc.house_number == 42
+    # assert doc.house_number == "42"
+    # assert doc.house_number in ['42']
+    assert doc.house_number in [42]
+    assert not doc.house_number != 42
+    # assert not doc.house_number != "42"
+    # assert doc.document_id == 123456
+    assert doc.document_id == "123456"
+    assert doc.document_id in ['123456']
+    # assert doc.document_id in [123456]
+    # assert not doc.document_id != 123456
+    assert not doc.document_id != "123456"

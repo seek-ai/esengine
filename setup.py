@@ -24,5 +24,14 @@ setup(
         "es1": ["elasticsearch>=1.0.0,<2.0.0"],
         "es2": ["elasticsearch>=2.0.0,<3.0.0"]
     },
-    tests_require=["pytest==2.8.2", "pytest-cov==2.2.0"]
+    tests_require=[
+        "pytest==2.8.3",
+        "pytest-cov==2.2.0",
+        "flake8==2.5.0",
+        "pep8-naming==0.3.3",
+        "flake8-debugger==1.4.0",
+        "flake8-print==2.0.1",
+        "flake8-todo==0.4",
+        "radon==1.2.2"
+   ]
 )

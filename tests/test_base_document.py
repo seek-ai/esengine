@@ -138,7 +138,9 @@ def test_doc_to_dict_call_validate():
     doc = Doc(multiple=[1, 2], simple="10")
     with pytest.raises(FieldTypeMismatch) as ex:
         doc.to_dict()
-    assert str(ex.value) == "`simple` expected `<type 'int'>`, actual `<type 'str'>`" # noqa
+    assert str(ex.value) == (
+        "`simple` expected `<type 'int'>`, actual `<type 'str'>`"
+    )
 
 
 def test_doc_from_dict():
