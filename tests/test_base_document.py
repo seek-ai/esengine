@@ -2,6 +2,7 @@ import pytest
 
 from esengine.bases.document import BaseDocument
 from esengine.bases.field import BaseField
+from esengine.fields import StringField, IntegerField
 
 from esengine.exceptions import FieldTypeMismatch
 
@@ -54,7 +55,14 @@ def test_doc_set_kwargs():
         _fields = {}
 
         def __setattr__(self, key, value):
-            super(BaseDocument, self).__setattr__(key, value)
+            if key not in self._fields:
+                if isinstance(value, basestring):
+                    self._fields[key] = StringField()
+                elif isinstance(value, int):
+                    self._fields[key] = IntegerField()
+                else:
+                    self._fields[key] = StringField(_multi=True)
+            super(Doc, self).__setattr__(key, value)
 
     x = Doc(asdf='0', x=10, value=['a', 'b'], _value='aaa')
     assert x.asdf == '0'
@@ -81,12 +89,13 @@ def test_doc_setattr_():
     class Doc(BaseDocument):
         _doctype = 'test'
         _index = 'test'
-        _fields = {}
-    Doc._fields['asdf'] = 1
+        _fields = {"asdf": 1}
     Doc._initialize_multi_fields = pass_func
 
-    doc = Doc(asdf='0')
-    assert doc.asdf == '0'
+    doc = Doc()
+    with pytest.raises(AttributeError) as ex:
+        doc.asdf = "0"
+        assert ex.message == "'int' object has no attribute 'from_dict'"
 
     doc.__setattr__('_test', 10)
     assert doc._test == 10

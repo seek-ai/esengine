@@ -119,6 +119,7 @@ def test_client_not_defined():
 
 def test_default_client():
     class DocWithDefaultClient(Doc):
+        id = IntegerField()
         @classmethod
         def get_es(cls, es):
             return es or MockES()

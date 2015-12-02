@@ -31,14 +31,15 @@ class BaseDocument(object):
     def __setattr__(self, key, value):
         if (not key.startswith('_')) and key not in self._fields:
             raise KeyError('`{}` is an invalid field'.format(key))
+        field_instance = self._fields.get(key)
+        if field_instance and not self._strict:
+            value = field_instance.from_dict(value)
         super(BaseDocument, self).__setattr__(key, value)
 
     def to_dict(self):
         result = {}
         for field_name, field_instance in self._fields.iteritems():
             value = getattr(self, field_name)
-            if value is not None and not self._strict:
-                value = field_instance.from_dict(value)
             field_instance.validate(field_name, value)
             result.update({field_name: field_instance.to_dict(value)})
         return result

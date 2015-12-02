@@ -35,6 +35,7 @@ class BaseField(object):
         return value
 
     def from_dict(self, serialized):
-        if self._multi:
-            return [self._type(x) for x in serialized]
-        return self._type(serialized)
+        if serialized is not None:
+            if self._multi:
+                return [self._type(x) for x in serialized]
+            return self._type(serialized)
