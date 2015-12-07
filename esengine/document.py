@@ -33,37 +33,38 @@ class Document(BaseDocument):
             self.id = saved_document['_id']
 
     @classmethod
-    def get(cls, id=None, ids=None, es=None):
+    def get(cls, id, es=None, **kwargs):
         es = cls.get_es(es)
-        if id is not None and ids is not None:
-            raise ValueError('id and ids can not be passed together.')
-        if id is not None:
-            res = es.get(index=cls._index,
-                         doc_type=cls._doctype,
-                         id=id)
-            return cls.from_dict(dct=res['_source'])
-        if ids is not None:
-            query = {
-                "query": {
-                    "filtered": {
-                        "query": {"match_all": {}},
-                        "filter": {
-                            "ids": {
-                                "values": list(ids)
-                            }
+        res = es.get(index=cls._index,
+                     doc_type=cls._doctype,
+                     id=id,
+                     **kwargs)
+        return cls.from_dict(dct=res['_source'])
+
+    @classmethod
+    def filter(cls, es=None, **kwargs):
+        es = cls.get_es(es)
+        query = {
+            "query": {
+                "filtered": {
+                    "query": {"match_all": {}},
+                    "filter": {
+                        "ids": {
+                            "values": None
                         }
                     }
-                }}
-            resp = es.search(
-                index=cls._index,
-                doc_type=cls._doctype,
-                body=query,
-                size=len(ids)
-            )
-            result = []
-            for obj in resp['hits']['hits']:
-                result.append(cls.from_dict(dct=obj['_source']['doc']))
-            return result
+                }
+            }}
+        resp = es.search(
+            index=cls._index,
+            doc_type=cls._doctype,
+            body=query,
+            size=len(ids)
+        )
+        result = []
+        for obj in resp['hits']['hits']:
+            result.append(cls.from_dict(dct=obj['_source']['doc']))
+        return result
 
     @classmethod
     def save_all(cls, docs, es=None):
