@@ -5,6 +5,17 @@ from esengine.fields import IntegerField, StringField, FloatField
 from esengine.exceptions import ClientError
 
 
+QUERY = {
+    "query": {
+        "bool": {
+            "must": [
+                {"match": {"name": "Gonzo"}}
+            ]
+        }
+    }
+}
+
+
 class Doc(Document):
         _index = 'index'
         _doctype = 'doc_type'
@@ -48,19 +59,6 @@ class MockES(object):
         assert kwargs['index'] == Doc._index
         assert kwargs['doc_type'] == Doc._doctype
         assert kwargs['size'] == len(self.test_ids)
-        query = {
-            "query": {
-                "filtered": {
-                    "query": {"match_all": {}},
-                    "filter": {
-                        "ids": {
-                            "values": self.test_ids
-                        }
-                    }
-                }
-            }
-        }
-        assert kwargs['body'] == query
         docs = []
         for id in self.test_ids:
             doc = {
@@ -78,14 +76,25 @@ class MockES(object):
         }
 
 
+def test_build_result():
+    resp = MockES().search(index='index', doc_type='doc_type', size=2)
+    results = Doc.build_result(resp)
+    for res in results:
+        assert res.id in MockES.test_ids
+
+
+def test_doc_search():
+    docs = Doc.search(QUERY, es=MockES(), size=2)
+    for doc in docs:
+        assert doc.id in MockES.test_ids
+
+
 def test_document_save():
     Doc(id=MockES.test_id).save(es=MockES())
 
 
-def test_raise_when_pass_id_and_ids_to_doc_get():
-    with pytest.raises(ValueError) as ex:
-        Doc.get(id=1, ids=[1, 2], es=MockES())
-    assert str(ex.value) == 'id and ids can not be passed together.'
+def test_get_with_id():
+    assert Doc.get(id=MockES.test_id, es=MockES()).id == MockES.test_id
 
 
 def test_doc_get():
@@ -93,11 +102,15 @@ def test_doc_get():
     assert doc.id == MockES.test_id
 
 
-def test_doc_get_ids():
-    docs = Doc.get(ids=MockES.test_ids, es=MockES())
+def test_filter_by_ids():
+    docs = Doc.filter(ids=MockES.test_ids, es=MockES())
     for doc in docs:
         assert doc.id in MockES.test_ids
 
+
+def test_raise_if_filter_by_ids_and_filters():
+    with pytest.raises(ValueError):
+        Doc.filter(ids=MockES.test_ids, es=MockES(), filters={"name": "Gonzo"})
 
 def mock_bulk(es, updates):
     assert updates == [
@@ -132,6 +145,26 @@ def test_default_client():
         doc = DocWithDefaultClient(id=MockES.test_id)
         doc.save()
         DocWithDefaultClient.get(id=MockES.test_id)
+    except ClientError:
+        pytest.fail("Doc has no default connection")
+
+
+def test_default_client_injected():
+    try:
+        Doc._es = MockES()
+        doc = Doc(id=MockES.test_id)
+        doc.save()
+        Doc.get(id=MockES.test_id)
+    except ClientError:
+        pytest.fail("Doc has no default connection")
+
+
+def test_default_client_injected_as_lambda():
+    try:
+        Doc._es = classmethod(lambda cls: MockES())
+        doc = Doc(id=MockES.test_id)
+        doc.save()
+        Doc.get(id=MockES.test_id)
     except ClientError:
         pytest.fail("Doc has no default connection")
 

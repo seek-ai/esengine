@@ -9,8 +9,8 @@ class BaseField(object):
     def __init__(self, field_type=None, required=False, multi=False, **kwargs):
         if field_type is not None:
             self._type = field_type
-        self._required = required
-        self._multi = multi
+        self._required = required or getattr(self, '_required', False)
+        self._multi = multi or getattr(self, '_multi', False)
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 

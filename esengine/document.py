@@ -2,6 +2,7 @@ import elasticsearch.helpers as eh
 
 from esengine.bases.document import BaseDocument
 from esengine.bases.metaclass import ModelMetaclass
+from esengine.bases.result import ResultSet
 from esengine.utils import validate_client
 
 
@@ -38,6 +39,8 @@ class Document(BaseDocument):
         This method also validades that the connection is a valid ES client.
         :return: elasticsearch.ElasticSearch() instance or equivalent client
         """
+        if not es and hasattr(cls, '_es'):
+            es = cls._es if not callable(cls._es) else cls._es()
         validate_client(es)
         return es
 
@@ -97,29 +100,40 @@ class Document(BaseDocument):
 
         es = cls.get_es(es)
 
-        if ids and not filters:
-            filters = {"ids": {"values": list(ids)}}
-        else:
+        if ids and filters:
             raise ValueError(
                 "You can't specify ids together with other filters"
             )
 
-        query = {
-            "query": {
-                "filtered": {
-                    "query": {"match_all": {}},
-                    "filter": filters
+        if ids:
+            query = {
+                "query": {
+                    "filtered": {
+                        "query": {"match_all": {}},
+                        "filter": {"ids": {"values": list(ids)}}
+                    }
                 }
-            }}
+            }
+        elif filters:
+            query = {
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"match": {key: value}}
+                            for key, value in filters.items()
+                        ]
+                    }
+                }
+            }
 
+        size = len(ids) if ids else size
         resp = es.search(
             index=cls._index,
             doc_type=cls._doctype,
             body=query,
-            size=len(ids) if ids else size
+            size=size
         )
-
-        return cls.build_result(resp)
+        return cls.build_result(resp, es=es, query=query, size=size)
 
     @classmethod
     def search(cls, query, es=None, **kwargs):
@@ -150,23 +164,30 @@ class Document(BaseDocument):
             body=query,
             **kwargs
         )
-        return cls.build_result(resp)
+        return cls.build_result(
+            resp, es=es, query=query, size=kwargs.get('size')
+        )
 
     @classmethod
-    def build_result(cls, resp):
+    def build_result(cls, resp, query=None, es=None, size=None):
         """
         Takes ES client response having ['hits']['hits']
         and turns it to an generator of Doc objects
         :param resp: ES client raw results
-        :return: Generator of Doc objects
+        :param query: The query used to build the results
+        :return: ResultSet: a generator of Doc objects
         """
-        return (
-            cls.from_dict(dct=obj['_source']['doc'])
-            for obj in resp['hits']['hits']
+        # FIxme: should pass meta data and _scores
+        return ResultSet(
+            values=[obj['_source'] for obj in resp['hits']['hits']],
+            model=cls,
+            query=query,
+            size=size,
+            es=cls.get_es(es)
         )
 
     @classmethod
-    def save_all(cls, docs, es=None):
+    def save_all(cls, docs, es=None, **kwargs):
         """
         Save various Doc instances in bulk
 
@@ -175,16 +196,77 @@ class Document(BaseDocument):
 
         :param docs: Iterator of Document instances
         :param es: ES client or None (if implemented a default in Model)
+        :param kwargs: Extra params to be passed to streaming_bulk
         :return: Nothing or Raise error
         """
-        updates = [
+        actions = [
             {
                 '_op_type': 'index',
                 '_index': cls._index,
                 '_type': cls._doctype,
                 '_id': doc.id,
-                'doc': doc.to_dict()
+                '_source': doc.to_dict()
             }
             for doc in docs
         ]
-        eh.bulk(cls.get_es(es), updates)
+        eh.bulk(cls.get_es(es), actions, **kwargs)
+
+    @classmethod
+    def update_all(cls, docs, es=None, meta=None, **kwargs):
+        """
+        Update various Doc instances in bulk
+
+        >>> docs = (Document(value=value) for value in [1, 2, 3])
+        # change all values to zero
+        >>> Document.update_all(docs, value=0)
+
+        :param docs: Iterator of Document instances
+        :param es: ES client or None (if implemented a default in Model)
+        :param kwargs: Extra params to be passed to streaming_bulk
+        :return: Nothing or Raise error
+        """
+        actions = (
+            {
+                '_op_type': 'update',
+                '_index': cls._index,
+                '_type': cls._doctype,
+                '_id': doc.id,
+                'doc': kwargs
+            }
+            for doc in docs
+        )
+        eh.bulk(cls.get_es(es), actions, **meta if meta else {})
+
+        for key, value in kwargs.items():
+            for doc in docs:
+                setattr(doc, key, value)
+
+    @classmethod
+    def delete_all(cls, docs, es=None, **kwargs):
+        """
+        Delete various Doc instances in bulk
+
+        >>> docs = (Document(value=value) for value in [1, 2, 3])
+        >>> Document.delete_all(docs)
+
+        :param docs: Iterator of Document instances
+        :param es: ES client or None (if implemented a default in Model)
+        :param kwargs: Extra params to be passed to streaming_bulk
+        :return: Nothing or Raise error
+        """
+        actions = [
+            {
+                '_op_type': 'delete',
+                '_index': cls._index,
+                '_type': cls._doctype,
+                '_id': doc.id,
+            }
+            for doc in docs
+        ]
+        eh.bulk(cls.get_es(es), actions, **kwargs)
+
+    def __unicode__(self):
+        return unicode(self.__str__())
+
+    def __str__(self):
+        return "<{0} {1}>".format(self.__class__.__name__, self.to_dict())
