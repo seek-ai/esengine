@@ -123,14 +123,14 @@ for res in results:
 
 
 results.update(active=True)
-
+results.reload()
 for res in results:
     print "{i.name} activation is {i.active}".format(i=res)
 
 print "Will update the names to Jonson"
 
 results.update(name="Jonson")
-
+results.reload()
 for res in results:
     print "{i.name} activation is {i.active}".format(i=res)
 

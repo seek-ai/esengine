@@ -1,4 +1,5 @@
 # coding: utf-8
+import time
 import elasticsearch.helpers as eh
 
 
@@ -32,16 +33,16 @@ class ResultSet(object):
     def __getitem__(self, item):
         return self.all_values[item]
 
-    def refresh(self):
+    def reload(self):
+        time.sleep(4)
         self._all_values = []
-        resp =  self._es.search(
+        resp = self._es.search(
             index=self._model._index,
             doc_type=self._model._doctype,
             body=self._query,
             size=self._size or len(self._values)
         )
         self._values = [obj['_source'] for obj in resp['hits']['hits']]
-        print "refreshed", self._values
 
     def update(self, meta=None, **kwargs):
         actions = (
@@ -55,7 +56,6 @@ class ResultSet(object):
             for doc in self.values
         )
         eh.bulk(self._es, actions, **meta if meta else {})
-        self.refresh()
 
     def delete(self, meta=None, **kwargs):
         actions = (
@@ -68,4 +68,3 @@ class ResultSet(object):
             for doc in self.values
         )
         eh.bulk(self._es, actions, **meta if meta else {})
-        self.refresh()

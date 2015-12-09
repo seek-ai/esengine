@@ -78,7 +78,7 @@ class MockES(object):
 
 def test_build_result():
     resp = MockES().search(index='index', doc_type='doc_type', size=2)
-    results = Doc.build_result(resp)
+    results = Doc.build_result(resp, es=MockES(), size=2)
     for res in results:
         assert res.id in MockES.test_ids
 
