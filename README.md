@@ -3,7 +3,8 @@ ElasticSearch ODM (Object Document Mapper) based in MongoEngine
 
 # install
 
-ESEngine depends on elasticsearch Python library so the instalation depends on the version of elasticsearch you are using
+ESengine depends on elasticsearch-py (Official E.S Python library) so the instalation 
+depends on the version of elasticsearch you are using.
 
 
 ## Elasticsearch 2.x
@@ -76,6 +77,14 @@ person.save(es=es)
 Person.get(id=1234, es=es)
 ```
 
+# filtering by IDS
+
+```python
+ids = [1234, 5678, 9101]
+power_trio = Person.filter(ids=ids)
+```
+
+
 # filtering by fields
 
 ```python
@@ -84,8 +93,9 @@ Person.filter(name="Gonzo", es=es)
 
 # Searching
 
-ESengine does not try to create abstratction for query building, but it is provided by a [plugin](http://plugin) 
-by default ESengine only implements search transport receiving a raw ES query in form of a Python dictionary.
+ESengine does not try to create abstraction for query building, 
+by default ESengine only implements search transport receiving a raw ES query 
+in form of a Python dictionary.
 
 ```python
 query = {
@@ -107,7 +117,11 @@ Person.search(query, size=10, es=es)
 
 # Default connection
 
-By default ES engine does not try to implicit create a connection for you, but you can easily achieve this overwriting the **get_es** method and returning a default connection or using any kind of technique as RoundRobin or Mocking for tests
+By default ES engine does not try to implicit create a connection for you, 
+but you can easily achieve this overwriting the **get_es** method and returning a 
+default connection or using any kind of technique as RoundRobin or Mocking for tests
+Also you can set the **_es** attribute pointing to a function generating the connection client
+or the client instance as the following example:
 
 ```python
 
@@ -119,14 +133,10 @@ from esengine.utils import validate_client
 class Person(Document):
     _doctype = "person"
     _index = "universe"
+    _es = Elasticsearch(host='10.0.0.0')
     
     name = StringField()
     
-    @classmethod
-    def get_es(cls, es):
-        es = es or ElasticSearch(host='host', port=port)
-        validate_client(es)
-        return es
 ```
         
 # Now you can use the document transport methods ommiting ES instance
@@ -139,6 +149,162 @@ person.save()
 Person.get(id=1234)
 
 Person.filter(name="Gonzo")
+```
+
+
+# Updating
+
+##  A single document
+
+A single document can be updated simply using the **.save()** method
+
+```python
+
+person = Person.get(id=1234)
+person.name = "Another Name"
+person.save()
+
+```
+
+## Updating a Resultset
+
+The Document methods **.get**, **.filter** and **.search** will return an instance
+of **ResultSet** object. This object is an Iterator containing the **hits** reached by 
+the filtering or search process and exposes some CRUD methods[ **update**, **delete** and **reload** ]
+to deal with its results.
+
+
+```python
+people = Person.filter(field='value')
+people.update(another_field='another_value')
+```
+
+> When updating documents sometimes you need the changes done in the E.S index reflected in the objects 
+of the **ResultSet** iterator, so you can use **.reload** method to perform that action.
+
+
+## The use of **reload** method
+ 
+```python
+people = Person.filter(field='value')
+print people
+... <Resultset: [{'field': 'value', 'another_field': None}, 
+                 {'field': 'value', 'another_field': None}]>
+
+# Updating another field on both instances
+people.update(another_field='another_value')
+print people
+... <Resultset: [{'field': 'value', 'another_field': None}, {'field': 'value', 'another_field': None}]>
+
+# Note that in E.S index the values weres changed but the current ResultSet is not updated by defaul
+# you have to fire an update
+people.reload()
+
+print people
+... <Resultset: [{'field': 'value', 'another_field': 'another_value'},
+                 {'field': 'value', 'another_field': 'another_value'}]>
+
+
+```
+
+## Deleting documents
+
+
+### A ResultSet
+
+```python
+people = Person.all()
+people.delete()
+```
+
+### A single document
+
+```python
+Person.get(id=123).delete()
+```
+
+# Bulk operations
+
+ESEngine takes advantage of elasticsearch-py helpers for bulk actions, 
+the **ResultSet** object uses **bulk** melhod to **update** and **delete** documents.
+
+But you can use it in a explicit way using Document's **update_all**, **save__all** and **delete_all** methods.
+
+### Lets create a bunch of document instances
+
+
+```python
+top_5_racing_bikers = []
+
+for name in ['Eddy Merckx', 
+             'Bernard Hinault', 
+             'Jacques Anquetil', 
+             'Sean Kelly', 
+             'Lance Armstrong']:
+     top_5_racing_bikers.append(Person(name=name))
+```
+
+### Save it all 
+
+```python
+Person.save_all(top_5_racing_bikers)
+```
+
+### Using the **create** shortcur
+
+The above could be achieved using **create** shortcut
+
+
+#### A single
+
+```python
+Person.create(name='Eddy Merckx', active=False)
+```
+
+> Create will return the instance of the indexed Document
+
+#### All using list comprehension
+
+```python
+top_5_racing_bikers = [
+    Person.create(name=name, active=False)
+    for name in ['Eddy Merckx', 
+                 'Bernard Hinault', 
+                 'Jacques Anquetil', 
+                 'Sean Kelly', 
+                 'Lance Armstrong']
+]
+
+```
+> NOTE: **.create** method will automatically save the document to the index, and
+will not raise an error if there is a document with the same ID (if specified), it will update it acting as upsert.
+
+### Updating all
+
+Turning the field **active** to **True** for all documents
+
+```python
+Person.update_all(top_5_racing_bikes, active=True)
+```
+
+### Deleting all
+
+```python
+Person.delete_all(top_5_racing_bikes)
+```
+
+
+### Chunck size
+
+chunk_size is number of docs in one chunk sent to ES (default: 500)
+you can change using **meta** argument.
+
+```python
+Person.update_all(
+    top_5_racing_bikes, # the documents
+    active=True,  # values to be changed
+    metal={'chunk_size': 200}  # meta data passed to **bulk** operation    
+)
 ```
 
 # Contribute

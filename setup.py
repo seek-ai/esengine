@@ -10,7 +10,7 @@ setup(
     name='esengine',
     version="0.0.2",
     url='https://github.com/catholabs/ESengine',
-    license='CATHO LICENSE',
+    license='MIT',
     author="Catholabs",
     author_email="catholabs@catho.com",
     description='Elasticsearch models inspired on mongo engine ORM',
