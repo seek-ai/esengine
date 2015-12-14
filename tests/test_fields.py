@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from es_engine.fields import DateField
+from esengine.fields import DateField
 
 
 def test_date_field_to_dict():

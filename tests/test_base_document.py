@@ -1,9 +1,10 @@
 import pytest
 
-from es_engine.bases.document import BaseDocument
-from es_engine.bases.field import BaseField
+from esengine.bases.document import BaseDocument
+from esengine.bases.field import BaseField
+from esengine.fields import StringField, IntegerField
 
-from es_engine.exceptions import FieldTypeMismatch
+from esengine.exceptions import FieldTypeMismatch
 
 
 def test_raise_when_doc_has_no_doc_type():
@@ -13,16 +14,16 @@ def test_raise_when_doc_has_no_doc_type():
 
 def test_raise_when_doc_has_no_index():
     class WhitoutIndex(BaseDocument):
-        __doc_type__ = 'test'
+        _doctype = 'test'
 
     class WhitIndex(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
         _fields = {}
 
     with pytest.raises(ValueError) as ex:
         WhitoutIndex()
-    assert str(ex.value) == '{} have no __index__ field'.format(
+    assert str(ex.value) == '{} have no _index attribute'.format(
         WhitoutIndex.__name__
     )
     WhitIndex()
@@ -30,12 +31,12 @@ def test_raise_when_doc_has_no_index():
 
 def test_raise_if_doc_has_no_fields():
     class WhitoutFields(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
 
     class WhitFields(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
         _fields = {}
 
     with pytest.raises(AttributeError) as ex:
@@ -49,12 +50,19 @@ def test_raise_if_doc_has_no_fields():
 
 def test_doc_set_kwargs():
     class Doc(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
         _fields = {}
 
         def __setattr__(self, key, value):
-            super(BaseDocument, self).__setattr__(key, value)
+            if key not in self._fields:
+                if isinstance(value, basestring):
+                    self._fields[key] = StringField()
+                elif isinstance(value, int):
+                    self._fields[key] = IntegerField()
+                else:
+                    self._fields[key] = StringField(_multi=True)
+            super(Doc, self).__setattr__(key, value)
 
     x = Doc(asdf='0', x=10, value=['a', 'b'], _value='aaa')
     assert x.asdf == '0'
@@ -65,8 +73,8 @@ def test_doc_set_kwargs():
 
 def test_raise_if_attr_not_in_fields():
     class Doc(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
         _fields = {}
 
     with pytest.raises(KeyError) as ex:
@@ -79,14 +87,15 @@ def test_doc_setattr_():
         pass
 
     class Doc(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
-        _fields = {}
-    Doc._fields['asdf'] = 1
+        _doctype = 'test'
+        _index = 'test'
+        _fields = {"asdf": 1}
     Doc._initialize_multi_fields = pass_func
 
-    doc = Doc(asdf='0')
-    assert doc.asdf == '0'
+    doc = Doc()
+    with pytest.raises(AttributeError) as ex:
+        doc.asdf = "0"
+        assert ex.message == "'int' object has no attribute 'from_dict'"
 
     doc.__setattr__('_test', 10)
     assert doc._test == 10
@@ -94,8 +103,8 @@ def test_doc_setattr_():
 
 def test_doc_initialize_multi_fields():
     class Doc(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
         _fields = {
             'multiple': BaseField(field_type=int, multi=True),
             'simple': BaseField(field_type=int)
@@ -107,8 +116,8 @@ def test_doc_initialize_multi_fields():
 
 def test_doc_to_dict():
     class Doc(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
         _fields = {
             'multiple': BaseField(field_type=int, multi=True),
             'simple': BaseField(field_type=int)
@@ -119,8 +128,9 @@ def test_doc_to_dict():
 
 def test_doc_to_dict_call_validate():
     class Doc(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
+        _strict = True
         _fields = {
             'multiple': BaseField(field_type=int, multi=True),
             'simple': BaseField(field_type=int)
@@ -128,13 +138,15 @@ def test_doc_to_dict_call_validate():
     doc = Doc(multiple=[1, 2], simple="10")
     with pytest.raises(FieldTypeMismatch) as ex:
         doc.to_dict()
-    assert str(ex.value) == "`simple` expected `<type 'int'>`, actual `<type 'str'>`" # noqa
+    assert str(ex.value) == (
+        "`simple` expected `<type 'int'>`, actual `<type 'str'>`"
+    )
 
 
 def test_doc_from_dict():
     class Doc(BaseDocument):
-        __doc_type__ = 'test'
-        __index__ = 'test'
+        _doctype = 'test'
+        _index = 'test'
         _fields = {
             'multiple': BaseField(field_type=int, multi=True),
             'simple': BaseField(field_type=int)

@@ -1,6 +1,6 @@
-from es_engine.bases.metaclass import ModelMetaclass
-from es_engine.bases.field import BaseField
-from es_engine.embedded_document import EmbeddedDocument
+from esengine.bases.metaclass import ModelMetaclass
+from esengine.bases.field import BaseField
+from esengine.embedded_document import EmbeddedDocument
 
 
 def test_derived_class_has_fields_attr():
@@ -28,5 +28,27 @@ def test_has_typefield_if_is_EmbeddedDocument(): # noqa
         (EmbeddedDocument,),
         {}
     )
-    assert hasattr(obj, '__type__')
-    assert getattr(obj, '__type__') is obj
+    assert hasattr(obj, '_type')
+    assert getattr(obj, '_type') is obj
+
+
+def test_id_injected_when_autoid():
+    class Base(object):
+        __metaclass__ = ModelMetaclass
+        _autoid = True
+
+    class Derived(Base):
+        pass
+
+    assert hasattr(Derived, 'id')
+
+
+def test_id_not_injected_when_not_autoid():
+    class Base(object):
+        __metaclass__ = ModelMetaclass
+        _autoid = False
+
+    class Derived(Base):
+        pass
+
+    assert not hasattr(Derived, 'id')

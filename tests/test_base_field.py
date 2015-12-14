@@ -1,9 +1,9 @@
 import pytest
 
-from es_engine.bases.field import BaseField
+from esengine.bases.field import BaseField
 
-from es_engine.exceptions import RequiredField, InvalidMultiField
-from es_engine.exceptions import FieldTypeMismatch
+from esengine.exceptions import RequiredField, InvalidMultiField
+from esengine.exceptions import FieldTypeMismatch
 
 
 def test_raise_when_required_fild_has_empty_value():
