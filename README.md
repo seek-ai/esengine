@@ -3,11 +3,13 @@
 [![Code Health](https://landscape.io/github/catholabs/esengine/development/landscape.svg?style=flat)](https://landscape.io/github/catholabs/esengine/development)
 <a href="http://smallactsmanifesto.org" title="Small Acts Manifesto"><img src="http://smallactsmanifesto.org/static/images/smallacts-badge-80x15-blue.png" style="border: none;" alt="Small Acts Manifesto" /></a>
 
-# ElasticSearch ODM (Object Document Mapper) based in MongoEngine
+# ESEngine - ElasticSearch ODM 
+## (Object Document Mapper) inspired by MongoEngine
  
-<p align="right">
-    <img src="octosearch.gif" alt="EsEngine" />
+<p align="left" style="float:left" >
+    <img src="octosearch.gif" alt="EsEngine" width="300" />
 </p>
+
 
 # install
 
@@ -258,7 +260,7 @@ for name in ['Eddy Merckx',
 Person.save_all(top_5_racing_bikers)
 ```
 
-### Using the **create** shortcur
+### Using the **create** shortcut
 
 The above could be achieved using **create** shortcut
 
