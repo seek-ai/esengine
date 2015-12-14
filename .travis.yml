@@ -1,0 +1,15 @@
+language: python
+before_install:
+  - curl -O https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.3.deb && sudo dpkg -i --force-confnew elasticsearch-1.7.3.deb
+before_script:
+  - sleep 10
+python:
+  - "2.7"
+services: elasticsearch
+install:
+  - "pip install --upgrade -r test.req"
+script: make test
+after_success:
+  - coveralls
+notifications:
+  slack: catholabs:9yCjbY6Jgn3Xdy9hwq6PyLEJ
