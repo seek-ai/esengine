@@ -1,6 +1,6 @@
 .PHONY: test
 test: pep8
-	py.test --cov=esengine -l --tb=short --maxfail=1 tests/
+	py.test -v --cov=esengine -l --tb=short --maxfail=1 tests/
 
 .PHONY: install
 install:
