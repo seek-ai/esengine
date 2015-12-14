@@ -1,4 +1,9 @@
-ElasticSearch ODM (Object Document Mapper) based in MongoEngine
+[![Travis CI](http://img.shields.io/travis/catholabs/esengine.svg)](https://travis-ci.org/catholabs/esengine)
+[![Coverage Status](http://img.shields.io/coveralls/catholabs/esengine.svg)](https://coveralls.io/r/catholabs/esengine)
+[![Code Health](https://landscape.io/github/catholabs/esengine/development/landscape.svg?style=flat)](https://landscape.io/github/catholabs/esengine/development)
+<a href="http://smallactsmanifesto.org" title="Small Acts Manifesto"><img src="http://smallactsmanifesto.org/static/images/smallacts-badge-80x15-blue.png" style="border: none;" alt="Small Acts Manifesto" /></a>
+
+# ElasticSearch ODM (Object Document Mapper) based in MongoEngine
  
 
 # install
