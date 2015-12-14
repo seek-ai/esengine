@@ -67,7 +67,7 @@ class Document(BaseDocument):
         saved_document = self.get_es(es).index(
             index=self._index,
             doc_type=self._doctype,
-            id=self.id,
+            id=self.id,  # noqa
             body=doc
         )
         if saved_document.get('created'):
@@ -86,7 +86,7 @@ class Document(BaseDocument):
         self.get_es(es).delete(
             index=self._index,
             doc_type=self._doctype,
-            id=self.id,
+            id=self.id,  # noqa
         )
 
     @classmethod
@@ -117,7 +117,7 @@ class Document(BaseDocument):
         return cls.filter(*args, **kwargs)
 
     @classmethod
-    def get(cls, id, es=None, **kwargs):
+    def get(cls, id, es=None, **kwargs):  # noqa
         """
         A get query returning a single document by _id or _uid
 
