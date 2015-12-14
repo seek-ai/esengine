@@ -5,6 +5,9 @@
 
 # ElasticSearch ODM (Object Document Mapper) based in MongoEngine
  
+<p align="right">
+    <img src="octosearch.gif" alt="EsEngine" />
+</p>
 
 # install
 
