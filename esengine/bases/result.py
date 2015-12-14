@@ -33,8 +33,8 @@ class ResultSet(object):
     def __getitem__(self, item):
         return self.all_values[item]
 
-    def reload(self):
-        time.sleep(4)
+    def reload(self, sleep=1):
+        time.sleep(sleep)
         self._all_values = []
         resp = self._es.search(
             index=self._model._index,
@@ -45,17 +45,18 @@ class ResultSet(object):
         self._values = [obj['_source'] for obj in resp['hits']['hits']]
 
     def update(self, meta=None, **kwargs):
-        actions = (
-            {
-                '_op_type': 'update',
-                '_index': self._model._index,
-                '_type': self._model._doctype,
-                '_id': doc.id,
-                'doc': kwargs
-            }
-            for doc in self.values
-        )
-        eh.bulk(self._es, actions, **meta if meta else {})
+        if kwargs:
+            actions = [
+                {
+                    '_op_type': 'update',
+                    '_index': self._model._index,
+                    '_type': self._model._doctype,
+                    '_id': doc.id,
+                    'doc': kwargs
+                }
+                for doc in self.values
+            ]
+            eh.bulk(self._es, actions, **meta if meta else {})
 
     def delete(self, meta=None, **kwargs):
         actions = (
@@ -68,3 +69,9 @@ class ResultSet(object):
             for doc in self.values
         )
         eh.bulk(self._es, actions, **meta if meta else {})
+
+    def __unicode__(self):
+        return unicode(self.__unicode__())
+
+    def __str__(self):
+        return "<ResultSet: {i.values}>".format(i=self)

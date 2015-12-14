@@ -134,5 +134,16 @@ results.reload()
 for res in results:
     print "{i.name} activation is {i.active}".format(i=res)
 
+print "Updating using Model.update_all"
+ExampleDoc.update_all(results, city="Itapopoca")
+time.sleep(1)
+results = ExampleDoc.filter(city="Itapopoca")
+for res in results:
+    print "{i.name} city is {i.city}".format(i=res)
+
+print "All documents"
+for doc in ExampleDoc.all():
+    print doc.to_dict()
+
 print "Deleting everything"
 results.delete()

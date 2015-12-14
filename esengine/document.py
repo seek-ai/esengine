@@ -27,7 +27,16 @@ class Document(BaseDocument):
     """
 
     __metaclass__ = ModelMetaclass
+
+    # If _autoid is set to False the id Field will not be automatically
+    # included in the Document model and you will need to specify a field
+    # called 'id' preferably a StringField
     _autoid = True
+
+    # If mapping is not specified it will be generated using the document
+    # model fields and its default patterns and types
+    # any field mapping can be overwritten by specifying in the following
+    # instance _mapping dictionary
     _mapping = {}
 
     @classmethod
@@ -63,6 +72,49 @@ class Document(BaseDocument):
         )
         if saved_document.get('created'):
             self.id = saved_document['_id']
+
+    def delete(self, es=None):
+        """
+        Delete current instance of a Document
+
+        >>> obj = Document.get(id=123)
+        >>> obj.delete()
+
+        :param es: ES client or None (if implemented a default in Model)
+        :return: Nothing or raise error
+        """
+        self.get_es(es).delete(
+            index=self._index,
+            doc_type=self._doctype,
+            id=self.id,
+        )
+
+    @classmethod
+    def create(cls, es=None, **kwargs):
+        """
+        Creates and returns an instance of the Document
+
+        >>> Document.create(field='value')
+        <Document: {'field': 'value'}>
+
+        :param es: ES client or None (if implemented a default in Model)
+        :param kwargs: fields and its values
+        :return: Instance of the Document created
+        """
+        instance = cls(**kwargs)
+        instance.save(es)
+        return instance
+
+    @classmethod
+    def all(cls, *args, **kwargs):
+        """
+        Returns a ResultSet with all documents without filtering
+        A semantic shortcut to filter() without keys
+
+        :param: < See filter parameters>
+        :return: A ResultSet with all documents in the index/type
+        """
+        return cls.filter(*args, **kwargs)
 
     @classmethod
     def get(cls, id, es=None, **kwargs):
@@ -125,14 +177,22 @@ class Document(BaseDocument):
                     }
                 }
             }
+        else:
+            query = {
+                "query": {
+                    "match_all": {}
+                }
+            }
 
         size = len(ids) if ids else size
-        resp = es.search(
+        search_args = dict(
             index=cls._index,
             doc_type=cls._doctype,
-            body=query,
-            size=size
+            body=query
         )
+        if size:
+            search_args['size'] = size
+        resp = es.search(**search_args)
         return cls.build_result(resp, es=es, query=query, size=size)
 
     @classmethod
@@ -236,10 +296,6 @@ class Document(BaseDocument):
             for doc in docs
         )
         eh.bulk(cls.get_es(es), actions, **meta if meta else {})
-
-        for key, value in kwargs.items():
-            for doc in docs:
-                setattr(doc, key, value)
 
     @classmethod
     def delete_all(cls, docs, es=None, **kwargs):
