@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Esengine by catholabs</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Esengine</h1>
+        <p class="header">A basic ODM (Object Document Mapper) for Elasticsearch based on MongoEngine.</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/catholabs/esengine/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/catholabs/esengine/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/catholabs/esengine">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/catholabs">catholabs</a></p>
+
+
+      </header>
+      <section>
+        <p><a href="https://travis-ci.org/catholabs/esengine"><img src="http://img.shields.io/travis/catholabs/esengine.svg" alt="Travis CI"></a>
+<a href="https://coveralls.io/r/catholabs/esengine"><img src="http://img.shields.io/coveralls/catholabs/esengine.svg" alt="Coverage Status"></a>
+<a href="https://landscape.io/github/catholabs/esengine/master"><img src="https://landscape.io/github/catholabs/esengine/master/landscape.svg?style=flat" alt="Code Health"></a>
+<a href="http://smallactsmanifesto.org" title="Small Acts Manifesto"><img src="http://smallactsmanifesto.org/static/images/smallacts-badge-80x15-blue.png" alt="Small Acts Manifesto"></a></p>
+
+<h1>
+<a id="esengine---elasticsearch-odm" class="anchor" href="#esengine---elasticsearch-odm" aria-hidden="true"><span class="octicon octicon-link"></span></a>ESEngine - ElasticSearch ODM</h1>
+
+<h2>
+<a id="object-document-mapper-inspired-by-mongoengine" class="anchor" href="#object-document-mapper-inspired-by-mongoengine" aria-hidden="true"><span class="octicon octicon-link"></span></a>(Object Document Mapper) inspired by MongoEngine</h2>
+
+<p align="left">
+    <img src="https://github.com/catholabs/esengine/raw/master/octosearch.gif" alt="EsEngine" width="300">
+</p>
+
+<h1>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>install</h1>
+
+<p>ESengine depends on elasticsearch-py (Official E.S Python library) so the instalation 
+depends on the version of elasticsearch you are using.</p>
+
+<h2>
+<a id="elasticsearch-2x" class="anchor" href="#elasticsearch-2x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 2.x</h2>
+
+<div class="highlight highlight-source-shell"><pre>pip install esengine[es2]</pre></div>
+
+<h2>
+<a id="elasticsearch-1x" class="anchor" href="#elasticsearch-1x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 1.x</h2>
+
+<div class="highlight highlight-source-shell"><pre>pip install esengine[es1]</pre></div>
+
+<h2>
+<a id="elasticsearch-090x" class="anchor" href="#elasticsearch-090x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 0.90.x</h2>
+
+<div class="highlight highlight-source-shell"><pre>pip install esengine[es0]</pre></div>
+
+<p>The above command will install esengine and the elasticsearch library specific for you ES version.</p>
+
+<blockquote>
+<p>Alternatively you can install elasticsearch library before esengine</p>
+</blockquote>
+
+<p>pip install <code>&lt;version-specific-es&gt;</code> </p>
+
+<ul>
+<li>for 2.0 + use "elasticsearch&gt;=2.0.0,&lt;3.0.0"</li>
+<li>for 1.0 + use "elasticsearch&gt;=1.0.0,&lt;2.0.0"</li>
+<li>under 1.0 use "elasticsearch&lt;1.0.0"</li>
+</ul>
+
+<p>Then install esengine</p>
+
+<div class="highlight highlight-source-shell"><pre>pip install esengine</pre></div>
+
+<h1>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started</h1>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> elasticsearch <span class="pl-k">import</span> ElasticSearch
+<span class="pl-k">from</span> esengine <span class="pl-k">import</span> Document, StringField
+
+es <span class="pl-k">=</span> ElasticSearch(<span class="pl-smi">host</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>host<span class="pl-pds">'</span></span>, <span class="pl-smi">port</span><span class="pl-k">=</span>port)</pre></div>
+
+<h1>
+<a id="defining-a-document" class="anchor" href="#defining-a-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defining a document</h1>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">class</span> <span class="pl-en">Person</span>(<span class="pl-e">Document</span>):
+    _doctype <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>person<span class="pl-pds">"</span></span>
+    _index <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>universe<span class="pl-pds">"</span></span>
+
+    name <span class="pl-k">=</span> StringField()
+</pre></div>
+
+<blockquote>
+<p>If you do not specify an "id" field, ESEngine will automatically add "id" as StringField. It is recommended that when specifying you use StringField for ids.</p>
+</blockquote>
+
+<h1>
+<a id="indexing" class="anchor" href="#indexing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Indexing</h1>
+
+<div class="highlight highlight-source-python"><pre>person <span class="pl-k">=</span> Person(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>, <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>)
+person.save(<span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
+
+<h1>
+<a id="getting-by-id" class="anchor" href="#getting-by-id" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting by id</h1>
+
+<div class="highlight highlight-source-python"><pre>Person.get(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>, <span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
+
+<h1>
+<a id="filtering-by-ids" class="anchor" href="#filtering-by-ids" aria-hidden="true"><span class="octicon octicon-link"></span></a>filtering by IDS</h1>
+
+<div class="highlight highlight-source-python"><pre>ids <span class="pl-k">=</span> [<span class="pl-c1">1234</span>, <span class="pl-c1">5678</span>, <span class="pl-c1">9101</span>]
+power_trio <span class="pl-k">=</span> Person.filter(<span class="pl-smi">ids</span><span class="pl-k">=</span>ids)</pre></div>
+
+<h1>
+<a id="filtering-by-fields" class="anchor" href="#filtering-by-fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>filtering by fields</h1>
+
+<div class="highlight highlight-source-python"><pre>Person.filter(<span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>, <span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
+
+<h1>
+<a id="searching" class="anchor" href="#searching" aria-hidden="true"><span class="octicon octicon-link"></span></a>Searching</h1>
+
+<p>ESengine does not try to create abstraction for query building, 
+by default ESengine only implements search transport receiving a raw ES query 
+in form of a Python dictionary.</p>
+
+<div class="highlight highlight-source-python"><pre>query <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>query<span class="pl-pds">"</span></span>: {
+        <span class="pl-s"><span class="pl-pds">"</span>filtered<span class="pl-pds">"</span></span>: {
+            <span class="pl-s"><span class="pl-pds">"</span>query<span class="pl-pds">"</span></span>: {
+                <span class="pl-s"><span class="pl-pds">"</span>match_all<span class="pl-pds">"</span></span>: {}
+            },
+            <span class="pl-s"><span class="pl-pds">"</span>filter<span class="pl-pds">"</span></span>: {
+                <span class="pl-s"><span class="pl-pds">"</span>ids<span class="pl-pds">"</span></span>: {
+                    <span class="pl-s"><span class="pl-pds">"</span>values<span class="pl-pds">"</span></span>: <span class="pl-c1">list</span>(ids)
+                }
+            }
+        }
+    }
+}
+Person.search(query, <span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">10</span>, <span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
+
+<h1>
+<a id="default-connection" class="anchor" href="#default-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Default connection</h1>
+
+<p>By default ES engine does not try to implicit create a connection for you, 
+but you can easily achieve this overwriting the <strong>get_es</strong> method and returning a 
+default connection or using any kind of technique as RoundRobin or Mocking for tests
+Also you can set the <strong>_es</strong> attribute pointing to a function generating the connection client
+or the client instance as the following example:</p>
+
+<div class="highlight highlight-source-python"><pre>
+<span class="pl-k">from</span> elasticsearch <span class="pl-k">import</span> ElasticSearch
+<span class="pl-k">from</span> esengine <span class="pl-k">import</span> Document, StringField
+<span class="pl-k">from</span> esengine.utils <span class="pl-k">import</span> validate_client
+
+
+<span class="pl-k">class</span> <span class="pl-en">Person</span>(<span class="pl-e">Document</span>):
+    _doctype <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>person<span class="pl-pds">"</span></span>
+    _index <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>universe<span class="pl-pds">"</span></span>
+    _es <span class="pl-k">=</span> Elasticsearch(<span class="pl-smi">host</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>10.0.0.0<span class="pl-pds">'</span></span>)
+
+    name <span class="pl-k">=</span> StringField()
+</pre></div>
+
+<h1>
+<a id="now-you-can-use-the-document-transport-methods-ommiting-es-instance" class="anchor" href="#now-you-can-use-the-document-transport-methods-ommiting-es-instance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now you can use the document transport methods ommiting ES instance</h1>
+
+<div class="highlight highlight-source-python"><pre>person <span class="pl-k">=</span> Person(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>, <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>)
+person.save()
+
+Person.get(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>)
+
+Person.filter(<span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>)</pre></div>
+
+<h1>
+<a id="updating" class="anchor" href="#updating" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating</h1>
+
+<h2>
+<a id="a-single-document" class="anchor" href="#a-single-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>A single document</h2>
+
+<p>A single document can be updated simply using the <strong>.save()</strong> method</p>
+
+<div class="highlight highlight-source-python"><pre>
+person <span class="pl-k">=</span> Person.get(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>)
+person.name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Another Name<span class="pl-pds">"</span></span>
+person.save()
+</pre></div>
+
+<h2>
+<a id="updating-a-resultset" class="anchor" href="#updating-a-resultset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating a Resultset</h2>
+
+<p>The Document methods <strong>.get</strong>, <strong>.filter</strong> and <strong>.search</strong> will return an instance
+of <strong>ResultSet</strong> object. This object is an Iterator containing the <strong>hits</strong> reached by 
+the filtering or search process and exposes some CRUD methods[ <strong>update</strong>, <strong>delete</strong> and <strong>reload</strong> ]
+to deal with its results.</p>
+
+<div class="highlight highlight-source-python"><pre>people <span class="pl-k">=</span> Person.filter(<span class="pl-smi">field</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>)
+people.update(<span class="pl-smi">another_field</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>another_value<span class="pl-pds">'</span></span>)</pre></div>
+
+<blockquote>
+<p>When updating documents sometimes you need the changes done in the E.S index reflected in the objects 
+of the <strong>ResultSet</strong> iterator, so you can use <strong>.reload</strong> method to perform that action.</p>
+</blockquote>
+
+<h2>
+<a id="the-use-of-reload-method" class="anchor" href="#the-use-of-reload-method" aria-hidden="true"><span class="octicon octicon-link"></span></a>The use of <strong>reload</strong> method</h2>
+
+<div class="highlight highlight-source-python"><pre>people <span class="pl-k">=</span> Person.filter(<span class="pl-smi">field</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>)
+<span class="pl-k">print</span> people
+... <span class="pl-k">&lt;</span>Resultset: [{<span class="pl-s"><span class="pl-pds">'</span>field<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>another_field<span class="pl-pds">'</span></span>: <span class="pl-c1">None</span>}, 
+                 {<span class="pl-s"><span class="pl-pds">'</span>field<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>another_field<span class="pl-pds">'</span></span>: <span class="pl-c1">None</span>}]<span class="pl-k">&gt;</span>
+
+<span class="pl-c"># Updating another field on both instances</span>
+people.update(<span class="pl-smi">another_field</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>another_value<span class="pl-pds">'</span></span>)
+<span class="pl-k">print</span> people
+... <span class="pl-k">&lt;</span>Resultset: [{<span class="pl-s"><span class="pl-pds">'</span>field<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>another_field<span class="pl-pds">'</span></span>: <span class="pl-c1">None</span>}, {<span class="pl-s"><span class="pl-pds">'</span>field<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>another_field<span class="pl-pds">'</span></span>: <span class="pl-c1">None</span>}]<span class="pl-k">&gt;</span>
+
+<span class="pl-c"># Note that in E.S index the values weres changed but the current ResultSet is not updated by defaul</span>
+<span class="pl-c"># you have to fire an update</span>
+people.reload()
+
+<span class="pl-k">print</span> people
+... <span class="pl-k">&lt;</span>Resultset: [{<span class="pl-s"><span class="pl-pds">'</span>field<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>another_field<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>another_value<span class="pl-pds">'</span></span>},
+                 {<span class="pl-s"><span class="pl-pds">'</span>field<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>value<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>another_field<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>another_value<span class="pl-pds">'</span></span>}]<span class="pl-k">&gt;</span>
+
+</pre></div>
+
+<h2>
+<a id="deleting-documents" class="anchor" href="#deleting-documents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deleting documents</h2>
+
+<h3>
+<a id="a-resultset" class="anchor" href="#a-resultset" aria-hidden="true"><span class="octicon octicon-link"></span></a>A ResultSet</h3>
+
+<div class="highlight highlight-source-python"><pre>people <span class="pl-k">=</span> Person.all()
+people.delete()</pre></div>
+
+<h3>
+<a id="a-single-document-1" class="anchor" href="#a-single-document-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>A single document</h3>
+
+<div class="highlight highlight-source-python"><pre>Person.get(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">123</span>).delete()</pre></div>
+
+<h1>
+<a id="bulk-operations" class="anchor" href="#bulk-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bulk operations</h1>
+
+<p>ESEngine takes advantage of elasticsearch-py helpers for bulk actions, 
+the <strong>ResultSet</strong> object uses <strong>bulk</strong> melhod to <strong>update</strong> and <strong>delete</strong> documents.</p>
+
+<p>But you can use it in a explicit way using Document's <strong>update_all</strong>, <strong>save__all</strong> and <strong>delete_all</strong> methods.</p>
+
+<h3>
+<a id="lets-create-a-bunch-of-document-instances" class="anchor" href="#lets-create-a-bunch-of-document-instances" aria-hidden="true"><span class="octicon octicon-link"></span></a>Lets create a bunch of document instances</h3>
+
+<div class="highlight highlight-source-python"><pre>top_5_racing_bikers <span class="pl-k">=</span> []
+
+<span class="pl-k">for</span> name <span class="pl-k">in</span> [<span class="pl-s"><span class="pl-pds">'</span>Eddy Merckx<span class="pl-pds">'</span></span>, 
+             <span class="pl-s"><span class="pl-pds">'</span>Bernard Hinault<span class="pl-pds">'</span></span>, 
+             <span class="pl-s"><span class="pl-pds">'</span>Jacques Anquetil<span class="pl-pds">'</span></span>, 
+             <span class="pl-s"><span class="pl-pds">'</span>Sean Kelly<span class="pl-pds">'</span></span>, 
+             <span class="pl-s"><span class="pl-pds">'</span>Lance Armstrong<span class="pl-pds">'</span></span>]:
+     top_5_racing_bikers.append(Person(<span class="pl-smi">name</span><span class="pl-k">=</span>name))</pre></div>
+
+<h3>
+<a id="save-it-all" class="anchor" href="#save-it-all" aria-hidden="true"><span class="octicon octicon-link"></span></a>Save it all</h3>
+
+<div class="highlight highlight-source-python"><pre>Person.save_all(top_5_racing_bikers)</pre></div>
+
+<h3>
+<a id="using-the-create-shortcut" class="anchor" href="#using-the-create-shortcut" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using the <strong>create</strong> shortcut</h3>
+
+<p>The above could be achieved using <strong>create</strong> shortcut</p>
+
+<h4>
+<a id="a-single" class="anchor" href="#a-single" aria-hidden="true"><span class="octicon octicon-link"></span></a>A single</h4>
+
+<div class="highlight highlight-source-python"><pre>Person.create(<span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>Eddy Merckx<span class="pl-pds">'</span></span>, <span class="pl-smi">active</span><span class="pl-k">=</span><span class="pl-c1">False</span>)</pre></div>
+
+<blockquote>
+<p>Create will return the instance of the indexed Document</p>
+</blockquote>
+
+<h4>
+<a id="all-using-list-comprehension" class="anchor" href="#all-using-list-comprehension" aria-hidden="true"><span class="octicon octicon-link"></span></a>All using list comprehension</h4>
+
+<div class="highlight highlight-source-python"><pre>top_5_racing_bikers <span class="pl-k">=</span> [
+    Person.create(<span class="pl-smi">name</span><span class="pl-k">=</span>name, <span class="pl-smi">active</span><span class="pl-k">=</span><span class="pl-c1">False</span>)
+    <span class="pl-k">for</span> name <span class="pl-k">in</span> [<span class="pl-s"><span class="pl-pds">'</span>Eddy Merckx<span class="pl-pds">'</span></span>, 
+                 <span class="pl-s"><span class="pl-pds">'</span>Bernard Hinault<span class="pl-pds">'</span></span>, 
+                 <span class="pl-s"><span class="pl-pds">'</span>Jacques Anquetil<span class="pl-pds">'</span></span>, 
+                 <span class="pl-s"><span class="pl-pds">'</span>Sean Kelly<span class="pl-pds">'</span></span>, 
+                 <span class="pl-s"><span class="pl-pds">'</span>Lance Armstrong<span class="pl-pds">'</span></span>]
+]
+</pre></div>
+
+<blockquote>
+<p>NOTE: <strong>.create</strong> method will automatically save the document to the index, and
+will not raise an error if there is a document with the same ID (if specified), it will update it acting as upsert.</p>
+</blockquote>
+
+<h3>
+<a id="updating-all" class="anchor" href="#updating-all" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating all</h3>
+
+<p>Turning the field <strong>active</strong> to <strong>True</strong> for all documents</p>
+
+<div class="highlight highlight-source-python"><pre>Person.update_all(top_5_racing_bikes, <span class="pl-smi">active</span><span class="pl-k">=</span><span class="pl-c1">True</span>)</pre></div>
+
+<h3>
+<a id="deleting-all" class="anchor" href="#deleting-all" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deleting all</h3>
+
+<div class="highlight highlight-source-python"><pre>Person.delete_all(top_5_racing_bikes)</pre></div>
+
+<h3>
+<a id="chunck-size" class="anchor" href="#chunck-size" aria-hidden="true"><span class="octicon octicon-link"></span></a>Chunck size</h3>
+
+<p>chunk_size is number of docs in one chunk sent to ES (default: 500)
+you can change using <strong>meta</strong> argument.</p>
+
+<div class="highlight highlight-source-python"><pre>Person.update_all(
+    top_5_racing_bikes, <span class="pl-c"># the documents</span>
+    <span class="pl-smi">active</span><span class="pl-k">=</span><span class="pl-c1">True</span>,  <span class="pl-c"># values to be changed</span>
+    <span class="pl-smi">metal</span><span class="pl-k">=</span>{<span class="pl-s"><span class="pl-pds">'</span>chunk_size<span class="pl-pds">'</span></span>: <span class="pl-c1">200</span>}  <span class="pl-c"># meta data passed to **bulk** operation    </span>
+)</pre></div>
+
+<h1>
+<a id="contribute" class="anchor" href="#contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contribute</h1>
+
+<p>ESEngine is OpenSource! join us!</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
