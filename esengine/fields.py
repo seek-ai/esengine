@@ -11,6 +11,10 @@ class IntegerField(BaseField):
     _type = int
 
 
+class LongField(BaseField):
+    _type = long
+
+
 class StringField(BaseField):
     _type = unicode
 

@@ -46,12 +46,25 @@ class Document(BaseDocument):
         and the use of a default client for a document.
         Document transport methods should use cls.get_es(es).method()
         This method also validades that the connection is a valid ES client.
+
+        :param es: The Es client or None
         :return: elasticsearch.ElasticSearch() instance or equivalent client
         """
         if not es and hasattr(cls, '_es'):
             es = cls._es if not callable(cls._es) else cls._es()
         validate_client(es)
         return es
+
+    @classmethod
+    def refresh(cls, es=None):
+        """
+        Used to refresh an index and its shards
+        Utility for tests purposes
+
+        :param es: ES client
+        :return: None
+        """
+        cls.get_es(es).indices.refresh()
 
     def save(self, es=None):
         """
@@ -72,6 +85,26 @@ class Document(BaseDocument):
         )
         if saved_document.get('created'):
             self.id = saved_document['_id']
+
+    def update(self, es=None, meta=None, **kwargs):
+        """
+        Update a single document
+
+        :param es: ES client
+        :param meta: Extra values to be passed to client
+        :param kwargs: values to change
+        :return: Update result
+        """
+        meta = meta or {}
+        if 'retry_on_conflict' not in meta:
+            meta = {'retry_on_conflict': 5}
+        return self.get_es(es).update(
+            index=self._index,
+            doc_type=self._doctype,
+            id=self.id,  # noqa
+            body=kwargs,
+            **meta
+        )
 
     def delete(self, es=None):
         """
@@ -111,10 +144,29 @@ class Document(BaseDocument):
         Returns a ResultSet with all documents without filtering
         A semantic shortcut to filter() without keys
 
-        :param: < See filter parameters>
+        :param: <See filter parameters>
         :return: A ResultSet with all documents in the index/type
         """
         return cls.filter(*args, **kwargs)
+
+    @classmethod
+    def exists(cls, id, es=None, **kwargs):  # noqa
+        """
+        Tell if document exists on index
+
+        >>> Document.exists(id=123)
+
+        :param id: The _id or _uid of the object
+        :param es: ES client or None (if implemented a default in Model)
+        :param kwargs: extra key=value to be passed to es client
+        :return: True or False
+        """
+        return cls.get_es(es).exists(
+            index=cls._index,
+            doc_type=cls._doctype,
+            id=id,
+            **kwargs
+        )
 
     @classmethod
     def get(cls, id, es=None, **kwargs):  # noqa
@@ -136,7 +188,42 @@ class Document(BaseDocument):
         return cls.from_dict(dct=res['_source'])
 
     @classmethod
-    def filter(cls, es=None, ids=None, size=None, **filters):
+    def count_by_query(cls, *args, **kwargs):
+        """
+        Count documents using a specific raw query
+        example: Counting all documents having non-null name field
+
+        >>> query = {
+        ...     "query": {
+        ...         "filtered": {
+        ...             "query": {"match_all": {}},
+        ...             "filter": {"exists": {"field": "name"}}
+        ...         }
+        ...     }
+        ... }
+        >>> total = Document.count_by_query(query)
+
+        :param args: <see .count parameters>
+        :param kwargs: <see .count parameters>
+        :return: Integer count
+        """
+        return cls.count(_method='search', *args, **kwargs)
+
+    @classmethod
+    def count(cls, _method='filter', *args, **kwargs):
+        """
+        Count documents by query or all if no param
+        :param args: <see .filter parameters>
+        :param _method: filter or search
+        :param kwargs: <see .filter parameters>
+        :return: Integer count
+        """
+        kwargs['perform_count'] = True
+        return getattr(cls, _method)(*args, **kwargs)
+
+    @classmethod
+    def filter(cls, es=None, ids=None,
+               size=None, perform_count=False, **filters):
         """
         A match_all query with filters
 
@@ -147,6 +234,7 @@ class Document(BaseDocument):
         :param ids: Filtering by _id or _uid
         :param size: size of result, default 100
         :param filters: key=value parameters
+        :param perform_count: If True, dont return objects, only count
         :return: Iterator of Doc objets
         """
 
@@ -190,13 +278,18 @@ class Document(BaseDocument):
             doc_type=cls._doctype,
             body=query
         )
+
+        if perform_count:
+            return es.count(**search_args)['count']
+
         if size:
             search_args['size'] = size
+
         resp = es.search(**search_args)
         return cls.build_result(resp, es=es, query=query, size=size)
 
     @classmethod
-    def search(cls, query, es=None, **kwargs):
+    def search(cls, query, es=None, perform_count=False, **kwargs):
         """
         Takes a raw ES query in form of a dict and
         return Doc instances iterator
@@ -214,18 +307,26 @@ class Document(BaseDocument):
 
         :param query: raw query
         :param es: ES client or None (if implemented a default in Model)
+        :param perform_count: If True, dont return objects, only count
         :param kwargs: extra key=value to be passed to es client
         :return: Iterator of Doc objets
         """
         es = cls.get_es(es)
-        resp = es.search(
+        search_args = dict(
             index=cls._index,
             doc_type=cls._doctype,
             body=query,
             **kwargs
         )
+
+        if perform_count:
+            return es.count(**search_args)['count']
+
         return cls.build_result(
-            resp, es=es, query=query, size=kwargs.get('size')
+            es.search(**search_args),
+            es=es,
+            query=query,
+            size=kwargs.get('size')
         )
 
     @classmethod
@@ -235,6 +336,8 @@ class Document(BaseDocument):
         and turns it to an generator of Doc objects
         :param resp: ES client raw results
         :param query: The query used to build the results
+        :param es: Es client
+        :param size: size of results
         :return: ResultSet: a generator of Doc objects
         """
         # FIxme: should pass meta data and _scores
@@ -282,6 +385,7 @@ class Document(BaseDocument):
 
         :param docs: Iterator of Document instances
         :param es: ES client or None (if implemented a default in Model)
+        :param meta: Extra values to be passed to client
         :param kwargs: Extra params to be passed to streaming_bulk
         :return: Nothing or Raise error
         """

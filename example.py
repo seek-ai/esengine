@@ -146,4 +146,4 @@ for doc in ExampleDoc.all():
     print doc.to_dict()
 
 print "Deleting everything"
-results.delete()
+# results.delete()
