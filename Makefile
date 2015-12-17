@@ -10,7 +10,7 @@ pep8:
 	@flake8 esengine --ignore=F403
 
 release: test
-	@python setup.py sdist upload
+	@python setup.py sdist bdist_wheel upload
 
 clean:
 	@find ./ -name '*.pyc' -exec rm -f {} \;

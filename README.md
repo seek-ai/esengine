@@ -1,35 +1,76 @@
+[![PyPI](https://img.shields.io/pypi/v/esengine.svg)](https://pypi.python.org/pypi/esengine)
+[![versions](https://img.shields.io/pypi/pyversions/esengine.svg)](https://pypi.python.org/pypi/esengine)
 [![Travis CI](http://img.shields.io/travis/catholabs/esengine.svg)](https://travis-ci.org/catholabs/esengine)
 [![Coverage Status](http://img.shields.io/coveralls/catholabs/esengine.svg)](https://coveralls.io/r/catholabs/esengine)
 [![Code Health](https://landscape.io/github/catholabs/esengine/master/landscape.svg?style=flat)](https://landscape.io/github/catholabs/esengine/master)
 <a href="http://smallactsmanifesto.org" title="Small Acts Manifesto"><img src="http://smallactsmanifesto.org/static/images/smallacts-badge-80x15-blue.png" style="border: none;" alt="Small Acts Manifesto" /></a>
 
 # ESEngine - ElasticSearch ODM 
-## (Object Document Mapper) inspired by MongoEngine
  
 <p align="left" style="float:left" >
     <img src="octosearch.gif" alt="EsEngine" width="300" />
 </p>
 
 
-# install
+# What is esengine?
+### (Object Document Mapper) inspired by MongoEngine
 
-ESengine depends on elasticsearch-py (Official E.S Python library) so the instalation 
+ESengine is ODM, you map elasticsearch indices in to Python objects, those objects are defined 
+using the **Document**, **EmbeddedDocument** and **< type >Field** classes provided by ESEngine.
+
+### modeling
+
+Out of the box ESengine takes care only of the Document Modeling, this includes Fields and its types and coercion, data mapping and the generation of the basic CRUD operations (Create, Read, Update, Delete).
+
+### Communication
+ESengine does not communicate direct with ElasticSearch, it only creates the basic structure, 
+to communicate it relies on an ES client providing the transport methods (index, delete, update etc). 
+
+### ES client
+ESengine does not enforce the use of the official ElasticSearch client,
+but you are encouraged to use it because it is well maintained and has the support to **bulk** operations. Bu you are free to use another client or create your own.
+
+### Querying the data
+ESengine does not enforce or encourage you to use a DSL language for queries, out of the box you have to
+write the elasticsearch **payload** representation as a raw Python dictionary. However ESEngine comes with a **utils.payload** helper module to help you building payloads in a less verbose way.
+
+### Why not elasticsearch_dsl?
+
+ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but its DSL objects leads to a confuse query building, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. DSL enforce you to use the official ES client and there are cases when a different client implementation perform better or you need to run tests using a Mock. Also, to make things really easy, all the synrax sugar in DSL can lead in to performance problems.
+
+### Project Stage
+
+It is in beta-Release, working in production, but missing a lot of features, you can help using, testing,, discussing or coding!
+
+
+# Getting started
+
+## install
+
+ESengine needs a client to communicate with E.S, you can use one of the following:
+
+- ElasticSearch-py (official)
+- Py-Elasticsearch (unofficial)
+- Create your own implementing the same api-protocol
+- Use the MockES provided as py.test fixture (only for tests)
+
+Because of bulk operations you are recommendded to use
+**elasticsearch-py** (Official E.S Python library) so the instalation 
 depends on the version of elasticsearch you are using.
 
-
-## Elasticsearch 2.x
+### Elasticsearch 2.x
 
 ```bash
 pip install esengine[es2]
 ```
 
-## Elasticsearch 1.x
+### Elasticsearch 1.x
 
 ```bash
 pip install esengine[es1]
 ```
 
-## Elasticsearch 0.90.x
+### Elasticsearch 0.90.x
 
 ```bash
 pip install esengine[es0]
@@ -38,7 +79,7 @@ pip install esengine[es0]
 The above command will install esengine and the elasticsearch library specific for you ES version.
 
 
-> Alternatively you can install elasticsearch library before esengine
+> Alternatively you can only install elasticsearch library before esengine
 
 pip install ``<version-specific-es>`` 
 
@@ -52,7 +93,7 @@ Then install esengine
 pip install esengine
 ```
 
-# Getting started
+# Usage
 
 ```python
 from elasticsearch import ElasticSearch
@@ -61,7 +102,7 @@ from esengine import Document, StringField
 es = ElasticSearch(host='host', port=port)
 ```
 
-# Defining a document
+## Defining a document
 
 ```python
 class Person(Document):
@@ -74,20 +115,20 @@ class Person(Document):
 
 > If you do not specify an "id" field, ESEngine will automatically add "id" as StringField. It is recommended that when specifying you use StringField for ids.
 
-# Indexing
+## Indexing
 
 ```python
 person = Person(id=1234, name="Gonzo")
 person.save(es=es)
 ```
 
-# Getting by id
+## Getting by id
 
 ```python
 Person.get(id=1234, es=es)
 ```
 
-# filtering by IDS
+## filtering by IDS
 
 ```python
 ids = [1234, 5678, 9101]
@@ -95,13 +136,13 @@ power_trio = Person.filter(ids=ids)
 ```
 
 
-# filtering by fields
+## filtering by fields
 
 ```python
 Person.filter(name="Gonzo", es=es)
 ```
 
-# Searching
+## Searching
 
 ESengine does not try to create abstraction for query building, 
 by default ESengine only implements search transport receiving a raw ES query 
@@ -116,7 +157,7 @@ query = {
             },
             "filter": {
                 "ids": {
-                    "values": list(ids)
+                    "values": [1, 2]
                 }
             }
         }
@@ -125,10 +166,30 @@ query = {
 Person.search(query, size=10, es=es)
 ```
 
-# Default connection
+## Getting all documents
 
-By default ES engine does not try to implicit create a connection for you, 
-but you can easily achieve this overwriting the **get_es** method and returning a 
+```python
+Person.all(es=es)
+
+# with more arguments
+
+Person.all(size=20, es=es)
+
+```
+
+
+## Counting
+
+```python
+Person.count(name='Gonzo', es=es)
+```
+
+## Using a default connection
+
+By default ES engine does not try to implicit create a connection for you, so you have to pass in **es=es** argument.
+
+
+You can easily achieve this overwriting the **get_es** method and returning a 
 default connection or using any kind of technique as RoundRobin or Mocking for tests
 Also you can set the **_es** attribute pointing to a function generating the connection client
 or the client instance as the following example:
@@ -149,7 +210,7 @@ class Person(Document):
     
 ```
         
-# Now you can use the document transport methods ommiting ES instance
+### Now you can use the document transport methods ommiting ES instance
 
 
 ```python
@@ -162,9 +223,9 @@ Person.filter(name="Gonzo")
 ```
 
 
-# Updating
+## Updating
 
-##  A single document
+###  A single document
 
 A single document can be updated simply using the **.save()** method
 
@@ -176,7 +237,7 @@ person.save()
 
 ```
 
-## Updating a Resultset
+### Updating a Resultset
 
 The Document methods **.get**, **.filter** and **.search** will return an instance
 of **ResultSet** object. This object is an Iterator containing the **hits** reached by 
@@ -193,7 +254,7 @@ people.update(another_field='another_value')
 of the **ResultSet** iterator, so you can use **.reload** method to perform that action.
 
 
-## The use of **reload** method
+### The use of **reload** method
  
 ```python
 people = Person.filter(field='value')
@@ -217,30 +278,30 @@ print people
 
 ```
 
-## Deleting documents
+### Deleting documents
 
 
-### A ResultSet
+#### A ResultSet
 
 ```python
 people = Person.all()
 people.delete()
 ```
 
-### A single document
+#### A single document
 
 ```python
 Person.get(id=123).delete()
 ```
 
-# Bulk operations
+## Bulk operations
 
 ESEngine takes advantage of elasticsearch-py helpers for bulk actions, 
 the **ResultSet** object uses **bulk** melhod to **update** and **delete** documents.
 
 But you can use it in a explicit way using Document's **update_all**, **save__all** and **delete_all** methods.
 
-### Lets create a bunch of document instances
+#### Lets create a bunch of document instances
 
 
 ```python
@@ -254,18 +315,18 @@ for name in ['Eddy Merckx',
      top_5_racing_bikers.append(Person(name=name))
 ```
 
-### Save it all 
+#### Save it all 
 
 ```python
 Person.save_all(top_5_racing_bikers)
 ```
 
-### Using the **create** shortcut
+#### Using the **create** shortcut
 
 The above could be achieved using **create** shortcut
 
 
-#### A single
+##### A single
 
 ```python
 Person.create(name='Eddy Merckx', active=False)
@@ -273,7 +334,7 @@ Person.create(name='Eddy Merckx', active=False)
 
 > Create will return the instance of the indexed Document
 
-#### All using list comprehension
+##### All using list comprehension
 
 ```python
 top_5_racing_bikers = [
@@ -289,7 +350,7 @@ top_5_racing_bikers = [
 > NOTE: **.create** method will automatically save the document to the index, and
 will not raise an error if there is a document with the same ID (if specified), it will update it acting as upsert.
 
-### Updating all
+#### Updating all
 
 Turning the field **active** to **True** for all documents
 
@@ -297,14 +358,14 @@ Turning the field **active** to **True** for all documents
 Person.update_all(top_5_racing_bikes, active=True)
 ```
 
-### Deleting all
+#### Deleting all
 
 ```python
 Person.delete_all(top_5_racing_bikes)
 ```
 
 
-### Chunck size
+#### Chunck size
 
 chunk_size is number of docs in one chunk sent to ES (default: 500)
 you can change using **meta** argument.
@@ -316,6 +377,60 @@ Person.update_all(
     metal={'chunk_size': 200}  # meta data passed to **bulk** operation    
 )
 ```
+
+#### Utilities
+
+#### Mapping
+
+TODO:
+
+#### Refreshing
+
+Sometimes you need to force indices-shards refresh for testing, you can use
+
+```python
+# Will refresh all indices
+Document.refresh()
+```
+
+# Payload builder
+
+Sometimes queries turns in to complex and verbose data structures, to help you
+(use with moderation) you can use Payload utils to build queries.
+
+
+## Example using a raw query:
+
+```python
+query = {
+    "query": {
+        "filtered": {
+            "query": {
+                "match_all": {}
+            },
+            "filter": {
+                "ids": {
+                    "values": [1, 2]
+                }
+            }
+        }
+    }
+}
+
+Person.search(query=query, size=10)
+```
+
+## Same example using payload utils
+
+```python
+from esengine.utils.payload import Payload, Query, Filter
+payload = Payload(
+    query=Query.filtered(query=Query.match_all(), filter=Filter.ids([1, 2]))
+)
+Person.search(query=payload.dict, size=10)
+```
+
+> Payload utils exposes Payload, Query, Filter, Aggregate, Suggesters
 
 # Contribute
 
