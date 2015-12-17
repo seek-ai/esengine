@@ -33,5 +33,16 @@ setup(
         "flake8-print==2.0.1",
         "flake8-todo==0.4",
         "radon==1.2.2"
-   ]
+    ],
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Operating System :: POSIX',
+        'Operating System :: POSIX :: Linux',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+    ]
 )
