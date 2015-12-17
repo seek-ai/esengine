@@ -4,18 +4,43 @@
 <a href="http://smallactsmanifesto.org" title="Small Acts Manifesto"><img src="http://smallactsmanifesto.org/static/images/smallacts-badge-80x15-blue.png" style="border: none;" alt="Small Acts Manifesto" /></a>
 
 # ESEngine - ElasticSearch ODM 
-## (Object Document Mapper) inspired by MongoEngine
  
 <p align="left" style="float:left" >
     <img src="octosearch.gif" alt="EsEngine" width="300" />
 </p>
 
 
+# What is esengine?
+## (Object Document Mapper) inspired by MongoEngine
+
+ESengine is ODM, you map elasticsearch indices in to Python objects, those objects are defined 
+using the Document, EmbeddedDocument and *Field classes provided by ESEngine.
+
+Out of the box ESengine takes care only of the Document Modeling, 
+this includes Fields and its types and coercion, data mapping and the generation of the basic CRUD
+operations (Create, Read, Update, Delete).
+
+ESengine do not communicate direct with ElasticSearch, it only creates the basic structure, 
+to communicate it relies on an ES client providing the transport methods. 
+ESengine does not enforce the use of the official ElasticSearch client,
+but you are encouraged to use it because it is well maintained and has the support to **bulk** operations.
+
+ESengine do not enforce or encourage you to use a DSL language for queries, out of the box you have to
+write the elasticsearch **payload** as a raw Python dictionary. However ESEngine comes with a **payload** helper module 
+to help you to build payloads in a less verbose way.
+
 # install
 
-ESengine depends on elasticsearch-py (Official E.S Python library) so the instalation 
-depends on the version of elasticsearch you are using.
+ESengine needs a client to communicate with E.S, you can use one of the following:
 
+- ElasticSearch-py (official)
+- Py-Elasticsearch (unofficial)
+- Create your own implementing the same api-protocol
+- Use the MockES provided as py.test fixture (only for tests)
+
+Because of bulk operations you are recommendded to use
+**elasticsearch-py** (Official E.S Python library) so the instalation 
+depends on the version of elasticsearch you are using.
 
 ## Elasticsearch 2.x
 
@@ -38,7 +63,7 @@ pip install esengine[es0]
 The above command will install esengine and the elasticsearch library specific for you ES version.
 
 
-> Alternatively you can install elasticsearch library before esengine
+> Alternatively you can only install elasticsearch library before esengine
 
 pip install ``<version-specific-es>`` 
 
@@ -116,13 +141,31 @@ query = {
             },
             "filter": {
                 "ids": {
-                    "values": list(ids)
+                    "values": [1, 2]
                 }
             }
         }
     }
 }
 Person.search(query, size=10, es=es)
+```
+
+# Getting all documents
+
+```python
+Person.all()
+
+# with more arguments
+
+Person.all(size=20)
+
+```
+
+
+# Counting
+
+```python
+Person.count(name='Gonzo')
 ```
 
 # Default connection
@@ -316,6 +359,60 @@ Person.update_all(
     metal={'chunk_size': 200}  # meta data passed to **bulk** operation    
 )
 ```
+
+### Utilities
+
+## Mapping
+
+TODO:
+
+## Refreshing
+
+Sometimes you need to force indices-shards refresh for testing, you can use
+
+```python
+# Will refresh all indices
+Document.refresh()
+```
+
+# Payload builder
+
+Sometimes queries turns in to complex and verbose data structures, to help you
+(use with moderation) you can use Payload utils to build queries.
+
+
+## Example using a raw query:
+
+```python
+query = {
+    "query": {
+        "filtered": {
+            "query": {
+                "match_all": {}
+            },
+            "filter": {
+                "ids": {
+                    "values": [1, 2]
+                }
+            }
+        }
+    }
+}
+
+Person.search(query=query, size=10)
+```
+
+## Same example using payload utils
+
+```python
+from esengine.utils.payload import Payload, Query, Filter
+payload = Payload(
+    query=Query.filtered(query=Query.match_all(), filter=Filter.ids([1, 2]))
+)
+Person.search(query=payload.dict, size=10)
+```
+
+> Payload utils exposes Payload, Query, Filter, Aggregate, Suggesters
 
 # Contribute
 
