@@ -15,7 +15,7 @@ except (IOError, ImportError):
 
 setup(
     name='esengine',
-    version="0.0.4",
+    version="0.0.5",
     url='https://github.com/catholabs/esengine',
     license='MIT',
     author="Catholabs",
