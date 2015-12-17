@@ -8,7 +8,7 @@
 # ESEngine - ElasticSearch ODM 
  
 <p align="left" style="float:left" >
-    <img src="octosearch.gif" alt="EsEngine" width="300" />
+    <img src="https://raw.githubusercontent.com/catholabs/esengine/master/octosearch.gif" alt="EsEngine" width="300" />
 </p>
 
 
