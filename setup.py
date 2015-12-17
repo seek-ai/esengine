@@ -6,15 +6,22 @@ except ImportError:
     from distutils.core import setup, find_packages
 
 
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except (IOError, ImportError):
+    long_description = "Elasticsearch ODM inspired on MongoEngine"
+
+
 setup(
     name='esengine',
     version="0.0.4",
-    url='https://github.com/catholabs/ESengine',
+    url='https://github.com/catholabs/esengine',
     license='MIT',
     author="Catholabs",
     author_email="catholabs@catho.com",
-    description='Elasticsearch models inspired on mongo engine ORM',
-    long_description="Elasticsearch models inspired on mongo engine ORM",
+    description='Elasticsearch ODM inspired on MongoEngine',
+    long_description=long_description,
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
