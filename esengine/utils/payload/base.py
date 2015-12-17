@@ -1,8 +1,8 @@
-from esengine.utils.query.queries import Query
-from esengine.utils.query.dsl_util import unroll_struct
+from esengine.utils.payload.queries import Query
+from esengine.utils.payload.meta_util import unroll_struct
 
 
-class BaseQuery(object):
+class Payload(object):
     _filter = None
     _query = None
     _aggs = []
@@ -16,7 +16,7 @@ class BaseQuery(object):
         :param filter: A Filter instance
         :param aggregate: Aggregate instances
         :param suggest: Suggester instances
-        :return: BaseQuery Wrapper
+        :return: Payload Wrapper
         """
         for key, value in kwargs.items():
             if key in ('filter', 'query'):

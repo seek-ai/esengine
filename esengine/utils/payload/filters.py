@@ -1,5 +1,5 @@
-from esengine.utils.query.dsl import BaseFilterQuery, MetaFilterQuery
-from esengine.utils.query.exception import NoFilter
+from esengine.utils.payload.meta import BaseFilterQuery, MetaFilterQuery
+from esengine.utils.payload.exception import NoFilter
 
 
 FILTERS = {

@@ -1,4 +1,4 @@
-from esengine.utils.query.exception import InvalidArg, MissingArg
+from esengine.utils.payload.exception import InvalidArg, MissingArg
 
 
 def _check_input(arg):

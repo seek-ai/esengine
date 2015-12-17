@@ -1,5 +1,5 @@
-from esengine.utils.query.dsl import BaseAggregate, MetaAggregate
-from esengine.utils.query.exception import NoAggregate
+from esengine.utils.payload.meta import BaseAggregate, MetaAggregate
+from esengine.utils.payload.exception import NoAggregate
 
 AGGREGATES = {
     'min': {

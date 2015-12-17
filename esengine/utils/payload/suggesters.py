@@ -1,5 +1,5 @@
-from esengine.utils.query.dsl import BaseSuggester, MetaSuggester
-from esengine.utils.query.exception import NoSuggester
+from esengine.utils.payload.meta import BaseSuggester, MetaSuggester
+from esengine.utils.payload.exception import NoSuggester
 
 SUGGESTERS = {
     'term': {

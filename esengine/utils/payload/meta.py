@@ -1,4 +1,4 @@
-from esengine.utils.query.dsl_util import (
+from esengine.utils.payload.meta_util import (
     make_struct, unroll_definitions, unroll_struct
 )
 
