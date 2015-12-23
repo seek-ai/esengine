@@ -1,27 +1,28 @@
+
+<img src="https://raw.githubusercontent.com/catholabs/esengine/master/octosearch.gif" align="left" width="192px" height="132px"/>
+<img align="left" width="0" height="192px" hspace="10"/>
+
+> **esengine** - The **E**lastic**s**earch **O**bject **D**ocument **M**apper
+
 [![PyPI](https://img.shields.io/pypi/v/esengine.svg)](https://pypi.python.org/pypi/esengine)
 [![versions](https://img.shields.io/pypi/pyversions/esengine.svg)](https://pypi.python.org/pypi/esengine)
 [![downloads](https://img.shields.io/pypi/dw/esengine.svg)](https://pypi.python.org/pypi/esengine)
 [![Travis CI](http://img.shields.io/travis/catholabs/esengine.svg)](https://travis-ci.org/catholabs/esengine)
 [![Coverage Status](http://img.shields.io/coveralls/catholabs/esengine.svg)](https://coveralls.io/r/catholabs/esengine)
 [![Code Health](https://landscape.io/github/catholabs/esengine/master/landscape.svg?style=flat)](https://landscape.io/github/catholabs/esengine/master)
-<a href="http://smallactsmanifesto.org" title="Small Acts Manifesto"><img src="http://smallactsmanifesto.org/static/images/smallacts-badge-80x15-blue.png" style="border: none;" alt="Small Acts Manifesto" /></a>
-
-# ESEngine - ElasticSearch ODM 
- 
-<p align="left" style="float:left" >
-    <img src="https://raw.githubusercontent.com/catholabs/esengine/master/octosearch.gif" alt="EsEngine" width="300" />
-</p>
 
 
-# What is esengine?
-### (Object Document Mapper) inspired by MongoEngine
+**esengine** is an ODM (**O**bject **D**ocument **M**apper) it maps Python classes in to **E**lastic**s**earch **index/doc_type** and **object instances()** in to Elasticsearch documents.
 
-ESengine is ODM, you map elasticsearch indices in to Python objects, those objects are defined 
-using the **Document**, **EmbeddedDocument** and **< type >Field** classes provided by ESEngine.
+<br><br>
 
-### modeling
+### Modeling
 
-Out of the box ESengine takes care only of the Document Modeling, this includes Fields and its types and coercion, data mapping and the generation of the basic CRUD operations (Create, Read, Update, Delete).
+Out of the box ESengine takes care only of the Modeling and CRUD operations including:
+
+- Index, DocType and Mapping specification 
+- Fields and its types coercion
+- basic CRUD operations (Create, Read, Update, Delete)
 
 ### Communication
 ESengine does not communicate direct with ElasticSearch, it only creates the basic structure, 
@@ -436,3 +437,4 @@ Person.search(query=payload.dict, size=10)
 # Contribute
 
 ESEngine is OpenSource! join us!
+<a href="http://smallactsmanifesto.org" title="Small Acts Manifesto"><img src="http://smallactsmanifesto.org/static/images/smallacts-badge-80x15-blue.png" style="border: none;" alt="Small Acts Manifesto" /></a>
