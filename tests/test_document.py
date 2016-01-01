@@ -1,9 +1,8 @@
 import pytest
 
-# import elasticsearch.helpers as eh
-# from esengine.document import Document
-# from esengine.fields import IntegerField, StringField, FloatField
-from esengine.exceptions import ClientError
+from esengine.document import Document
+from esengine.fields import StringField, IntegerField
+from esengine.exceptions import ClientError, ValidationError, RequiredField
 
 
 def test_build_result(Doc, MockES):
@@ -142,3 +141,71 @@ def test_compare_attributed_values_against_fields(DocWithDefaultClient, MockES):
     # assert doc.document_id in [123456]
     # assert not doc.document_id != 123456
     assert not doc.document_id != "123456"
+
+
+def test_validators(MockES):
+    def if_city_state_is_required(obj):
+        if obj.city and not obj.state:
+            raise ValidationError("If city, state is required")
+
+    def max_len_10(field_name, value):
+        if len(value) > 10:
+            raise ValidationError("Invalid Length")
+
+    class Address(Document):
+        _doctype = "doc_type"
+        _index = "index"
+        _es = MockES()
+        _validators = [if_city_state_is_required]
+        street = StringField(validators=[max_len_10])
+        number = IntegerField(required=True)
+        city = StringField()
+        state = StringField()
+
+    # Invalid Street Length
+    doc = Address(
+        street="22, Acacia Avenue",
+        city="London",
+        state="WestMinster"
+    )
+
+    with pytest.raises(ValidationError) as ex:
+        doc.save()
+    assert str(ex.value) == 'Invalid Length'
+
+    # Required field missing
+    doc = Address(
+        street="Acacia Av",
+        city="London",
+        state="WestMinster"
+    )
+    with pytest.raises(RequiredField) as ex:
+        doc.save()
+    assert str(ex.value) == 'number'
+
+    # City and not state
+    doc = Address(
+        street="Acacia Av",
+        city="London",
+        number=22
+    )
+    with pytest.raises(ValidationError) as ex:
+        doc.save()
+    assert str(ex.value) == "If city, state is required"
+
+    # Valid document
+    doc = Address(
+        id="100",
+        street="Acacia Av",
+        city="London",
+        state="WestMinster",
+        number=22
+    )
+    # to_dict calls validation
+    assert doc.to_dict() == dict(
+        id="100",
+        street="Acacia Av",
+        city="London",
+        state="WestMinster",
+        number=22
+    )

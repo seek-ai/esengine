@@ -39,6 +39,12 @@ class Document(BaseDocument):
     # instance _mapping dictionary
     _mapping = {}
 
+    # _validators is a list of callable, each one executed receiving the
+    # document instance, and should return None
+    # else document is invalid and will not be saved
+    # to invalidate the callable should raise validationError or return value
+    _validators = []
+
     @classmethod
     def get_es(cls, es):
         """

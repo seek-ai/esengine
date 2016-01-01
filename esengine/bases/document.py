@@ -1,9 +1,11 @@
 import warnings
 from esengine.fields import StringField
+from esengine.exceptions import ValidationError
 
 
 class BaseDocument(object):
     _strict = False
+    _validators = []
 
     def _initialize_multi_fields(self):
         for key, field_class in self.__class__._fields.items():
@@ -36,11 +38,14 @@ class BaseDocument(object):
             value = field_instance.from_dict(value)
         super(BaseDocument, self).__setattr__(key, value)
 
-    def to_dict(self):
+    def to_dict(self, validate=True):
         """
         Transform value from Python to Dict to be saved in E.S
+        :param validate: If should validate before transform
         :return: dict
         """
+        if validate:
+            self.validate()
         result = {}
         for field_name, field_instance in self._fields.iteritems():
             value = getattr(self, field_name)
@@ -60,3 +65,14 @@ class BaseDocument(object):
             value = field_instance.from_dict(serialized)
             params[field_name] = value
         return cls(**params)
+
+    def validate(self):
+        for validator in self._validators:
+            """
+            Functions in self._validators receives document instance
+            should return None or
+            raise Exception (ValidationError) or return any value
+            """
+            val = validator(self)
+            if val:
+                raise ValidationError("Invalid: %s" % val)

@@ -39,20 +39,21 @@ class BaseField(object):
             should return None or
             raise Exception (ValidationError) or return any value
             """
-            print self._validators  # noqa
             val = validator(self._field_name, value)
             if val:
                 raise ValidationError(
                     'Invalid %s, returned: %s' % (self._field_name, val)
                 )
 
-    def to_dict(self, value):
+    def to_dict(self, value, validate=True):
         """
         Transform value from Python to be saved in E.S
         :param value: raw value
+        :param validate: if should validate before transform
         :return: pure value
         """
-        self.validate(value)
+        if validate:
+            self.validate(value)
         return value
 
     def from_dict(self, serialized):
