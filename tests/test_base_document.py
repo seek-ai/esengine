@@ -132,8 +132,9 @@ def test_doc_to_dict_call_validate():
         _index = 'test'
         _strict = True
         _fields = {
-            'multiple': BaseField(field_type=int, multi=True),
-            'simple': BaseField(field_type=int)
+            'multiple': BaseField(field_type=int, multi=True,
+                                  field_name='multiple'),
+            'simple': BaseField(field_type=int, field_name='simple')
         }
     doc = Doc(multiple=[1, 2], simple="10")
     with pytest.raises(FieldTypeMismatch) as ex:

@@ -425,6 +425,19 @@ class Document(BaseDocument):
         ]
         eh.bulk(cls.get_es(es), actions, **kwargs)
 
+    @classmethod
+    def random(cls, size=None):
+        _query = {
+            "query": {
+                "function_score": {
+                    "query": {"match_all": {}},
+                    "random_score": {}
+                }
+            }
+        }
+        results = cls.search(_query, size=size)
+        return results
+
     def __unicode__(self):
         return unicode(self.__str__())
 

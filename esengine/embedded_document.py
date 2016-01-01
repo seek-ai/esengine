@@ -22,26 +22,26 @@ class EmbeddedDocument(BaseField):
                 return [self._to_dict_element(elem) for elem in value]
             return self._to_dict_element(value)
 
-    def _validate_element(self, field_name, elem):
+    def _validate_element(self, elem):
         if not isinstance(elem, EmbeddedDocument):
-            raise FieldTypeMismatch(field_name, self.__class__._type,
+            raise FieldTypeMismatch(self._field_name, self.__class__._type,
                                     elem.__class__)
         for field_name, field_class in self._fields.iteritems():
             value = getattr(elem, field_name)
-            field_class.validate(field_name, value)
+            field_class.validate(value)
 
-    def validate(self, field_name, value):
+    def validate(self, value):
         if value is None:
             if self._required:
-                raise RequiredField(field_name)
+                raise RequiredField(self._field_name)
         else:
             if self._multi:
                 if not isinstance(value, Iterable):
-                    raise InvalidMultiField(field_name)
+                    raise InvalidMultiField(self._field_name)
                 for elem in value:
-                    self._validate_element(field_name, elem)
+                    self._validate_element(elem)
             else:
-                self._validate_element(field_name, value)
+                self._validate_element(value)
 
     def _from_dict_element(self, dct):
         params = {}

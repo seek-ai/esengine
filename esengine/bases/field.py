@@ -1,12 +1,15 @@
 from collections import Iterable
 
 from esengine.exceptions import RequiredField, InvalidMultiField
-from esengine.exceptions import FieldTypeMismatch
+from esengine.exceptions import FieldTypeMismatch, ValidationError
 
 
 class BaseField(object):
 
-    def __init__(self, field_type=None, required=False, multi=False, **kwargs):
+    def __init__(self, field_type=None, required=False, multi=False,
+                 field_name=None, validators=None, **kwargs):
+        self._validators = validators or []
+        self._field_name = field_name
         if field_type is not None:
             self._type = field_type
         self._required = required or getattr(self, '_required', False)
@@ -14,27 +17,50 @@ class BaseField(object):
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
-    def validate(self, field_name, value):
+    def validate(self, value):
         if value is None:
             if self._required:
-                raise RequiredField(field_name)
+                raise RequiredField(self._field_name)
         else:
             if self._multi:
                 if not isinstance(value, Iterable):
-                    raise InvalidMultiField(field_name)
+                    raise InvalidMultiField(self._field_name)
                 for elem in value:
                     if not isinstance(elem, self._type):
-                        raise FieldTypeMismatch(field_name, self._type,
+                        raise FieldTypeMismatch(self._field_name, self._type,
                                                 elem.__class__)
             else:
                 if not isinstance(value, self._type):
-                    raise FieldTypeMismatch(field_name, self._type,
+                    raise FieldTypeMismatch(self._field_name, self._type,
                                             value.__class__)
+        for validator in self._validators:
+            """
+            Functions in self._validators receives field_name, value
+            should return None or
+            raise Exception (ValidationError) or return any value
+            """
+            print self._validators  # noqa
+            val = validator(self._field_name, value)
+            if val:
+                raise ValidationError(
+                    'Invalid %s, returned: %s' % (self._field_name, val)
+                )
 
     def to_dict(self, value):
+        """
+        Transform value from Python to be saved in E.S
+        :param value: raw value
+        :return: pure value
+        """
+        self.validate(value)
         return value
 
     def from_dict(self, serialized):
+        """
+        Transform data read from E.S to Python Object
+        :param serialized: Result from E.S (string)
+        :return: Instance or Instances of self._type
+        """
         if serialized is not None:
             if self._multi:
                 return [self._type(x) for x in serialized]

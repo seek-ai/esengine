@@ -10,6 +10,10 @@ class InvalidMultiField(Exception):
     pass
 
 
+class ValidationError(Exception):
+    pass
+
+
 class FieldTypeMismatch(Exception):
 
     def __init__(self, field_name, expected_type, actual_type):

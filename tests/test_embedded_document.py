@@ -29,37 +29,36 @@ def test_multi_to_dict():
 
 
 def test_raise_when_validate_is_not_multi_field():
-    field = TowFields(multi=True)
+    field = TowFields(multi=True, field_name="test")
     with pytest.raises(InvalidMultiField) as ex:
-        field.validate('test', 10)
+        field.validate(10)
     assert str(ex.value) == "test"
 
 
 def test_raise_when_validate_required_field():
-    field = TowFields(required=True)
+    field = TowFields(required=True, field_name="test")
     with pytest.raises(RequiredField) as ex:
-        field.validate('test', None)
+        field.validate(None)
     assert str(ex.value) == "test"
 
 
 def test_validate():
-    field = TowFields(x=10, y=15)
-    field.validate('test', field)
+    field = TowFields(x=10, y=15, field_name="test")
+    field.validate(field)
 
 
 def test_validate_multi():
-    field = TowFields(multi=True, x=10, y=15)
-    field.validate('test', [field, field])
+    field = TowFields(multi=True, x=10, y=15, field_name="test")
+    field.validate([field, field])
 
 
 def test_raise_when_multi_fild_type_missmatch():
-    field = TowFields(multi=True)
-    field_name = 'test'
+    field = TowFields(multi=True, field_name="test")
     with pytest.raises(FieldTypeMismatch) as ex:
-        field.validate(field_name, [10, 'asdf'])
-    assert str(ex.value) == "`{}` expected `{}`, actual `<type 'int'>`".format(
-        field_name,
-        TowFields._type
+        field.validate([10, 'asdf'])
+    tmpl = "`{field._field_name}` expected `{field._type}`, actual `<type 'int'>`"
+    assert str(ex.value) == tmpl.format(
+        field=field
     )
 
 

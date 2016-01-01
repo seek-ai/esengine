@@ -37,15 +37,23 @@ class BaseDocument(object):
         super(BaseDocument, self).__setattr__(key, value)
 
     def to_dict(self):
+        """
+        Transform value from Python to Dict to be saved in E.S
+        :return: dict
+        """
         result = {}
         for field_name, field_instance in self._fields.iteritems():
             value = getattr(self, field_name)
-            field_instance.validate(field_name, value)
             result.update({field_name: field_instance.to_dict(value)})
         return result
 
     @classmethod
     def from_dict(cls, dct):
+        """
+        Transform data read from E.S to Python Document Object
+        :param dct: Result from E.S (hits, source as dict)
+        :return: Instance of Document
+        """
         params = {}
         for field_name, field_instance in cls._fields.iteritems():
             serialized = dct.get(field_name)
