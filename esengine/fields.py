@@ -1,11 +1,13 @@
-__all__ = [
-    'IntegerField', 'StringField', 'FloatField',
-    'DateField', 'BooleanField', 'GeoField'
-]
+# coding: utf-8
 
 from datetime import datetime
 from esengine.bases.field import BaseField
 from esengine.exceptions import ValidationError
+
+__all__ = [
+    'IntegerField', 'StringField', 'FloatField',
+    'DateField', 'BooleanField', 'GeoField'
+]
 
 
 class IntegerField(BaseField):
@@ -32,14 +34,19 @@ class GeoField(BaseField):
     """
     A field to hold GeoPoint
 
-    self.mode = dict, array, string
+    mode = dict|array|string
 
-    string: A string representation, with "lat,lon"
-      {"location": "40.715, -74.011"}
-    array: An array representation with [lon,lat].
-      {"location": [ -73.983, 40.719 ]}
-    dict An object representation with lat and lon explicitly named.
-      { "location": { "lat": 40.722, "lon": -73.989}}
+    >>> location = GeoField(mode='dict')  # default
+    An object representation with lat and lon explicitly named
+    >>> location = {"lat": 40.722, "lon": -73.989}}
+
+    >>> location = GeoField(mode='string')
+    A string representation, with "lat,lon"
+    >>> location = "40.715, -74.011"
+
+    >>> location = GeoField(mode='array')
+    An array representation with [lon,lat].
+    >>> location = [-73.983, 40.719]
     """
 
     def __init__(self, *args, **kwargs):

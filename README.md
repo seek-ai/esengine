@@ -117,6 +117,33 @@ class Person(Document):
 
 > If you do not specify an "id" field, ESEngine will automatically add "id" as StringField. It is recommended that when specifying you use StringField for ids.
 
+
+## Special Fields
+
+### GeoField
+
+A field to hold GeoPoint with modes dict|array|string and its mappings
+
+```python
+class Obj(Document):
+    location = GeoField(mode='dict')  # default
+    # An object representation with lat and lon explicitly named
+
+Obj.location = {"lat": 40.722, "lon": -73.989}}
+
+class Obj(Document):
+    location = GeoField(mode='string')
+    # A string representation, with "lat,lon"
+
+Obj.location = "40.715, -74.011"
+
+class Obj(Document):
+    location = GeoField(mode='array')
+    # An array representation with [lon,lat].
+
+Obj.location = [-73.983, 40.719]
+```
+
 ## Indexing
 
 ```python
@@ -385,6 +412,59 @@ Person.update_all(
 #### Mapping
 
 TODO:
+
+
+#### Validators
+
+##### Field Validator
+
+To validate each field separately you can set a list of validators, each 
+validator is a callable receiving field_name and value as arguments and
+should return None to be valid. If raise or return the data will be invalidated
+
+```python
+from esengine.exceptions import ValidationError
+
+def category_validator(field_name, value):
+    # check if value is in valid categories
+    if value not in ["primary", "secondary", ...]:
+        raise ValidationError("Invalid category!!!")
+    
+class Obj(Document):
+    category = StringField(validators=[category_validator])
+
+obj = Obj()
+obj.category = "another"
+obj.save()
+Traceback: ValidationError(....)
+
+```
+
+##### Document Validator
+
+To validate the whole document you can set a list of validators, each 
+validator is a callable receiving the document instance and
+should return None to be valid. If raise or return the data will be invalidated
+
+```python
+from esengine.exceptions import ValidationError
+
+def if_city_state_is_required(obj):
+    if obj.city and not obj.state:
+        raise ValidationError("If city is defined you should define state")
+        
+class Obj(Document):
+    _validators = [if_city_state_is_required]
+    
+    city = StringField()
+    state = StringField()
+
+obj = Obj()
+obj.city = "Sao Paulo"
+obj.save()
+Traceback: ValidationError(....)
+
+```
 
 #### Refreshing
 
