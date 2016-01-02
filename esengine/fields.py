@@ -5,53 +5,60 @@ from esengine.bases.field import BaseField
 from esengine.exceptions import ValidationError
 
 __all__ = [
-    'IntegerField', 'StringField', 'FloatField',
-    'DateField', 'BooleanField', 'GeoField'
+    'IntegerField', 'LongField', 'StringField', 'FloatField',
+    'DateField', 'BooleanField', 'GeoPointField'
 ]
 
 
 class IntegerField(BaseField):
     _type = int
+    _default_mapping = {'type': 'integer'}
 
 
 class LongField(BaseField):
     _type = long
+    _default_mapping = {'type': 'long'}
 
 
 class StringField(BaseField):
     _type = unicode
+    _default_mapping = {'type': 'string'}
 
 
 class FloatField(BaseField):
     _type = float
+    _default_mapping = {'type': 'float'}
 
 
 class BooleanField(BaseField):
     _type = bool
+    _default_mapping = {'type': 'boolean'}
 
 
-class GeoField(BaseField):
+class GeoPointField(BaseField):
     """
     A field to hold GeoPoint
 
     mode = dict|array|string
 
-    >>> location = GeoField(mode='dict')  # default
+    >>> location = GeoPointField(mode='dict')  # default
     An object representation with lat and lon explicitly named
     >>> location = {"lat": 40.722, "lon": -73.989}}
 
-    >>> location = GeoField(mode='string')
+    >>> location = GeoPointField(mode='string')
     A string representation, with "lat,lon"
     >>> location = "40.715, -74.011"
 
-    >>> location = GeoField(mode='array')
+    >>> location = GeoPointField(mode='array')
     An array representation with [lon,lat].
     >>> location = [-73.983, 40.719]
     """
 
+    _default_mapping = {'type': 'geo_point'}
+
     def __init__(self, *args, **kwargs):
         self.mode = kwargs.pop('mode', 'dict')
-        super(GeoField, self).__init__(*args, **kwargs)
+        super(GeoPointField, self).__init__(*args, **kwargs)
         if self.mode == 'string':
             self._type = unicode
 
@@ -91,13 +98,18 @@ class GeoField(BaseField):
 
 class DateField(BaseField):
     _type = datetime
+    _default_mapping = {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+    }
 
     @property
     def _date_format(self):
         return getattr(self, 'date_format', "%Y-%m-%d %H:%M:%S")
 
-    def to_dict(self, value):
-        self.validate(value)
+    def to_dict(self, value, validate=True):
+        if validate:
+            self.validate(value)
         if value:
             return value.strftime(self._date_format)
 

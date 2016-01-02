@@ -14,15 +14,29 @@ class Mapping(object):
     obj_mapping.save()
 
     """
-
-    _mapping = {}
-
-    def __init__(self, document_class):
+    def __init__(self, document_class, enable_all=True):
         self.document_class = document_class
+        self.enable_all = enable_all
 
     def generate(self):
-        for field_name, field_instance in self._fields.items():
-            self._mapping[field_name] = field_instance.mapping
+        m = {
+            "mappings": {
+                self.document_class._doctype: {
+                    "_all": {"enabled": self.enable_all},
+                    "properties": {
+                        field_name: field_instance.mapping
+                        for field_name, field_instance in
+                        self.document_class._fields.items()
+                        if field_name != "id"
+                    }
+                }
+            }
+        }
+        return m
 
-    def save(self):
-        pass
+    def save(self, es=None):
+        self.document_class.get_es(es).put_mapping(
+            doc_type=self.document_class._doctype,
+            index=self.document_class._index,
+            body=self.generate()
+        )

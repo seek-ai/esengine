@@ -3,6 +3,7 @@ import elasticsearch.helpers as eh
 from esengine.bases.document import BaseDocument
 from esengine.bases.metaclass import ModelMetaclass
 from esengine.bases.result import ResultSet
+from esengine.mapping import Mapping
 from esengine.utils import validate_client
 
 
@@ -443,6 +444,11 @@ class Document(BaseDocument):
         }
         results = cls.search(_query, size=size)
         return results
+
+    @classmethod
+    def put_mapping(cls, *args, **kwargs):
+        mapping = Mapping(cls, *args, **kwargs)
+        mapping.save()
 
     def __unicode__(self):
         return unicode(self.__str__())

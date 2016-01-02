@@ -5,7 +5,7 @@ import datetime
 from elasticsearch import Elasticsearch
 from esengine import (
     Document, StringField, IntegerField, BooleanField,
-    FloatField, GeoField, DateField
+    FloatField, GeoPointField, DateField
 )
 
 
@@ -18,7 +18,7 @@ class ExampleDoc(Document):
     age = IntegerField()
     active = BooleanField()
     weight = FloatField()
-    location = GeoField()
+    location = GeoPointField()
     birthday = DateField(date_format="%Y-%m-%d")
     city = StringField()
 

@@ -120,25 +120,25 @@ class Person(Document):
 
 ## Special Fields
 
-### GeoField
+### GeoPointField
 
 A field to hold GeoPoint with modes dict|array|string and its mappings
 
 ```python
 class Obj(Document):
-    location = GeoField(mode='dict')  # default
+    location = GeoPointField(mode='dict')  # default
     # An object representation with lat and lon explicitly named
 
 Obj.location = {"lat": 40.722, "lon": -73.989}}
 
 class Obj(Document):
-    location = GeoField(mode='string')
+    location = GeoPointField(mode='string')
     # A string representation, with "lat,lon"
 
 Obj.location = "40.715, -74.011"
 
 class Obj(Document):
-    location = GeoField(mode='array')
+    location = GeoPointField(mode='array')
     # An array representation with [lon,lat].
 
 Obj.location = [-73.983, 40.719]
@@ -409,10 +409,27 @@ Person.update_all(
 
 #### Utilities
 
-#### Mapping
+#### Mapping and Mapping migrations
 
-TODO:
+ESEngine does not saves mappings automatically, but it offers an utility to generate and save mappings on demand
+You can create a cron job to refresh mappings once a day or run it every time your model changes
 
+##### Using the document
+
+```python
+Person.put_mapping()
+```
+
+##### Using Mapping
+
+```python
+from esengine.mapping import Mapping
+mapping = Mapping(Person, enable_all=False)
+print mapping.generate()  # shows mapping payload
+mapping.save()  # put mapping
+```
+
+> Include above in your cron jobs or migration scripts
 
 #### Validators
 

@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime
-from esengine.fields import DateField, GeoField
+from esengine.fields import DateField, GeoPointField
 from esengine.exceptions import ValidationError, FieldTypeMismatch
 
 
@@ -33,7 +33,7 @@ def test_date_multi_field_from_dict():
 
 
 def test_geo_field_dict_type():
-    field = GeoField(field_name='test')
+    field = GeoPointField(field_name='test')
     value = {
         "lat": 40.722,
         "lon": -73.989
@@ -42,7 +42,7 @@ def test_geo_field_dict_type():
 
 
 def test_geo_field_dict_lon_missing():
-    field = GeoField(field_name='test')
+    field = GeoPointField(field_name='test')
     value = {
         "lat": 40.722
     }
@@ -52,7 +52,7 @@ def test_geo_field_dict_lon_missing():
 
 
 def test_geo_field_dict_lat_missing():
-    field = GeoField(field_name='test')
+    field = GeoPointField(field_name='test')
     value = {
         "lon": -40.722
     }
@@ -62,7 +62,7 @@ def test_geo_field_dict_lat_missing():
 
 
 def test_geo_field_dict_invalid_lat_type():
-    field = GeoField(field_name='test')
+    field = GeoPointField(field_name='test')
     value = {
         "lat": '40.722',
         "lon": -73.989
@@ -73,7 +73,7 @@ def test_geo_field_dict_invalid_lat_type():
 
 
 def test_geo_field_dict_invalid_lon_type():
-    field = GeoField(field_name='test')
+    field = GeoPointField(field_name='test')
     value = {
         "lat": 40.722,
         "lon": list
@@ -84,7 +84,7 @@ def test_geo_field_dict_invalid_lon_type():
 
 
 def test_geo_field_dict_invalid_type():
-    field = GeoField(field_name='test')
+    field = GeoPointField(field_name='test')
     value = [-73.989, 40.722]
     with pytest.raises(FieldTypeMismatch) as ex:
         field.to_dict(value)
@@ -92,13 +92,13 @@ def test_geo_field_dict_invalid_type():
 
 
 def test_geo_field_string_type():
-    field = GeoField(field_name='test', mode='string')
+    field = GeoPointField(field_name='test', mode='string')
     value = u"40.715, -74.011"
     assert field.to_dict(value) == value
 
 
 def test_geo_field_string_value_missing():
-    field = GeoField(field_name='test', mode='string')
+    field = GeoPointField(field_name='test', mode='string')
     value = u"40.715"
     with pytest.raises(ValidationError) as ex:
         field.to_dict(value)
@@ -106,7 +106,7 @@ def test_geo_field_string_value_missing():
 
 
 def test_geo_field_string_invalid_type():
-    field = GeoField(field_name='test', mode='string')
+    field = GeoPointField(field_name='test', mode='string')
     value = u"test, error"
     with pytest.raises(ValueError) as ex:
         field.to_dict(value)
@@ -114,13 +114,13 @@ def test_geo_field_string_invalid_type():
 
 
 def test_geo_field_array_type():
-    field = GeoField(field_name='test', mode='array')
+    field = GeoPointField(field_name='test', mode='array')
     value = [40.715, -74.011]
     assert field.to_dict(value) == value
 
 
 def test_geo_field_array_value_missing():
-    field = GeoField(field_name='test', mode='array')
+    field = GeoPointField(field_name='test', mode='array')
     value = [40.715]
     with pytest.raises(ValidationError) as ex:
         field.to_dict(value)
@@ -128,7 +128,7 @@ def test_geo_field_array_value_missing():
 
 
 def test_geo_field_array_invalid_type():
-    field = GeoField(field_name='test', mode='array')
+    field = GeoPointField(field_name='test', mode='array')
     value = value = [40.715, list]
     with pytest.raises(FieldTypeMismatch) as ex:
         field.to_dict(value)

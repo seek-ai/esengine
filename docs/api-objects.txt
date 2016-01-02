@@ -248,11 +248,11 @@ esengine.bases.field.BaseField.from_dict	esengine.bases.field.BaseField-class.ht
 esengine.bases.field.BaseField.to_dict	esengine.bases.field.BaseField-class.html#to_dict
 esengine.bases.field.BaseField.validate	esengine.bases.field.BaseField-class.html#validate
 esengine.bases.field.BaseField.__init__	esengine.bases.field.BaseField-class.html#__init__
-esengine.fields.GeoField	esengine.fields.GeoField-class.html
+esengine.fields.GeoPointField	esengine.fields.GeoPointField-class.html
 esengine.fields.FloatField._type	float-class.html
 esengine.bases.field.BaseField.from_dict	esengine.bases.field.BaseField-class.html#from_dict
 esengine.bases.field.BaseField.to_dict	esengine.bases.field.BaseField-class.html#to_dict
-esengine.fields.GeoField._multi	esengine.fields.GeoField-class.html#_multi
+esengine.fields.GeoPointField._multi	esengine.fields.GeoPointField-class.html#_multi
 esengine.bases.field.BaseField.validate	esengine.bases.field.BaseField-class.html#validate
 esengine.bases.field.BaseField.__init__	esengine.bases.field.BaseField-class.html#__init__
 esengine.fields.IntegerField	esengine.fields.IntegerField-class.html
