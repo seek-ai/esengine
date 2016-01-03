@@ -452,6 +452,11 @@ class Document(BaseDocument):
 
     @classmethod
     def put_mapping(cls, *args, **kwargs):
+        """
+        If index does not exist it is created with mapping
+        If exists mapping is updated
+        :return: acknowlege
+        """
         mapping = Mapping(cls, *args, **kwargs)
         mapping.save()
 

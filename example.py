@@ -22,6 +22,9 @@ class ExampleDoc(Document):
     birthday = DateField(date_format="%Y-%m-%d")
     city = StringField()
 
+
+ExampleDoc.put_mapping()
+
 ########################################################################
 instances = []
 gonzo = ExampleDoc(

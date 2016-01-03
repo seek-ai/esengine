@@ -1,3 +1,4 @@
+from elasticsearch.exceptions import TransportError
 
 
 class Mapping(object):
@@ -33,8 +34,15 @@ class Mapping(object):
         return m
 
     def save(self, es=None):
-        return self.document_class.get_es(es).indices.put_mapping(
-            doc_type=self.document_class._doctype,
-            index=self.document_class._index,
-            body=self.generate()
-        )
+        es = self.document_class.get_es(es)
+        try:
+            return es.indices.put_mapping(
+                doc_type=self.document_class._doctype,
+                index=self.document_class._index,
+                body=self.generate()
+            )
+        except TransportError:
+            return es.indices.create(
+                index=self.document_class._index,
+                body={"mappings": self.generate()}
+            )
