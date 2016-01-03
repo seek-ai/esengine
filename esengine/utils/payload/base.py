@@ -4,9 +4,10 @@ from esengine.utils.payload.meta_util import unroll_struct
 
 class Payload(object):
 
-    def __init__(self, **kwargs):
+    def __init__(self, model=None, **kwargs):
         """
         Optional parameters
+        :param model: a Document model class (optional)
         :param query: A Query instance
         :param filter: A Filter instance
         :param aggregate: Aggregate instances
@@ -17,6 +18,7 @@ class Payload(object):
         :param fields: List of fields
         :return: Payload Wrapper
         """
+        self._model = model
         self._filter = None
         self._query = None
         self._aggs = []
@@ -109,5 +111,6 @@ class Payload(object):
 
         return unroll_struct(self._struct)
 
-    def search(self, cls, **kwargs):
-        return cls.search(query=self.dict, **kwargs)
+    def search(self, model=None, **kwargs):
+        model = model or self._model
+        return model.search(query=self.dict, **kwargs)

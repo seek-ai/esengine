@@ -529,6 +529,19 @@ Person.search(payload, size=10)
 
 > Payload utils exposes Payload, Query, Filter, Aggregate, Suggesters
 
+You can also set model on payload initialization to create a more complete payload definition
+
+```python
+from esengine import Payload, Query, Filter
+payload = Payload(
+    model=Person,
+    query=Query.filtered(query=Query.match_all(), filter=Filter.ids([1, 2]))
+    sort={"name": {"order": "desc"}},
+    size=10
+)
+payload.search()
+```
+
 ## More examples
 
 You can use Payload, Query or Filter direct in search
