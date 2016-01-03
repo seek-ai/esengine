@@ -298,7 +298,7 @@ class Document(BaseDocument):
     @classmethod
     def search(cls, query, es=None, perform_count=False, **kwargs):
         """
-        Takes a raw ES query in form of a dict and
+        Takes a raw ES query in form of a dict or Payload and
         return Doc instances iterator
 
         >>> query = {
@@ -312,12 +312,17 @@ class Document(BaseDocument):
         ...}
         >>> results = Document.search(query, size=10)
 
-        :param query: raw query
+        :param query: raw query or Payload instance
         :param es: ES client or None (if implemented a default in Model)
         :param perform_count: If True, dont return objects, only count
         :param kwargs: extra key=value to be passed to es client
         :return: Iterator of Doc objets
         """
+
+        if not isinstance(query, dict):
+            # if not a dict, must be a Payload instance
+            query = query.dict
+
         es = cls.get_es(es)
         search_args = dict(
             index=cls._index,

@@ -52,5 +52,5 @@ def test_filter_must_terms_must_not_ids():
 def test_arbitrary_arguments_to_query():
     raw_query = {'query': {'bool': {'minimum_should_match': 1}}}
     payload = Payload()
-    payload.query = Query.bool(minimum_should_match=1)
+    payload.query(Query.bool(minimum_should_match=1))
     assert payload.dict == raw_query

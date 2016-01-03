@@ -11,40 +11,38 @@ class Payload(object):
 
     def __init__(self, **kwargs):
         """
-        Normally receives
+        Optional parameters
         :param query: A Query instance
         :param filter: A Filter instance
         :param aggregate: Aggregate instances
         :param suggest: Suggester instances
+        :param sort: field name or dictionary
+        :param size: Integer size
+        :param timeout: Timeout in seconds
+        :param fields: List of fields
         :return: Payload Wrapper
         """
         for key, value in kwargs.items():
-            if key in ('filter', 'query'):
-                setattr(self, key, value)
-            else:
+            try:
                 getattr(self, key)(value)
+            except AttributeError:
+                self.set(key, value)
 
-    @property
-    def query(self):
-        return self._query
-
-    @query.setter
     def query(self, query):
         self._query = query
+        return self
 
-    @property
-    def filter(self):
-        return self._filter
-
-    @filter.setter
     def filter(self, filter_):
         self._filter = filter_
+        return self
 
     def aggregate(self, aggregates):
         self._aggs.extend(aggregates)
+        return self
 
     def suggest(self, *suggesters):
         self._suggesters.extend(suggesters)
+        return self
 
     def set(self, key, value):
         self._struct[key] = value
@@ -54,8 +52,25 @@ class Payload(object):
         self._struct['from'] = from_
         return self
 
+    def size(self, size):
+        self._struct['size'] = size
+        return self
+
+    def timeout(self, timeout):
+        self._struct['timeout'] = timeout
+        return self
+
     def fields(self, fields):
         self._struct['_source'] = fields
+        return self
+
+    def sort(self, field, **kwargs):
+        if 'sort' not in self._struct:
+            self._struct['sort'] = []
+        if not kwargs:
+            self._struct['sort'].append(field)
+        else:
+            self._struct['sort'].append({field: kwargs})
         return self
 
     @property
@@ -92,3 +107,6 @@ class Payload(object):
             self._struct['suggest'] = suggs
 
         return unroll_struct(self._struct)
+
+    def search(self, cls, **kwargs):
+        return cls.search(query=self.dict, **kwargs)

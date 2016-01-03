@@ -117,7 +117,7 @@ QUERY = {
 
 print "for", QUERY
 
-results =  ExampleDoc.search(QUERY)
+results = ExampleDoc.search(QUERY)
 for res in results:
     print res
 

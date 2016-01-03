@@ -35,7 +35,7 @@ class Mapping(object):
         return m
 
     def save(self, es=None):
-        self.document_class.get_es(es).put_mapping(
+        self.document_class.get_es(es).index(
             doc_type=self.document_class._doctype,
             index=self.document_class._index,
             body=self.generate()

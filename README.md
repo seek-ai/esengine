@@ -531,6 +531,14 @@ Person.search(query=payload.dict, size=10)
 
 > Payload utils exposes Payload, Query, Filter, Aggregate, Suggesters
 
+## chaining
+
+Payload object is chainable so you can do:
+```python
+payload = Payload(query=query).size(10).sort("field", order="desc")
+Document.search(payload)
+```
+
 # Contribute
 
 ESEngine is OpenSource! join us!
