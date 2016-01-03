@@ -100,7 +100,7 @@ class DateField(BaseField):
     _type = datetime
     _default_mapping = {
         "type": "date",
-        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd"
     }
 
     @property

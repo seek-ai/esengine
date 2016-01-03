@@ -20,22 +20,20 @@ class Mapping(object):
 
     def generate(self):
         m = {
-            "mappings": {
-                self.document_class._doctype: {
-                    "_all": {"enabled": self.enable_all},
-                    "properties": {
-                        field_name: field_instance.mapping
-                        for field_name, field_instance in
-                        self.document_class._fields.items()
-                        if field_name != "id"
-                    }
+            self.document_class._doctype: {
+                "_all": {"enabled": self.enable_all},
+                "properties": {
+                    field_name: field_instance.mapping
+                    for field_name, field_instance in
+                    self.document_class._fields.items()
+                    if field_name != "id"
                 }
             }
         }
         return m
 
     def save(self, es=None):
-        self.document_class.get_es(es).index(
+        return self.document_class.get_es(es).indices.put_mapping(
             doc_type=self.document_class._doctype,
             index=self.document_class._index,
             body=self.generate()
