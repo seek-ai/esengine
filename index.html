@@ -154,24 +154,24 @@ es <span class="pl-k">=</span> ElasticSearch(<span class="pl-smi">host</span><sp
 <a id="special-fields" class="anchor" href="#special-fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>Special Fields</h2>
 
 <h3>
-<a id="geofield" class="anchor" href="#geofield" aria-hidden="true"><span class="octicon octicon-link"></span></a>GeoField</h3>
+<a id="geopointfield" class="anchor" href="#geopointfield" aria-hidden="true"><span class="octicon octicon-link"></span></a>GeoPointField</h3>
 
 <p>A field to hold GeoPoint with modes dict|array|string and its mappings</p>
 
 <div class="highlight highlight-source-python"><pre><span class="pl-k">class</span> <span class="pl-en">Obj</span>(<span class="pl-e">Document</span>):
-    location <span class="pl-k">=</span> GeoField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>dict<span class="pl-pds">'</span></span>)  <span class="pl-c"># default</span>
+    location <span class="pl-k">=</span> GeoPointField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>dict<span class="pl-pds">'</span></span>)  <span class="pl-c"># default</span>
     <span class="pl-c"># An object representation with lat and lon explicitly named</span>
 
 Obj.location <span class="pl-k">=</span> {<span class="pl-s"><span class="pl-pds">"</span>lat<span class="pl-pds">"</span></span>: <span class="pl-c1">40.722</span>, <span class="pl-s"><span class="pl-pds">"</span>lon<span class="pl-pds">"</span></span>: <span class="pl-k">-</span><span class="pl-c1">73.989</span>}}
 
 <span class="pl-k">class</span> <span class="pl-en">Obj</span>(<span class="pl-e">Document</span>):
-    location <span class="pl-k">=</span> GeoField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>)
+    location <span class="pl-k">=</span> GeoPointField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>)
     <span class="pl-c"># A string representation, with "lat,lon"</span>
 
 Obj.location <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>40.715, -74.011<span class="pl-pds">"</span></span>
 
 <span class="pl-k">class</span> <span class="pl-en">Obj</span>(<span class="pl-e">Document</span>):
-    location <span class="pl-k">=</span> GeoField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>array<span class="pl-pds">'</span></span>)
+    location <span class="pl-k">=</span> GeoPointField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>array<span class="pl-pds">'</span></span>)
     <span class="pl-c"># An array representation with [lon,lat].</span>
 
 Obj.location <span class="pl-k">=</span> [<span class="pl-k">-</span><span class="pl-c1">73.983</span>, <span class="pl-c1">40.719</span>]</pre></div>
@@ -415,16 +415,34 @@ you can change using <strong>meta</strong> argument.</p>
 <div class="highlight highlight-source-python"><pre>Person.update_all(
     top_5_racing_bikes, <span class="pl-c"># the documents</span>
     <span class="pl-smi">active</span><span class="pl-k">=</span><span class="pl-c1">True</span>,  <span class="pl-c"># values to be changed</span>
-    <span class="pl-smi">metal</span><span class="pl-k">=</span>{<span class="pl-s"><span class="pl-pds">'</span>chunk_size<span class="pl-pds">'</span></span>: <span class="pl-c1">200</span>}  <span class="pl-c"># meta data passed to **bulk** operation    </span>
+    <span class="pl-smi">meta</span><span class="pl-k">=</span>{<span class="pl-s"><span class="pl-pds">'</span>chunk_size<span class="pl-pds">'</span></span>: <span class="pl-c1">200</span>}  <span class="pl-c"># meta data passed to **bulk** operation    </span>
 )</pre></div>
 
 <h4>
 <a id="utilities" class="anchor" href="#utilities" aria-hidden="true"><span class="octicon octicon-link"></span></a>Utilities</h4>
 
 <h4>
-<a id="mapping" class="anchor" href="#mapping" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mapping</h4>
+<a id="mapping-and-mapping-migrations" class="anchor" href="#mapping-and-mapping-migrations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mapping and Mapping migrations</h4>
 
-<p>TODO:</p>
+<p>ESEngine does not saves mappings automatically, but it offers an utility to generate and save mappings on demand
+You can create a cron job to refresh mappings once a day or run it every time your model changes</p>
+
+<h5>
+<a id="using-the-document" class="anchor" href="#using-the-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using the document</h5>
+
+<div class="highlight highlight-source-python"><pre>Person.put_mapping()</pre></div>
+
+<h5>
+<a id="using-mapping" class="anchor" href="#using-mapping" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Mapping</h5>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> esengine.mapping <span class="pl-k">import</span> Mapping
+mapping <span class="pl-k">=</span> Mapping(Person, <span class="pl-smi">enable_all</span><span class="pl-k">=</span><span class="pl-c1">False</span>)
+<span class="pl-k">print</span> mapping.generate()  <span class="pl-c"># shows mapping payload</span>
+mapping.save()  <span class="pl-c"># put mapping</span></pre></div>
+
+<blockquote>
+<p>Include above in your cron jobs or migration scripts</p>
+</blockquote>
 
 <h4>
 <a id="validators" class="anchor" href="#validators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Validators</h4>
@@ -514,15 +532,50 @@ Person.search(<span class="pl-smi">query</span><span class="pl-k">=</span>query,
 <h2>
 <a id="same-example-using-payload-utils" class="anchor" href="#same-example-using-payload-utils" aria-hidden="true"><span class="octicon octicon-link"></span></a>Same example using payload utils</h2>
 
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> esengine.utils.payload <span class="pl-k">import</span> Payload, Query, Filter
-payload <span class="pl-k">=</span> Payload(
-    <span class="pl-smi">query</span><span class="pl-k">=</span>Query.filtered(<span class="pl-smi">query</span><span class="pl-k">=</span>Query.match_all(), <span class="pl-smi">filter</span><span class="pl-k">=</span>Filter.ids([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>]))
-)
-Person.search(<span class="pl-smi">query</span><span class="pl-k">=</span>payload.dict, <span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">10</span>)</pre></div>
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> esengine <span class="pl-k">import</span> Payload, Query, Filter
+payload <span class="pl-k">=</span> Payload(<span class="pl-smi">query</span><span class="pl-k">=</span>Query.filtered(<span class="pl-smi">query</span><span class="pl-k">=</span>Query.match_all(), <span class="pl-smi">filter</span><span class="pl-k">=</span>Filter.ids([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>])))
+Person.search(payload, <span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">10</span>)</pre></div>
 
 <blockquote>
 <p>Payload utils exposes Payload, Query, Filter, Aggregate, Suggesters</p>
 </blockquote>
+
+<p>You can also set model on payload initialization to create a more complete payload definition</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> esengine <span class="pl-k">import</span> Payload, Query, Filter
+payload <span class="pl-k">=</span> Payload(
+    <span class="pl-smi">model</span><span class="pl-k">=</span>Person,
+    <span class="pl-smi">query</span><span class="pl-k">=</span>Query.filtered(<span class="pl-smi">query</span><span class="pl-k">=</span>Query.match_all(), <span class="pl-smi">filter</span><span class="pl-k">=</span>Filter.ids([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>]))
+    <span class="pl-smi">sort</span><span class="pl-k">=</span>{<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: {<span class="pl-s"><span class="pl-pds">"</span>order<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>desc<span class="pl-pds">"</span></span>}},
+    <span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">10</span>
+)
+payload.search()</pre></div>
+
+<h2>
+<a id="more-examples" class="anchor" href="#more-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>More examples</h2>
+
+<p>You can use Payload, Query or Filter direct in search</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> esengine <span class="pl-k">import</span> Payload, Query, Filter
+
+Person.search(Payload(<span class="pl-smi">query</span><span class="pl-k">=</span>Query.match_all()))
+
+Person.search(Query.bool(<span class="pl-smi">must</span><span class="pl-k">=</span>[Query.match(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>)]))
+
+Person.search(Query.match_all())
+
+Person.search(Filter.ids([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>]))
+</pre></div>
+
+<h2>
+<a id="chaining" class="anchor" href="#chaining" aria-hidden="true"><span class="octicon octicon-link"></span></a>chaining</h2>
+
+<p>Payload object is chainable so you can do:</p>
+
+<div class="highlight highlight-source-python"><pre>payload <span class="pl-k">=</span> Payload(<span class="pl-smi">query</span><span class="pl-k">=</span>query).size(<span class="pl-c1">10</span>).sort(<span class="pl-s"><span class="pl-pds">"</span>field<span class="pl-pds">"</span></span>, <span class="pl-smi">order</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>desc<span class="pl-pds">"</span></span>)
+Document.search(payload) 
+<span class="pl-c"># or the equivalent</span>
+payload.search(Document)</pre></div>
 
 <h1>
 <a id="contribute" class="anchor" href="#contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contribute</h1>
