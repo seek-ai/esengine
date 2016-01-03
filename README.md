@@ -522,11 +522,11 @@ Person.search(query=query, size=10)
 ## Same example using payload utils
 
 ```python
-from esengine.utils.payload import Payload, Query, Filter
+from esengine import Payload, Query, Filter
 payload = Payload(
     query=Query.filtered(query=Query.match_all(), filter=Filter.ids([1, 2]))
 )
-Person.search(query=payload.dict, size=10)
+Person.search(payload, size=10)
 ```
 
 > Payload utils exposes Payload, Query, Filter, Aggregate, Suggesters
@@ -536,7 +536,9 @@ Person.search(query=payload.dict, size=10)
 Payload object is chainable so you can do:
 ```python
 payload = Payload(query=query).size(10).sort("field", order="desc")
-Document.search(payload)
+Document.search(payload) 
+# or the equivalent
+payload.search(Document)
 ```
 
 # Contribute

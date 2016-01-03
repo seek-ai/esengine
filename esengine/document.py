@@ -5,6 +5,7 @@ from esengine.bases.metaclass import ModelMetaclass
 from esengine.bases.result import ResultSet
 from esengine.mapping import Mapping
 from esengine.utils import validate_client
+from esengine.utils.payload import Payload
 
 
 class Document(BaseDocument):
@@ -305,7 +306,7 @@ class Document(BaseDocument):
         ...}
         >>> results = Document.search(query, size=10)
 
-        :param query: raw query or Payload instance
+        :param query: raw query or Query or Payload instance
         :param es: ES client or None (if implemented a default in Model)
         :param perform_count: If True, dont return objects, only count
         :param kwargs: extra key=value to be passed to es client
@@ -313,8 +314,11 @@ class Document(BaseDocument):
         """
 
         if not isinstance(query, dict):
-            # if not a dict, must be a Payload instance
-            query = query.dict
+            # if not a raw dict query
+            if isinstance(query, Payload):  # must be a Payload instance
+                query = query.dict
+            else:  # must be a Query to wrap
+                query = Payload(query=query).dict
 
         es = cls.get_es(es)
         search_args = dict(
