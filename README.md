@@ -403,7 +403,7 @@ you can change using **meta** argument.
 Person.update_all(
     top_5_racing_bikes, # the documents
     active=True,  # values to be changed
-    metal={'chunk_size': 200}  # meta data passed to **bulk** operation    
+    meta={'chunk_size': 200}  # meta data passed to **bulk** operation    
 )
 ```
 
@@ -523,13 +523,28 @@ Person.search(query=query, size=10)
 
 ```python
 from esengine import Payload, Query, Filter
-payload = Payload(
-    query=Query.filtered(query=Query.match_all(), filter=Filter.ids([1, 2]))
-)
+payload = Payload(query=Query.filtered(query=Query.match_all(), filter=Filter.ids([1, 2])))
 Person.search(payload, size=10)
 ```
 
 > Payload utils exposes Payload, Query, Filter, Aggregate, Suggesters
+
+## More examples
+
+You can use Payload, Query or Filter direct in search
+
+```python
+from esengine import Payload, Query, Filter
+
+Person.search(Payload(query=Query.match_all()))
+
+Person.search(Query.bool(must=[Query.match("name", "Gonzo")]))
+
+Person.search(Query.match_all())
+
+Person.search(Filter.ids([1, 2, 3]))
+
+```
 
 ## chaining
 
