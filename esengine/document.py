@@ -17,7 +17,6 @@ class Document(BaseDocument):
     ...   _autoid = True
     ...   _index = 'indexname'
     ...   _doctype = 'doctypename'
-    ...   _mapping = {}
     ...   name = StringField()
 
     >>> obj = MyDoc(name="Gonzo")
@@ -34,17 +33,11 @@ class Document(BaseDocument):
     # called 'id' preferably a StringField
     _autoid = True
 
-    # If mapping is not specified it will be generated using the document
-    # model fields and its default patterns and types
-    # any field mapping can be overwritten by specifying in the following
-    # instance _mapping dictionary
-    _mapping = {}
-
     # _validators is a list of callable, each one executed receiving the
     # document instance, and should return None
     # else document is invalid and will not be saved
     # to invalidate the callable should raise validationError or return value
-    _validators = []
+    _validators = None
 
     @classmethod
     def get_es(cls, es):

@@ -5,7 +5,7 @@ from esengine.exceptions import ValidationError
 
 class BaseDocument(object):
     _strict = False
-    _validators = []
+    _validators = None
 
     def _initialize_multi_fields(self):
         for key, field_class in self.__class__._fields.items():
@@ -67,12 +67,13 @@ class BaseDocument(object):
         return cls(**params)
 
     def validate(self):
-        for validator in self._validators:
-            """
-            Functions in self._validators receives document instance
-            should return None or
-            raise Exception (ValidationError) or return any value
-            """
-            val = validator(self)
-            if val:
-                raise ValidationError("Invalid: %s" % val)
+        if self._validators:
+            for validator in self._validators:
+                """
+                Functions in self._validators receives document instance
+                should return None or
+                raise Exception (ValidationError) or return any value
+                """
+                val = validator(self)
+                if val:
+                    raise ValidationError("Invalid: %s" % val)

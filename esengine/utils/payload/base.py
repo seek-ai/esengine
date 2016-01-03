@@ -3,11 +3,6 @@ from esengine.utils.payload.meta_util import unroll_struct
 
 
 class Payload(object):
-    _filter = None
-    _query = None
-    _aggs = []
-    _suggesters = []
-    _struct = {}
 
     def __init__(self, **kwargs):
         """
@@ -22,6 +17,12 @@ class Payload(object):
         :param fields: List of fields
         :return: Payload Wrapper
         """
+        self._filter = None
+        self._query = None
+        self._aggs = []
+        self._suggesters = []
+        self._struct = {}
+
         for key, value in kwargs.items():
             try:
                 getattr(self, key)(value)
