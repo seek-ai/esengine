@@ -11,6 +11,13 @@ class ModelMetaclass(type):
                 if base._autoid and 'id' not in attrs:
                     attrs['id'] = StringField(field_name='id')
                 break
+
+        for base in bases:
+            for key, value in base.__dict__.iteritems():
+                if isinstance(value, BaseField):
+                    value._field_name = key
+                    attrs['_fields'][key] = value
+
         for key, value in attrs.iteritems():
             if isinstance(value, BaseField):
                 value._field_name = key
