@@ -6,14 +6,14 @@ from esengine.exceptions import ValidationError, FieldTypeMismatch
 
 def test_date_field_to_dict():
     date = datetime.strptime("2015-01-15 00:01:59", "%Y-%m-%d %H:%M:%S")
-    field = DateField()
+    field = DateField(date_format="%Y-%m-%d %H:%M:%S")
     assert field.to_dict(date) == "2015-01-15 00:01:59"
 
 
 def test_date_field_from_dict():
     str_date = "2015-01-15 00:01:59"
     date = datetime.strptime(str_date, "%Y-%m-%d %H:%M:%S")
-    field = DateField()
+    field = DateField(date_format="%Y-%m-%d %H:%M:%S")
     assert field.from_dict(date) == date
     assert field.from_dict(str_date) == date
     with pytest.raises(ValueError) as ex:
@@ -25,7 +25,7 @@ def test_date_multi_field_from_dict():
     str_date = "2015-01-15 00:01:59"
     date = datetime.strptime(str_date, "%Y-%m-%d %H:%M:%S")
     dates = [str_date, date]
-    field = DateField(multi=True)
+    field = DateField(multi=True, date_format="%Y-%m-%d %H:%M:%S")
     assert field.from_dict(dates) == [date, date]
     with pytest.raises(ValueError) as ex:
         field.from_dict([10])

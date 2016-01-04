@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from dateutil import parser
 from datetime import datetime
 from esengine.bases.field import BaseField
 from esengine.exceptions import ValidationError
@@ -105,13 +106,22 @@ class DateField(BaseField):
 
     @property
     def _date_format(self):
-        return getattr(self, 'date_format', "%Y-%m-%d %H:%M:%S")
+        """
+        Optional string format used to send date value to E.S
+        specified in DateField(date_format="%Y-%m-%d %H:%M:%S")
+        if not specified in  isoformat() will be used
+        :return: string date format or None
+        """
+        return getattr(self, 'date_format', None)
 
     def to_dict(self, value, validate=True):
         if validate:
             self.validate(value)
         if value:
-            return value.strftime(self._date_format)
+            if self._date_format:
+                return value.strftime(self._date_format)
+            else:
+                return value.isoformat()
 
     def from_dict(self, serialized):
         if serialized:
@@ -121,7 +131,7 @@ class DateField(BaseField):
                     if isinstance(elem, self._type):
                         values.append(elem)
                     elif isinstance(elem, basestring):
-                        date = datetime.strptime(elem, self._date_format)
+                        date = parser.parse(elem)
                         values.append(date)
                     else:
                         raise ValueError(
@@ -134,7 +144,7 @@ class DateField(BaseField):
                 if isinstance(serialized, self._type):
                     return serialized
                 elif isinstance(serialized, basestring):
-                    return datetime.strptime(serialized, self._date_format)
+                    return parser.parse(serialized)
                 raise ValueError('Expected str or date. {} found'.format(
                     serialized.__class__)
                 )
