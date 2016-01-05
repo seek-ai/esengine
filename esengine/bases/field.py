@@ -35,21 +35,17 @@ class BaseField(object):
             if self._multi:
                 if not isinstance(value, Iterable):
                     raise InvalidMultiField(self._field_name)
-                for elem in value:
-                    if not isinstance(elem, self._type):
-                        raise FieldTypeMismatch(self._field_name, self._type,
-                                                elem.__class__)
+                [self.validate_field_type(elem) for elem in value]
             else:
-                if not isinstance(value, self._type):
-                    raise FieldTypeMismatch(self._field_name, self._type,
-                                            value.__class__)
+                self.validate_field_type(value)
+
         for validator in self._validators:
             """
-            Functions in self._validators receives field_name, value
+            Functions in self._validators receives field_instance, value
             should return None or
             raise Exception (ValidationError) or return any value
             """
-            val = validator(self._field_name, value)
+            val = validator(self, value)
             if val:
                 raise ValidationError(
                     'Invalid %s, returned: %s' % (self._field_name, val)
