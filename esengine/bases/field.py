@@ -70,7 +70,9 @@ class BaseField(object):
         """
         if serialized is not None:
             if self._multi:
-                return [self._type(x) for x in serialized]
+                return [
+                    self._type(x) if x is not None else x for x in serialized
+                ]
             return self._type(serialized)
 
     @property
