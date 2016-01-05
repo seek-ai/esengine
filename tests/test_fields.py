@@ -129,7 +129,82 @@ def test_geo_field_array_value_missing():
 
 def test_geo_field_array_invalid_type():
     field = GeoPointField(field_name='test', mode='array')
-    value = value = [40.715, list]
+    value = [40.715, list]
+    with pytest.raises(FieldTypeMismatch) as ex:
+        field.to_dict(value)
+    assert str(ex.value) == "`test` expected `<type 'float'>`, actual `<type 'type'>`"  # noqa
+
+
+def test_geo_field_dict_multi():
+    field = GeoPointField(field_name='test', multi=True)
+    value = [
+        {
+           "lat": 40.722,
+           "lon": -73.989
+        },
+        {
+           "lat": 40.722,
+           "lon": -73.989
+        },
+        {
+           "lat": 40.722,
+           "lon": -73.989
+        }
+    ]
+    assert field.to_dict(value) == value
+
+
+def test_geo_field_string_type_multi():
+    field = GeoPointField(field_name='test', mode='string', multi=True)
+    value = [u"40.715, -74.011", u"40.715, -74.011", u"40.715, -74.011"]
+    assert field.to_dict(value) == value
+
+
+def test_geo_field_array_type_multi():
+    field = GeoPointField(field_name='test', mode='array', multi=True)
+    value = [[40.715, -74.011], [40.715, -74.011], [40.715, -74.011]]
+    assert field.to_dict(value) == value
+
+
+def test_geo_field_dict_multi_invalid():
+    field = GeoPointField(field_name='test', multi=True)
+    value = [
+        {
+           "lat": 40.722,
+           "lon": -73.989
+        },
+        {
+           "lat": 40.722,
+           "lon": -73.989
+        },
+        {
+           "lat": 40.722
+        }
+    ]
+    with pytest.raises(ValidationError) as ex:
+        field.to_dict(value)
+    assert str(ex.value) == "test: lon requires a float"
+
+
+def test_geo_field_string_type_multi_invalid():
+    field = GeoPointField(field_name='test', mode='string', multi=True)
+    value = [u"40.715, -74.011", u"40.715, -74.011", u"40.715"]
+    with pytest.raises(ValidationError) as ex:
+        field.to_dict(value)
+    assert str(ex.value) == '2 elements "lat,lon" required in test'
+
+
+def test_geo_field_array_type_multi_invalid():
+    field = GeoPointField(field_name='test', mode='array', multi=True)
+    value = [[40.715, -74.011], [40.715], [40.715, -74.011]]
+    with pytest.raises(ValidationError) as ex:
+        field.to_dict(value)
+    assert str(ex.value) == '2 elements [lon, lat] required in test'
+
+
+def test_geo_field_array_type_multi_invalid_type():
+    field = GeoPointField(field_name='test', mode='array', multi=True)
+    value = [[40.715, -74.011], [40.715], list]
     with pytest.raises(FieldTypeMismatch) as ex:
         field.to_dict(value)
     assert str(ex.value) == "`test` expected `<type 'float'>`, actual `<type 'type'>`"  # noqa

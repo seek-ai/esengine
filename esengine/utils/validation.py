@@ -23,3 +23,20 @@ def validate_client(es):
             )
     except AttributeError as e:
         raise ClientError(str(e))
+
+
+class FieldValidator(object):
+    def __init__(self):
+        self.validation = []
+
+    def validate_value(self, field, value):
+        pass
+
+    def validate_item(self, field, item):
+        pass
+
+    def __call__(self, field, value):
+        self.validate_value(field, value)
+        if field._multi:
+            [self.validate_item(field, item) for item in value]
+        return self.validation
