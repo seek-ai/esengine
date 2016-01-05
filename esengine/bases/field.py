@@ -20,6 +20,13 @@ class BaseField(object):
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
+    def validate_field_type(self, value):
+        if value is not None:
+            if not isinstance(value, self._type):
+                raise FieldTypeMismatch(self._field_name,
+                                        self._type,
+                                        value.__class__)
+
     def validate(self, value):
         if value is None:
             if self._required:
