@@ -455,7 +455,15 @@ class Document(BaseDocument):
         :return: acknowlege
         """
         mapping = Mapping(cls, *args, **kwargs)
-        mapping.save()
+        return mapping.save()
+
+    @classmethod
+    def init(cls, *args, **kwargs):
+        return {
+            'mapping': cls.put_mapping(*args, **kwargs),
+            'settings': 'Not Implemented yet',
+            'analysers': 'Not Implemented yet'
+        }
 
     def __unicode__(self):
         return unicode(self.__str__())
