@@ -356,9 +356,12 @@ class Document(BaseDocument):
         :param size: size of results
         :return: ResultSet: a generator of Doc objects
         """
-        # FIxme: should pass meta data and _scores
+
+        if resp.get('timed_out'):
+            raise ClientError("Timeout")
+
         return ResultSet(
-            values=[obj['_source'] for obj in resp['hits']['hits']],
+            resp=resp,
             model=cls,
             query=query,
             size=size,
