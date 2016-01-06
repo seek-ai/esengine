@@ -30,7 +30,7 @@ to communicate it relies on an ES client providing the transport methods (index,
 
 ### ES client
 ESengine does not enforce the use of the official ElasticSearch client,
-but you are encouraged to use it because it is well maintained and has the support to **bulk** operations. Bu you are free to use another client or create your own.
+but you are encouraged to use it because it is well maintained and has the support to **bulk** operations. But you are free to use another client or create your own.
 
 ### Querying the data
 ESengine does not enforce or encourage you to use a DSL language for queries, out of the box you have to
