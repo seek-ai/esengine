@@ -38,7 +38,9 @@ class ES(object):
             doc = {
                 '_source': {
                     'id': _id
-                }
+                },
+                '_id': _id,
+                '_score': 1.0
             }
             docs.append(doc)
         return {
