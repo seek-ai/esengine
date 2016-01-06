@@ -66,6 +66,20 @@ class BaseDocument(object):
             params[field_name] = value
         return cls(**params)
 
+    @classmethod
+    def from_es(cls, hit):
+        """
+        Takes E.S hit element containing
+            [u'_score', u'_type', u'_id', u'_source', u'_index']
+
+        :param hit: E.S hit
+        :return: Document instance
+        """
+        instance = cls.from_dict(dct=hit.get('_source', {}))
+        instance._id = instance.id = hit.get('_id')
+        instance._score = hit.get('_score')
+        return instance
+
     def validate(self):
         if self._validators:
             for validator in self._validators:

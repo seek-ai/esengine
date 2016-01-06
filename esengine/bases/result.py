@@ -1,27 +1,35 @@
 # coding: utf-8
 import time
+import copy
 import elasticsearch.helpers as eh
 
 
 class ResultSet(object):
-    def __init__(self, values, model, query=None,
+    def __init__(self, resp, model, query=None,
                  size=None, es=None, meta=None):
+        resp = copy.deepcopy(resp)
         self._model = model
-        self._values = values
+        self._values = self._hits = resp.get('hits', {}).pop('hits', [])
         self._query = query
         self._es = model.get_es(es)
-        self._size = size
-        self._meta = meta
+        self._size = size or len(self._values)
+        self._meta = resp
+        if meta:
+            self._meta.update(meta)
         self._all_values = []
 
     def __iter__(self):
         return self.values
 
     @property
+    def meta(self):
+        return self._meta
+
+    @property
     def values(self):
         return (
-            self._model.from_dict(dct=value)
-            for value in self._values
+            self._model.from_es(hit=hit)
+            for hit in self._hits
         )
 
     @property
@@ -42,7 +50,8 @@ class ResultSet(object):
             body=self._query,
             size=self._size or len(self._values)
         )
-        self._values = [obj['_source'] for obj in resp['hits']['hits']]
+        self._hits = self._values = resp.get('hits', {}).pop('hits', [])
+        self._meta = resp
 
     def update(self, meta=None, **kwargs):
         if kwargs:
@@ -69,6 +78,9 @@ class ResultSet(object):
             for doc in self.values
         )
         eh.bulk(self._es, actions, **meta if meta else {})
+
+    def count(self):
+        return min(self._size, self.meta.get('hits', {}).get('total'))
 
     def __unicode__(self):
         return unicode(self.__unicode__())
