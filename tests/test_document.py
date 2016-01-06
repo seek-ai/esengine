@@ -66,6 +66,7 @@ def test_client_not_defined(Doc, MockES):
     with pytest.raises(ClientError):
         doc.save()
 
+
 def test_default_client(DocWithDefaultClient, MockES):
     try:
         doc = DocWithDefaultClient(id=MockES.test_id)
