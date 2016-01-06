@@ -38,7 +38,7 @@ write the elasticsearch **payload** representation as a raw Python dictionary. H
 
 ### Why not elasticsearch_dsl?
 
-ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but its DSL objects leads to a confuse query building, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. DSL enforce you to use the official ES client and there are cases when a different client implementation perform better or you need to run tests using a Mock. Also, to make things really easy, all the synrax sugar in DSL can lead in to performance problems.
+ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but its DSL objects leads to a confuse query building, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. DSL enforce you to use the official ES client and there are cases when a different client implementation perform better or you need to run tests using a Mock. Also, to make things really easy, all the syntax sugar in DSL can lead in to performance problems.
 
 ### Project Stage
 
