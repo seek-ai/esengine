@@ -5,7 +5,8 @@ from esengine.bases.metaclass import ModelMetaclass
 from esengine.bases.result import ResultSet
 from esengine.mapping import Mapping
 from esengine.utils import validate_client
-from esengine.utils.payload import Payload
+from esengine.utils.payload import Payload, Filter
+from esengine.exceptions import ClientError
 
 
 class Document(BaseDocument):
@@ -306,18 +307,24 @@ class Document(BaseDocument):
         ...}
         >>> results = Document.search(query, size=10)
 
-        :param query: raw query or Query or Payload instance
+        :param query: raw_query(preferable) or Query or Payload instance
         :param es: ES client or None (if implemented a default in Model)
         :param perform_count: If True, dont return objects, only count
         :param kwargs: extra key=value to be passed to es client
         :return: Iterator of Doc objets
+
+        NOTE: Checking istance types is expensive, please prefer to use
+        raw queries ex:
+           .search({"query": ...}) || .search(payload_instance.dict)
         """
 
         if not isinstance(query, dict):
             # if not a raw dict query
             if isinstance(query, Payload):  # must be a Payload instance
                 query = query.dict
-            else:  # must be a Query to wrap
+            elif isinstance(query, Filter):  # must be a Filter
+                query = Payload(filter=query).dict
+            else:  # or a Query to wrap
                 query = Payload(query=query).dict
 
         es = cls.get_es(es)
