@@ -5,12 +5,11 @@ from esengine.bases.result import ResultSet
 
 def test_resultset_has_values(MockES, INDEX, DOC_TYPE, Doc):
     resp = MockES().search(index=INDEX, doc_type=DOC_TYPE, size=2)
-    values=[obj['_source'] for obj in resp['hits']['hits']]
     results = ResultSet(
-        values=values,
+        resp=resp,
         model=Doc
     )
-    assert results._values == values
+    assert results._values == [obj for obj in resp['hits']['hits']]
     for result in results:
         assert result.id in MockES().test_ids
 
