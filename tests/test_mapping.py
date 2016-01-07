@@ -31,7 +31,6 @@ def test_mapping():
             'properties': {
                 'booleanfield': {'type': 'boolean'},
                 'datefield': {
-                    'format': 'yyyy-MM-dd HH:mm:ss||yyyy-MM-dd',
                     'type': 'date'
                 },
                 'floatfield': {'type': 'float'},
