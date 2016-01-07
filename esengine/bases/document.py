@@ -70,7 +70,7 @@ class BaseDocument(object):
     def from_es(cls, hit):
         """
         Takes E.S hit element containing
-            [u'_score', u'_type', u'_id', u'_source', u'_index']
+        [u'_score', u'_type', u'_id', u'_source', u'_index']
 
         :param hit: E.S hit
         :return: Document instance

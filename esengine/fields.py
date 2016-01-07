@@ -44,10 +44,10 @@ class ObjectField(BaseField):
     A mapping can be optionally defined in mapping argument
     example:
 
-    field = ObjectField(
-        mapping={"dynamic": False,
-                 "properties": {"name": {"type": "string"}}
-    )
+    >>> field = ObjectField(
+    ...    mapping={"dynamic": False,
+    ...             "properties": {"name": {"type": "string"}}
+    ... )
 
     The above field will not store arbitrary properties and will accepts
     only string type in name property
@@ -99,12 +99,12 @@ class ArrayField(BaseField):
 
     Or an array of schema strict documents
 
-    field = ArrayField(
-        ObjectField(
-            dynamic=False,
-            properties={"name": {"type": "string"}}
-        )
-    )
+    >>> field = ArrayField(
+    ...    ObjectField(
+    ...        dynamic=False,
+    ...        properties={"name": {"type": "string"}}
+    ...    )
+    ... )
 
     # NOTE: Schema validation is done only at E.S indexing level
 

@@ -348,7 +348,6 @@ class Document(BaseDocument):
         """
         Takes a raw ES query in form of a dict or Payload and
         return Doc instances iterator
-
         >>> query = {
         ...     "query": {
         ...        "bool": {
@@ -368,7 +367,7 @@ class Document(BaseDocument):
 
         NOTE: Checking istance types is expensive, please prefer to use
         raw queries ex:
-           .search({"query": ...}) || .search(payload_instance.dict)
+        Document.search({"query": ...}) || .search(payload_instance.dict)
         """
 
         if not isinstance(query, dict):

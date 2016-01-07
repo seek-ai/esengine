@@ -4,8 +4,8 @@ class Mapping(object):
     """
     Used to generate mapping based in document field definitions
 
-    class Obj(Document):
-        name = StringField()
+    >>> class Obj(Document):
+    ...     name = StringField()
 
     And you can use a Mapping to refresh mappings
     (use in cron jobs or call periodically)
