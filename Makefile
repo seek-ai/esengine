@@ -17,5 +17,12 @@ clean:
 	@find ./ -name 'Thumbs.db' -exec rm -f {} \;
 	@find ./ -name '*~' -exec rm -f {} \;
 
-doc:
-	@epydoc --html esengine -o docs
+epydoc:
+	@git up && git checkout master
+	@epydoc --html esengine -o /tmp/esengine_docs
+	@git checkout gh-pages
+	@cp -r /tmp/esengine_docs docs
+	@git add docs/
+	@git commit -am"updated docs"
+	@git push -u origin gh-pages
+	@git checkout master
