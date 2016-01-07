@@ -90,7 +90,7 @@ def test_doc_setattr_():
         _doctype = 'test'
         _index = 'test'
         _fields = {"asdf": 1}
-    Doc._initialize_multi_fields = pass_func
+    Doc._initialize_defaults_fields = pass_func
 
     doc = Doc()
     with pytest.raises(AttributeError) as ex:

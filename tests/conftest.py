@@ -27,7 +27,8 @@ class ES(object):
         return {
             '_source': {
                 'id': self.test_id
-            }
+            },
+            '_id': self.test_id
         }
 
     def search(self, *args, **kwargs):
