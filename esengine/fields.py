@@ -2,6 +2,7 @@
 
 from dateutil import parser
 from datetime import datetime
+from six import string_types
 from esengine.bases.field import BaseField
 from esengine.exceptions import ValidationError, FieldTypeMismatch
 from esengine.utils.validation import FieldValidator
@@ -223,17 +224,14 @@ class GeoPointField(BaseField):
 
 class DateField(BaseField):
     _type = datetime
-    _default_mapping = {
-        "type": "date",
-        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd"
-    }
+    _default_mapping = {"type": "date"}
 
     @property
     def _date_format(self):
         """
         Optional string format used to send date value to E.S
         specified in DateField(date_format="%Y-%m-%d %H:%M:%S")
-        if not specified in  isoformat() will be used
+        if not specified isoformat() will be used
         :return: string date format or None
         """
         return getattr(self, 'date_format', None)
@@ -254,7 +252,7 @@ class DateField(BaseField):
                 for elem in serialized:
                     if isinstance(elem, self._type):
                         values.append(elem)
-                    elif isinstance(elem, basestring):
+                    elif isinstance(elem, string_types):
                         date = parser.parse(elem)
                         values.append(date)
                     else:
@@ -267,7 +265,7 @@ class DateField(BaseField):
             else:
                 if isinstance(serialized, self._type):
                     return serialized
-                elif isinstance(serialized, basestring):
+                elif isinstance(serialized, string_types):
                     return parser.parse(serialized)
                 raise ValueError('Expected str or date. {} found'.format(
                     serialized.__class__)
