@@ -5,10 +5,10 @@ The main ``Payload`` class allows you to build Elasticsearch queries
 
 .. code:: python
 
-    from eengine import Payload, Query, Aggregate
+    from esngine import Payload, Query, Aggregate
 
     # Create a new payload
-    p = payload()
+    p = Payload()
 
     # Match something
     p.query(Query.match('some_field', 'some_text'))
@@ -20,7 +20,7 @@ The main ``Payload`` class allows you to build Elasticsearch queries
 API
 ---
 
-.. automodule:: esengine.utils.payload.base
+.. automodule:: esengine.utils.payload
     :members:
     :undoc-members:
 
