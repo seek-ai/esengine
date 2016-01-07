@@ -1,5 +1,6 @@
 import elasticsearch.helpers as eh
 
+from six import iteritems
 from esengine.bases.document import BaseDocument
 from esengine.bases.metaclass import ModelMetaclass
 from esengine.bases.result import ResultSet
@@ -85,28 +86,80 @@ class Document(BaseDocument):
             id=self.id,  # noqa
             body=doc
         )
-        if saved_document.get('created'):
+        created = saved_document.get('created')
+        if created:
             self.id = saved_document['_id']
+        return created
 
-    def update(self, es=None, meta=None, **kwargs):
+    def update(self, body=None, es=None, meta=None, **kwargs):
         """
         Update a single document
 
+        Using fields
+        >>> Document().update(some_field="some_value")
+
+        Using a body dict
+        >>> Document().update({'some_field': "some_value"})
+
+        Or a script
+        >>> Document().update(script="for(x in data){x}",
+        ...                   lang="groovy",
+        ...                   params={'data': [...]})
+
+        :param es: ES client
+        :param meta: Extra values to be passed to client
+        :param body: Optional values passed as dict
+        :param kwargs: values to change
+        :return: Update result
+        """
+        body = body or {}
+        body.update(kwargs)
+        updated_data = self.update_by_id(
+            self.id, body=body, es=es, meta=meta, **kwargs
+        )
+        if 'script' not in kwargs:
+            for key, value in iteritems(body):
+                setattr(self, key, value)
+        return updated_data
+
+    @classmethod
+    def update_by_id(cls, doc_id, body=None, es=None, meta=None, **kwargs):
+        """
+        Update a single document using its id on BaseClass
+
+        Using fields
+        >>> Document.update_by_id(1234, some_field="some_value")
+        Using boy dict
+        >>> Document.update_by_id(1234, {'some_field': 'some_value'})
+
+        Or a script
+        >>> Document.update_by_id(1234,
+        ...                       script="for(x in data){x}",
+        ...                       lang="groovy",
+        ...                       params={'data': [...]})
+
+        :param doc_id: The document of the id to be updated
+        :param body: Optional values passed as dict
         :param es: ES client
         :param meta: Extra values to be passed to client
         :param kwargs: values to change
         :return: Update result
         """
+        body = body or {}
+        body.update(kwargs)
         meta = meta or {}
-        if 'retry_on_conflict' not in meta:
-            meta = {'retry_on_conflict': 5}
-        return self.get_es(es).update(
-            index=self._index,
-            doc_type=self._doctype,
-            id=self.id,  # noqa
-            body=kwargs,
+
+        if 'script' not in body and 'doc' not in body:
+            body = {'doc': body}
+
+        updated_data = cls.get_es(es).update(
+            index=cls._index,
+            doc_type=cls._doctype,
+            id=doc_id,  # noqa
+            body=body,
             **meta
         )
+        return updated_data
 
     def delete(self, es=None):
         """
