@@ -117,7 +117,7 @@ class Document(BaseDocument):
         updated_data = self.update_by_id(
             self.id, body=body, es=es, meta=meta, **kwargs
         )
-        if 'script' not in kwargs:
+        if 'script' not in body:
             for key, value in iteritems(body):
                 setattr(self, key, value)
         return updated_data
