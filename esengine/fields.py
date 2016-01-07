@@ -62,10 +62,9 @@ class ObjectField(BaseField):
     def __init__(self, *args, **kwargs):
         properties = kwargs.pop('properties', None)
         dynamic = kwargs.pop('dynamic', None)
-
         self._default_mapping = {'type': 'object'}
+        self._default = {}
         super(ObjectField, self).__init__(*args, **kwargs)
-
         if dynamic is not None:
             self._default_mapping['dynamic'] = dynamic
         if properties is not None:
@@ -120,6 +119,10 @@ class ArrayField(BaseField):
                 self.field._default_mapping['type'] = 'nested'
             self._default_mapping.update(self.field.mapping)
             self._type = field._type
+
+        if 'default' not in kwargs:
+            kwargs['default'] = []
+
         super(ArrayField, self).__init__(*args, **kwargs)
 
 
@@ -144,7 +147,6 @@ class GeoPointField(BaseField):
 
     def __init__(self, *args, **kwargs):
         self._default_mapping = {'type': 'geo_point'}
-
         self.mode = kwargs.pop('mode', 'dict')
         super(GeoPointField, self).__init__(*args, **kwargs)
         if self.mode == 'string':
