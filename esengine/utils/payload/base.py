@@ -111,6 +111,9 @@ class Payload(object):
 
         return unroll_struct(self._struct)
 
+    # backward compatibility API
+    to_dict = as_dict  # noqa
+
     def search(self, model=None, **kwargs):
         model = model or self._model
         return model.search(query=self.dict, **kwargs)
