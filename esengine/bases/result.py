@@ -52,6 +52,7 @@ class ResultSet(object):
         )
         self._hits = self._values = resp.get('hits', {}).pop('hits', [])
         self._meta = resp
+        return resp
 
     def update(self, meta=None, **kwargs):
         if kwargs:
@@ -65,7 +66,7 @@ class ResultSet(object):
                 }
                 for doc in self.values
             ]
-            eh.bulk(self._es, actions, **meta if meta else {})
+            return eh.bulk(self._es, actions, **meta if meta else {})
 
     def delete(self, meta=None, **kwargs):
         actions = (
@@ -77,7 +78,7 @@ class ResultSet(object):
             }
             for doc in self.values
         )
-        eh.bulk(self._es, actions, **meta if meta else {})
+        return eh.bulk(self._es, actions, **meta if meta else {})
 
     def count(self):
         return min(self._size, self.meta.get('hits', {}).get('total'))

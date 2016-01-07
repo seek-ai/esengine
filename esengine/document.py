@@ -65,9 +65,9 @@ class Document(BaseDocument):
         Utility for tests purposes
 
         :param es: ES client
-        :return: None
+        :return: ES Metadata
         """
-        cls.get_es(es).indices.refresh()
+        return cls.get_es(es).indices.refresh()
 
     def save(self, es=None):
         """
@@ -77,7 +77,7 @@ class Document(BaseDocument):
         >>> obj.save()
 
         :param es: ES client or None (if implemented a default in Model)
-        :return: Nothing or raise error
+        :return: Es meta data
         """
         doc = self.to_dict()
         saved_document = self.get_es(es).index(
@@ -89,7 +89,7 @@ class Document(BaseDocument):
         created = saved_document.get('created')
         if created:
             self.id = saved_document['_id']
-        return created
+        return saved_document
 
     def update(self, body=None, es=None, meta=None, **kwargs):
         """
@@ -169,9 +169,9 @@ class Document(BaseDocument):
         >>> obj.delete()
 
         :param es: ES client or None (if implemented a default in Model)
-        :return: Nothing or raise error
+        :return: ES meta data
         """
-        self.get_es(es).delete(
+        return self.get_es(es).delete(
             index=self._index,
             doc_type=self._doctype,
             id=self.id,  # noqa
@@ -240,7 +240,7 @@ class Document(BaseDocument):
                      doc_type=cls._doctype,
                      id=id,
                      **kwargs)
-        return cls.from_dict(dct=res['_source'])
+        return cls.from_es(res)
 
     @classmethod
     def count_by_query(cls, *args, **kwargs):
@@ -431,7 +431,7 @@ class Document(BaseDocument):
         :param docs: Iterator of Document instances
         :param es: ES client or None (if implemented a default in Model)
         :param kwargs: Extra params to be passed to streaming_bulk
-        :return: Nothing or Raise error
+        :return: ES metadata
         """
         actions = [
             {
@@ -443,7 +443,7 @@ class Document(BaseDocument):
             }
             for doc in docs
         ]
-        eh.bulk(cls.get_es(es), actions, **kwargs)
+        return eh.bulk(cls.get_es(es), actions, **kwargs)
 
     @classmethod
     def update_all(cls, docs, es=None, meta=None, **kwargs):
@@ -458,7 +458,7 @@ class Document(BaseDocument):
         :param es: ES client or None (if implemented a default in Model)
         :param meta: Extra values to be passed to client
         :param kwargs: Extra params to be passed to streaming_bulk
-        :return: Nothing or Raise error
+        :return: Es Metadata
         """
         actions = (
             {
@@ -470,7 +470,7 @@ class Document(BaseDocument):
             }
             for doc in docs
         )
-        eh.bulk(cls.get_es(es), actions, **meta if meta else {})
+        return eh.bulk(cls.get_es(es), actions, **meta if meta else {})
 
     @classmethod
     def delete_all(cls, docs, es=None, **kwargs):
@@ -483,7 +483,7 @@ class Document(BaseDocument):
         :param docs: Iterator of Document instances
         :param es: ES client or None (if implemented a default in Model)
         :param kwargs: Extra params to be passed to streaming_bulk
-        :return: Nothing or Raise error
+        :return: ES metadata
         """
         actions = [
             {
@@ -494,7 +494,7 @@ class Document(BaseDocument):
             }
             for doc in docs
         ]
-        eh.bulk(cls.get_es(es), actions, **kwargs)
+        return eh.bulk(cls.get_es(es), actions, **kwargs)
 
     @classmethod
     def random(cls, size=None):
