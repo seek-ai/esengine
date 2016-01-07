@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class Hierarchy</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="esengine-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Trees&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">&nbsp;</td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="class-tree.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<center><b>
+ [ <a href="module-tree.html">Module Hierarchy</a>
+ | <a href="class-tree.html">Class Hierarchy</a> ]
+</b></center><br />
+<h1 class="epydoc">Class Hierarchy</h1>
+<ul class="nomargin-top">
+    <li> <strong class="uidlink">object</strong>:
+      <em class="summary">The most base type</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.bases.document.BaseDocument-class.html">esengine.bases.document.BaseDocument</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.document.Document-class.html">esengine.document.Document</a></strong>:
+      <em class="summary">Base Document to be extended in your models definitions</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink">exceptions.BaseException</strong>:
+      <em class="summary">Common base class for all exceptions</em>
+    <ul>
+    <li> <strong class="uidlink">exceptions.Exception</strong>:
+      <em class="summary">Common base class for all non-exit exceptions.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.exceptions.ClientError-class.html">esengine.exceptions.ClientError</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.exception.ElasticQueryException-class.html">esengine.utils.payload.exception.ElasticQueryException</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.exception.DslException-class.html">esengine.utils.payload.exception.DslException</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.exception.InvalidArg-class.html">esengine.utils.payload.exception.InvalidArg</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.exception.MissingArg-class.html">esengine.utils.payload.exception.MissingArg</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.exception.NoAggregate-class.html">esengine.utils.payload.exception.NoAggregate</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.exception.NoFilter-class.html">esengine.utils.payload.exception.NoFilter</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.exception.NoQuery-class.html">esengine.utils.payload.exception.NoQuery</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.exception.NoSuggester-class.html">esengine.utils.payload.exception.NoSuggester</a></strong>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.exceptions.FieldTypeMismatch-class.html">esengine.exceptions.FieldTypeMismatch</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.exceptions.InvalidMultiField-class.html">esengine.exceptions.InvalidMultiField</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.exceptions.RequiredField-class.html">esengine.exceptions.RequiredField</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.exceptions.ValidationError-class.html">esengine.exceptions.ValidationError</a></strong>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.bases.field.BaseField-class.html">esengine.bases.field.BaseField</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.fields.ArrayField-class.html">esengine.fields.ArrayField</a></strong>:
+      <em class="summary">ArrayField is by default a string type allowing multiple items of 
+        any type to be stored and retrieved as string</em>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.fields.BooleanField-class.html">esengine.fields.BooleanField</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.fields.DateField-class.html">esengine.fields.DateField</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.embedded_document.EmbeddedDocument-class.html">esengine.embedded_document.EmbeddedDocument</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.fields.FloatField-class.html">esengine.fields.FloatField</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.fields.GeoPointField-class.html">esengine.fields.GeoPointField</a></strong>:
+      <em class="summary">A field to hold GeoPoint</em>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.fields.IntegerField-class.html">esengine.fields.IntegerField</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.fields.LongField-class.html">esengine.fields.LongField</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.fields.ObjectField-class.html">esengine.fields.ObjectField</a></strong>:
+      <em class="summary">Represent a typed or schema-less object (a python dict {}) A 
+        mapping can be optionally defined in mapping argument example:</em>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.fields.StringField-class.html">esengine.fields.StringField</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.meta.BaseFilterQuery-class.html">esengine.utils.payload.meta.BaseFilterQuery</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.meta.BaseAggregate-class.html">esengine.utils.payload.meta.BaseAggregate</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.aggregates.Aggregate-class.html">esengine.utils.payload.aggregates.Aggregate</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.meta.BaseSuggester-class.html">esengine.utils.payload.meta.BaseSuggester</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.suggesters.Suggester-class.html">esengine.utils.payload.suggesters.Suggester</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.filters.Filter-class.html">esengine.utils.payload.filters.Filter</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.queries.Query-class.html">esengine.utils.payload.queries.Query</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.validation.FieldValidator-class.html">esengine.utils.validation.FieldValidator</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.mapping.Mapping-class.html">esengine.mapping.Mapping</a></strong>:
+      <em class="summary">Used to generate mapping based in document field definitions</em>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.base.Payload-class.html">esengine.utils.payload.base.Payload</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.bases.result.ResultSet-class.html">esengine.bases.result.ResultSet</a></strong>
+    </li>
+    <li> <strong class="uidlink">basestring</strong>:
+      <em class="summary">Type basestring cannot be instantiated; it is the base for str and 
+        unicode.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="unicode-class.html">unicode</a></strong>:
+      <em class="summary">unicode(object='') -&gt; unicode object unicode(string[, encoding[,
+        errors]]) -&gt; unicode object</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink">datetime.date</strong>:
+      <em class="summary">date(year, month, day) --&gt; date object</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="datetime.datetime-class.html">datetime.datetime</a></strong>:
+      <em class="summary">datetime(year, month, day[, hour[, minute[, second[, 
+        microsecond[,tzinfo]]]]])</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="dict-class.html">dict</a></strong>:
+      <em class="summary">dict() -&gt; new empty dictionary
+dict(mapping) -&gt; new dictionary initialized from a mapping object's
+    (key, value) pairs
+dict(iterable) -&gt; new dictionary initialized as if via:
+    d = {}
+    for k, v in iterable:
+        d[k] = v
+dict(**kwargs) -&gt; new dictionary initialized with the name=value pairs
+    in the keyword argument list.</em>
+    </li>
+    <li> <strong class="uidlink"><a href="float-class.html">float</a></strong>:
+      <em class="summary">float(x) -&gt; floating point number</em>
+    </li>
+    <li> <strong class="uidlink"><a href="int-class.html">int</a></strong>:
+      <em class="summary">int(x=0) -&gt; int or long int(x, base=10) -&gt; int or long</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="bool-class.html">bool</a></strong>:
+      <em class="summary">bool(x) -&gt; bool</em>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="long-class.html">long</a></strong>:
+      <em class="summary">long(x=0) -&gt; long long(x, base=10) -&gt; long</em>
+    </li>
+    <li> <strong class="uidlink">type</strong>:
+      <em class="summary">type(object) -&gt; the object's type type(name, bases, dict) -&gt; 
+        a new type</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.meta.MetaFilterQuery-class.html">esengine.utils.payload.meta.MetaFilterQuery</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.meta.MetaAggregate-class.html">esengine.utils.payload.meta.MetaAggregate</a></strong>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.utils.payload.meta.MetaSuggester-class.html">esengine.utils.payload.meta.MetaSuggester</a></strong>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="esengine.bases.metaclass.ModelMetaclass-class.html">esengine.bases.metaclass.ModelMetaclass</a></strong>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+</ul>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="esengine-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Trees&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Jan  7 15:01:18 2016
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

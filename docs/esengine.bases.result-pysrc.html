@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>esengine.bases.result</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="esengine-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="esengine-module.html">Package&nbsp;esengine</a> ::
+        <a href="esengine.bases-module.html">Package&nbsp;bases</a> ::
+        Module&nbsp;result
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="esengine.bases.result-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="esengine.bases.result-module.html">Module esengine.bases.result</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># coding: utf-8</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">time</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">copy</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">elasticsearch</tt><tt class="py-op">.</tt><tt class="py-name">helpers</tt> <tt class="py-keyword">as</tt> <tt class="py-name">eh</tt> </tt>
+<a name="ResultSet"></a><div id="ResultSet-def"><a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt> <a class="py-toggle" href="#" id="ResultSet-toggle" onclick="return toggle('ResultSet');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html">ResultSet</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="ResultSet-expanded"><a name="ResultSet.__init__"></a><div id="ResultSet.__init__-def"><a name="L8"></a><tt class="py-lineno"> 8</tt> <a class="py-toggle" href="#" id="ResultSet.__init__-toggle" onclick="return toggle('ResultSet.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">resp</tt><tt class="py-op">,</tt> <tt class="py-param">model</tt><tt class="py-op">,</tt> <tt class="py-param">query</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line">                 <tt class="py-param">size</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">es</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">meta</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.__init__-expanded"><a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line">        <tt class="py-name">resp</tt> <tt class="py-op">=</tt> <tt class="py-name">copy</tt><tt class="py-op">.</tt><tt class="py-name">deepcopy</tt><tt class="py-op">(</tt><tt class="py-name">resp</tt><tt class="py-op">)</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_model</tt> <tt class="py-op">=</tt> <tt class="py-name">model</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_hits</tt> <tt class="py-op">=</tt> <tt class="py-name">resp</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Class Method esengine.document.Document.get()=esengine.document.Document-class.html#get"><a title="esengine.document.Document.get" class="py-name" href="#" onclick="return doclink('link-0', 'get', 'link-0');">get</a></tt><tt class="py-op">(</tt><tt class="py-string">'hits'</tt><tt class="py-op">,</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">pop</tt><tt class="py-op">(</tt><tt class="py-string">'hits'</tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_query</tt> <tt class="py-op">=</tt> <tt id="link-1" class="py-name" targets="Method esengine.utils.payload.base.Payload.query()=esengine.utils.payload.base.Payload-class.html#query,Class Method esengine.utils.payload.filters.Filter.query()=esengine.utils.payload.filters.Filter-class.html#query"><a title="esengine.utils.payload.base.Payload.query
+esengine.utils.payload.filters.Filter.query" class="py-name" href="#" onclick="return doclink('link-1', 'query', 'link-1');">query</a></tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_es</tt> <tt class="py-op">=</tt> <tt class="py-name">model</tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Class Method esengine.document.Document.get_es()=esengine.document.Document-class.html#get_es"><a title="esengine.document.Document.get_es" class="py-name" href="#" onclick="return doclink('link-2', 'get_es', 'link-2');">get_es</a></tt><tt class="py-op">(</tt><tt class="py-name">es</tt><tt class="py-op">)</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_size</tt> <tt class="py-op">=</tt> <tt id="link-3" class="py-name" targets="Method esengine.utils.payload.base.Payload.size()=esengine.utils.payload.base.Payload-class.html#size"><a title="esengine.utils.payload.base.Payload.size" class="py-name" href="#" onclick="return doclink('link-3', 'size', 'link-3');">size</a></tt> <tt class="py-keyword">or</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">)</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_meta</tt> <tt class="py-op">=</tt> <tt class="py-name">resp</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt id="link-4" class="py-name" targets="Variable esengine.bases.result.ResultSet.meta=esengine.bases.result.ResultSet-class.html#meta,Module esengine.utils.payload.meta=esengine.utils.payload.meta-module.html"><a title="esengine.bases.result.ResultSet.meta
+esengine.utils.payload.meta" class="py-name" href="#" onclick="return doclink('link-4', 'meta', 'link-4');">meta</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_meta</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Method esengine.bases.result.ResultSet.update()=esengine.bases.result.ResultSet-class.html#update,Method esengine.document.Document.update()=esengine.document.Document-class.html#update"><a title="esengine.bases.result.ResultSet.update
+esengine.document.Document.update" class="py-name" href="#" onclick="return doclink('link-5', 'update', 'link-5');">update</a></tt><tt class="py-op">(</tt><tt id="link-6" class="py-name"><a title="esengine.bases.result.ResultSet.meta
+esengine.utils.payload.meta" class="py-name" href="#" onclick="return doclink('link-6', 'meta', 'link-4');">meta</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_all_values</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"> </tt>
+<a name="ResultSet.__iter__"></a><div id="ResultSet.__iter__-def"><a name="L21"></a><tt class="py-lineno">21</tt> <a class="py-toggle" href="#" id="ResultSet.__iter__-toggle" onclick="return toggle('ResultSet.__iter__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#__iter__">__iter__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.__iter__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.__iter__-expanded"><a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Variable esengine.bases.result.ResultSet.values=esengine.bases.result.ResultSet-class.html#values"><a title="esengine.bases.result.ResultSet.values" class="py-name" href="#" onclick="return doclink('link-7', 'values', 'link-7');">values</a></tt> </tt>
+</div><a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">property</tt> </tt>
+<a name="ResultSet.meta"></a><div id="ResultSet.meta-def"><a name="L25"></a><tt class="py-lineno">25</tt> <a class="py-toggle" href="#" id="ResultSet.meta-toggle" onclick="return toggle('ResultSet.meta');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#meta">meta</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.meta-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.meta-expanded"><a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_meta</tt> </tt>
+</div><a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">property</tt> </tt>
+<a name="ResultSet.values"></a><div id="ResultSet.values-def"><a name="L29"></a><tt class="py-lineno">29</tt> <a class="py-toggle" href="#" id="ResultSet.values-toggle" onclick="return toggle('ResultSet.values');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#values">values</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.values-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.values-expanded"><a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-op">(</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_model</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Class Method esengine.bases.document.BaseDocument.from_es()=esengine.bases.document.BaseDocument-class.html#from_es"><a title="esengine.bases.document.BaseDocument.from_es" class="py-name" href="#" onclick="return doclink('link-8', 'from_es', 'link-8');">from_es</a></tt><tt class="py-op">(</tt><tt class="py-name">hit</tt><tt class="py-op">=</tt><tt class="py-name">hit</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">hit</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_hits</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">        <tt class="py-op">)</tt> </tt>
+</div><a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">property</tt> </tt>
+<a name="ResultSet.all_values"></a><div id="ResultSet.all_values-def"><a name="L36"></a><tt class="py-lineno">36</tt> <a class="py-toggle" href="#" id="ResultSet.all_values-toggle" onclick="return toggle('ResultSet.all_values');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#all_values">all_values</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.all_values-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.all_values-expanded"><a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_all_values</tt><tt class="py-op">:</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_all_values</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">i</tt> <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name"><a title="esengine.bases.result.ResultSet.values" class="py-name" href="#" onclick="return doclink('link-9', 'values', 'link-7');">values</a></tt><tt class="py-op">]</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_all_values</tt> </tt>
+</div><a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"> </tt>
+<a name="ResultSet.__getitem__"></a><div id="ResultSet.__getitem__-def"><a name="L41"></a><tt class="py-lineno">41</tt> <a class="py-toggle" href="#" id="ResultSet.__getitem__-toggle" onclick="return toggle('ResultSet.__getitem__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#__getitem__">__getitem__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">item</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.__getitem__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.__getitem__-expanded"><a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Variable esengine.bases.result.ResultSet.all_values=esengine.bases.result.ResultSet-class.html#all_values"><a title="esengine.bases.result.ResultSet.all_values" class="py-name" href="#" onclick="return doclink('link-10', 'all_values', 'link-10');">all_values</a></tt><tt class="py-op">[</tt><tt class="py-name">item</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line"> </tt>
+<a name="ResultSet.reload"></a><div id="ResultSet.reload-def"><a name="L44"></a><tt class="py-lineno">44</tt> <a class="py-toggle" href="#" id="ResultSet.reload-toggle" onclick="return toggle('ResultSet.reload');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#reload">reload</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">sleep</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.reload-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.reload-expanded"><a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">        <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">sleep</tt><tt class="py-op">(</tt><tt class="py-name">sleep</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_all_values</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line">        <tt class="py-name">resp</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_es</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Class Method esengine.document.Document.search()=esengine.document.Document-class.html#search,Method esengine.utils.payload.base.Payload.search()=esengine.utils.payload.base.Payload-class.html#search"><a title="esengine.document.Document.search
+esengine.utils.payload.base.Payload.search" class="py-name" href="#" onclick="return doclink('link-11', 'search', 'link-11');">search</a></tt><tt class="py-op">(</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line">            <tt class="py-name">index</tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_model</tt><tt class="py-op">.</tt><tt class="py-name">_index</tt><tt class="py-op">,</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">            <tt class="py-name">doc_type</tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_model</tt><tt class="py-op">.</tt><tt class="py-name">_doctype</tt><tt class="py-op">,</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">            <tt class="py-name">body</tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_query</tt><tt class="py-op">,</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">            <tt id="link-12" class="py-name"><a title="esengine.utils.payload.base.Payload.size" class="py-name" href="#" onclick="return doclink('link-12', 'size', 'link-3');">size</a></tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_size</tt> <tt class="py-keyword">or</tt> <tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">        <tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_hits</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_values</tt> <tt class="py-op">=</tt> <tt class="py-name">resp</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name"><a title="esengine.document.Document.get" class="py-name" href="#" onclick="return doclink('link-13', 'get', 'link-0');">get</a></tt><tt class="py-op">(</tt><tt class="py-string">'hits'</tt><tt class="py-op">,</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">pop</tt><tt class="py-op">(</tt><tt class="py-string">'hits'</tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_meta</tt> <tt class="py-op">=</tt> <tt class="py-name">resp</tt> </tt>
+</div><a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line"> </tt>
+<a name="ResultSet.update"></a><div id="ResultSet.update-def"><a name="L56"></a><tt class="py-lineno">56</tt> <a class="py-toggle" href="#" id="ResultSet.update-toggle" onclick="return toggle('ResultSet.update');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#update">update</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">meta</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">kwargs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.update-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.update-expanded"><a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">kwargs</tt><tt class="py-op">:</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line">            <tt class="py-name">actions</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">                <tt class="py-op">{</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">                    <tt class="py-string">'_op_type'</tt><tt class="py-op">:</tt> <tt class="py-string">'update'</tt><tt class="py-op">,</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">                    <tt class="py-string">'_index'</tt><tt class="py-op">:</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_model</tt><tt class="py-op">.</tt><tt class="py-name">_index</tt><tt class="py-op">,</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line">                    <tt class="py-string">'_type'</tt><tt class="py-op">:</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_model</tt><tt class="py-op">.</tt><tt class="py-name">_doctype</tt><tt class="py-op">,</tt> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">                    <tt class="py-string">'_id'</tt><tt class="py-op">:</tt> <tt class="py-name">doc</tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">,</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">                    <tt class="py-string">'doc'</tt><tt class="py-op">:</tt> <tt class="py-name">kwargs</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">                <tt class="py-op">}</tt> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">doc</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-14" class="py-name"><a title="esengine.bases.result.ResultSet.values" class="py-name" href="#" onclick="return doclink('link-14', 'values', 'link-7');">values</a></tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line">            <tt class="py-op">]</tt> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line">            <tt class="py-name">eh</tt><tt class="py-op">.</tt><tt class="py-name">bulk</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_es</tt><tt class="py-op">,</tt> <tt class="py-name">actions</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt id="link-15" class="py-name"><a title="esengine.bases.result.ResultSet.meta
+esengine.utils.payload.meta" class="py-name" href="#" onclick="return doclink('link-15', 'meta', 'link-4');">meta</a></tt> <tt class="py-keyword">if</tt> <tt id="link-16" class="py-name"><a title="esengine.bases.result.ResultSet.meta
+esengine.utils.payload.meta" class="py-name" href="#" onclick="return doclink('link-16', 'meta', 'link-4');">meta</a></tt> <tt class="py-keyword">else</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line"> </tt>
+<a name="ResultSet.delete"></a><div id="ResultSet.delete-def"><a name="L70"></a><tt class="py-lineno">70</tt> <a class="py-toggle" href="#" id="ResultSet.delete-toggle" onclick="return toggle('ResultSet.delete');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#delete">delete</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">meta</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">kwargs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.delete-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.delete-expanded"><a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line">        <tt class="py-name">actions</tt> <tt class="py-op">=</tt> <tt class="py-op">(</tt> </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line">            <tt class="py-op">{</tt> </tt>
+<a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line">                <tt class="py-string">'_op_type'</tt><tt class="py-op">:</tt> <tt class="py-string">'delete'</tt><tt class="py-op">,</tt> </tt>
+<a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line">                <tt class="py-string">'_index'</tt><tt class="py-op">:</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_model</tt><tt class="py-op">.</tt><tt class="py-name">_index</tt><tt class="py-op">,</tt> </tt>
+<a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line">                <tt class="py-string">'_type'</tt><tt class="py-op">:</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_model</tt><tt class="py-op">.</tt><tt class="py-name">_doctype</tt><tt class="py-op">,</tt> </tt>
+<a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line">                <tt class="py-string">'_id'</tt><tt class="py-op">:</tt> <tt class="py-name">doc</tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">,</tt> </tt>
+<a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line">            <tt class="py-op">}</tt> </tt>
+<a name="L78"></a><tt class="py-lineno">78</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">doc</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="esengine.bases.result.ResultSet.values" class="py-name" href="#" onclick="return doclink('link-17', 'values', 'link-7');">values</a></tt> </tt>
+<a name="L79"></a><tt class="py-lineno">79</tt>  <tt class="py-line">        <tt class="py-op">)</tt> </tt>
+<a name="L80"></a><tt class="py-lineno">80</tt>  <tt class="py-line">        <tt class="py-name">eh</tt><tt class="py-op">.</tt><tt class="py-name">bulk</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_es</tt><tt class="py-op">,</tt> <tt class="py-name">actions</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt id="link-18" class="py-name"><a title="esengine.bases.result.ResultSet.meta
+esengine.utils.payload.meta" class="py-name" href="#" onclick="return doclink('link-18', 'meta', 'link-4');">meta</a></tt> <tt class="py-keyword">if</tt> <tt id="link-19" class="py-name"><a title="esengine.bases.result.ResultSet.meta
+esengine.utils.payload.meta" class="py-name" href="#" onclick="return doclink('link-19', 'meta', 'link-4');">meta</a></tt> <tt class="py-keyword">else</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L81"></a><tt class="py-lineno">81</tt>  <tt class="py-line"> </tt>
+<a name="ResultSet.count"></a><div id="ResultSet.count-def"><a name="L82"></a><tt class="py-lineno">82</tt> <a class="py-toggle" href="#" id="ResultSet.count-toggle" onclick="return toggle('ResultSet.count');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#count">count</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.count-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.count-expanded"><a name="L83"></a><tt class="py-lineno">83</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt id="link-20" class="py-name" targets="Variable datetime.datetime.min=datetime.datetime-class.html#min"><a title="datetime.datetime.min" class="py-name" href="#" onclick="return doclink('link-20', 'min', 'link-20');">min</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_size</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="esengine.bases.result.ResultSet.meta
+esengine.utils.payload.meta" class="py-name" href="#" onclick="return doclink('link-21', 'meta', 'link-4');">meta</a></tt><tt class="py-op">.</tt><tt id="link-22" class="py-name"><a title="esengine.document.Document.get" class="py-name" href="#" onclick="return doclink('link-22', 'get', 'link-0');">get</a></tt><tt class="py-op">(</tt><tt class="py-string">'hits'</tt><tt class="py-op">,</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name"><a title="esengine.document.Document.get" class="py-name" href="#" onclick="return doclink('link-23', 'get', 'link-0');">get</a></tt><tt class="py-op">(</tt><tt class="py-string">'total'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L84"></a><tt class="py-lineno">84</tt>  <tt class="py-line"> </tt>
+<a name="ResultSet.__unicode__"></a><div id="ResultSet.__unicode__-def"><a name="L85"></a><tt class="py-lineno">85</tt> <a class="py-toggle" href="#" id="ResultSet.__unicode__-toggle" onclick="return toggle('ResultSet.__unicode__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#__unicode__">__unicode__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.__unicode__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.__unicode__-expanded"><a name="L86"></a><tt class="py-lineno">86</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt id="link-24" class="py-name" targets="Class unicode=unicode-class.html"><a title="unicode" class="py-name" href="#" onclick="return doclink('link-24', 'unicode', 'link-24');">unicode</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-25" class="py-name" targets="Method esengine.bases.result.ResultSet.__unicode__()=esengine.bases.result.ResultSet-class.html#__unicode__,Method esengine.document.Document.__unicode__()=esengine.document.Document-class.html#__unicode__"><a title="esengine.bases.result.ResultSet.__unicode__
+esengine.document.Document.__unicode__" class="py-name" href="#" onclick="return doclink('link-25', '__unicode__', 'link-25');">__unicode__</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L87"></a><tt class="py-lineno">87</tt>  <tt class="py-line"> </tt>
+<a name="ResultSet.__str__"></a><div id="ResultSet.__str__-def"><a name="L88"></a><tt class="py-lineno">88</tt> <a class="py-toggle" href="#" id="ResultSet.__str__-toggle" onclick="return toggle('ResultSet.__str__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.result.ResultSet-class.html#__str__">__str__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ResultSet.__str__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="ResultSet.__str__-expanded"><a name="L89"></a><tt class="py-lineno">89</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">"&lt;ResultSet: {i.values}&gt;"</tt><tt class="py-op">.</tt><tt class="py-name">format</tt><tt class="py-op">(</tt><tt class="py-name">i</tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L90"></a><tt class="py-lineno">90</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="esengine-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Jan  7 15:01:18 2016
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

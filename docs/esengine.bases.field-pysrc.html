@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>esengine.bases.field</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="esengine-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="esengine-module.html">Package&nbsp;esengine</a> ::
+        <a href="esengine.bases-module.html">Package&nbsp;bases</a> ::
+        Module&nbsp;field
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="esengine.bases.field-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="esengine.bases.field-module.html">Module esengine.bases.field</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">collections</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Iterable</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package esengine=esengine-module.html"><a title="esengine" class="py-name" href="#" onclick="return doclink('link-0', 'esengine', 'link-0');">esengine</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Module esengine.exceptions=esengine.exceptions-module.html"><a title="esengine.exceptions" class="py-name" href="#" onclick="return doclink('link-1', 'exceptions', 'link-1');">exceptions</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Class esengine.exceptions.RequiredField=esengine.exceptions.RequiredField-class.html"><a title="esengine.exceptions.RequiredField" class="py-name" href="#" onclick="return doclink('link-2', 'RequiredField', 'link-2');">RequiredField</a></tt><tt class="py-op">,</tt> <tt id="link-3" class="py-name" targets="Class esengine.exceptions.InvalidMultiField=esengine.exceptions.InvalidMultiField-class.html"><a title="esengine.exceptions.InvalidMultiField" class="py-name" href="#" onclick="return doclink('link-3', 'InvalidMultiField', 'link-3');">InvalidMultiField</a></tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-4" class="py-name"><a title="esengine" class="py-name" href="#" onclick="return doclink('link-4', 'esengine', 'link-0');">esengine</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name"><a title="esengine.exceptions" class="py-name" href="#" onclick="return doclink('link-5', 'exceptions', 'link-1');">exceptions</a></tt> <tt class="py-keyword">import</tt> <tt id="link-6" class="py-name" targets="Class esengine.exceptions.FieldTypeMismatch=esengine.exceptions.FieldTypeMismatch-class.html"><a title="esengine.exceptions.FieldTypeMismatch" class="py-name" href="#" onclick="return doclink('link-6', 'FieldTypeMismatch', 'link-6');">FieldTypeMismatch</a></tt><tt class="py-op">,</tt> <tt id="link-7" class="py-name" targets="Class esengine.exceptions.ValidationError=esengine.exceptions.ValidationError-class.html"><a title="esengine.exceptions.ValidationError" class="py-name" href="#" onclick="return doclink('link-7', 'ValidationError', 'link-7');">ValidationError</a></tt> </tt>
+<a name="BaseField"></a><div id="BaseField-def"><a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt> <a class="py-toggle" href="#" id="BaseField-toggle" onclick="return toggle('BaseField');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="esengine.bases.field.BaseField-class.html">BaseField</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseField-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="BaseField-expanded"><a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line">    <tt class="py-name">_type</tt> <tt class="py-op">=</tt> <tt id="link-8" class="py-name" targets="Class unicode=unicode-class.html"><a title="unicode" class="py-name" href="#" onclick="return doclink('link-8', 'unicode', 'link-8');">unicode</a></tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line">    <tt id="link-9" class="py-name" targets="Variable esengine.bases.field.BaseField._default_mapping=esengine.bases.field.BaseField-class.html#_default_mapping,Variable esengine.fields.BooleanField._default_mapping=esengine.fields.BooleanField-class.html#_default_mapping,Variable esengine.fields.DateField._default_mapping=esengine.fields.DateField-class.html#_default_mapping,Variable esengine.fields.FloatField._default_mapping=esengine.fields.FloatField-class.html#_default_mapping,Variable esengine.fields.IntegerField._default_mapping=esengine.fields.IntegerField-class.html#_default_mapping,Variable esengine.fields.LongField._default_mapping=esengine.fields.LongField-class.html#_default_mapping,Variable esengine.fields.StringField._default_mapping=esengine.fields.StringField-class.html#_default_mapping"><a title="esengine.bases.field.BaseField._default_mapping
+esengine.fields.BooleanField._default_mapping
+esengine.fields.DateField._default_mapping
+esengine.fields.FloatField._default_mapping
+esengine.fields.IntegerField._default_mapping
+esengine.fields.LongField._default_mapping
+esengine.fields.StringField._default_mapping" class="py-name" href="#" onclick="return doclink('link-9', '_default_mapping', 'link-9');">_default_mapping</a></tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'string'</tt><tt class="py-op">}</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"> </tt>
+<a name="BaseField.__init__"></a><div id="BaseField.__init__-def"><a name="L11"></a><tt class="py-lineno">11</tt> <a class="py-toggle" href="#" id="BaseField.__init__-toggle" onclick="return toggle('BaseField.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.field.BaseField-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">field_type</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">required</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">,</tt> <tt class="py-param">multi</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">,</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line">                 <tt class="py-param">field_name</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">validators</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">mapping</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">kwargs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseField.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="BaseField.__init__-expanded"><a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Variable esengine.bases.document.BaseDocument._validators=esengine.bases.document.BaseDocument-class.html#_validators,Variable esengine.document.Document._validators=esengine.document.Document-class.html#_validators"><a title="esengine.bases.document.BaseDocument._validators
+esengine.document.Document._validators" class="py-name" href="#" onclick="return doclink('link-10', '_validators', 'link-10');">_validators</a></tt> <tt class="py-op">=</tt> <tt class="py-name">validators</tt> <tt class="py-keyword">or</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_field_name</tt> <tt class="py-op">=</tt> <tt class="py-name">field_name</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_mapping</tt> <tt class="py-op">=</tt> <tt id="link-11" class="py-name" targets="Variable esengine.bases.field.BaseField.mapping=esengine.bases.field.BaseField-class.html#mapping,Module esengine.mapping=esengine.mapping-module.html"><a title="esengine.bases.field.BaseField.mapping
+esengine.mapping" class="py-name" href="#" onclick="return doclink('link-11', 'mapping', 'link-11');">mapping</a></tt> <tt class="py-keyword">or</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">field_type</tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_type</tt> <tt class="py-op">=</tt> <tt class="py-name">field_type</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_required</tt> <tt class="py-op">=</tt> <tt class="py-name">required</tt> <tt class="py-keyword">or</tt> <tt class="py-name">getattr</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-string">'_required'</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Variable esengine.fields.ArrayField._multi=esengine.fields.ArrayField-class.html#_multi"><a title="esengine.fields.ArrayField._multi" class="py-name" href="#" onclick="return doclink('link-12', '_multi', 'link-12');">_multi</a></tt> <tt class="py-op">=</tt> <tt class="py-name">multi</tt> <tt class="py-keyword">or</tt> <tt class="py-name">getattr</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-string">'_multi'</tt><tt class="py-op">,</tt> <tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">key</tt><tt class="py-op">,</tt> <tt class="py-name">value</tt> <tt class="py-keyword">in</tt> <tt class="py-name">kwargs</tt><tt class="py-op">.</tt><tt class="py-name">iteritems</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">            <tt class="py-name">setattr</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-name">key</tt><tt class="py-op">,</tt> <tt class="py-name">value</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"> </tt>
+<a name="BaseField.validate_field_type"></a><div id="BaseField.validate_field_type-def"><a name="L23"></a><tt class="py-lineno">23</tt> <a class="py-toggle" href="#" id="BaseField.validate_field_type-toggle" onclick="return toggle('BaseField.validate_field_type');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.field.BaseField-class.html#validate_field_type">validate_field_type</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">value</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseField.validate_field_type-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="BaseField.validate_field_type-expanded"><a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">value</tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">value</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_type</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">                <tt class="py-keyword">raise</tt> <tt id="link-13" class="py-name"><a title="esengine.exceptions.FieldTypeMismatch" class="py-name" href="#" onclick="return doclink('link-13', 'FieldTypeMismatch', 'link-6');">FieldTypeMismatch</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_field_name</tt><tt class="py-op">,</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">                                        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_type</tt><tt class="py-op">,</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">                                        <tt class="py-name">value</tt><tt class="py-op">.</tt><tt class="py-name">__class__</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"> </tt>
+<a name="BaseField.validate"></a><div id="BaseField.validate-def"><a name="L30"></a><tt class="py-lineno">30</tt> <a class="py-toggle" href="#" id="BaseField.validate-toggle" onclick="return toggle('BaseField.validate');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.field.BaseField-class.html#validate">validate</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">value</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseField.validate-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="BaseField.validate-expanded"><a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">value</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_required</tt><tt class="py-op">:</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">                <tt class="py-keyword">raise</tt> <tt id="link-14" class="py-name"><a title="esengine.exceptions.RequiredField" class="py-name" href="#" onclick="return doclink('link-14', 'RequiredField', 'link-2');">RequiredField</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_field_name</tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name"><a title="esengine.fields.ArrayField._multi" class="py-name" href="#" onclick="return doclink('link-15', '_multi', 'link-12');">_multi</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">value</tt><tt class="py-op">,</tt> <tt class="py-name">Iterable</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">                    <tt class="py-keyword">raise</tt> <tt id="link-16" class="py-name"><a title="esengine.exceptions.InvalidMultiField" class="py-name" href="#" onclick="return doclink('link-16', 'InvalidMultiField', 'link-3');">InvalidMultiField</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_field_name</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">                <tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name" targets="Method esengine.bases.field.BaseField.validate_field_type()=esengine.bases.field.BaseField-class.html#validate_field_type,Method esengine.fields.GeoPointField.validate_field_type()=esengine.fields.GeoPointField-class.html#validate_field_type"><a title="esengine.bases.field.BaseField.validate_field_type
+esengine.fields.GeoPointField.validate_field_type" class="py-name" href="#" onclick="return doclink('link-17', 'validate_field_type', 'link-17');">validate_field_type</a></tt><tt class="py-op">(</tt><tt class="py-name">elem</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">elem</tt> <tt class="py-keyword">in</tt> <tt class="py-name">value</tt><tt class="py-op">]</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name"><a title="esengine.bases.field.BaseField.validate_field_type
+esengine.fields.GeoPointField.validate_field_type" class="py-name" href="#" onclick="return doclink('link-18', 'validate_field_type', 'link-17');">validate_field_type</a></tt><tt class="py-op">(</tt><tt class="py-name">value</tt><tt class="py-op">)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line"> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">validator</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="esengine.bases.document.BaseDocument._validators
+esengine.document.Document._validators" class="py-name" href="#" onclick="return doclink('link-19', '_validators', 'link-10');">_validators</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">            <tt class="py-string">"""</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"><tt class="py-string">            Functions in self._validators receives field_instance, value</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"><tt class="py-string">            should return None or</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-string">            raise Exception (ValidationError) or return any value</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"><tt class="py-string">            """</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line">            <tt class="py-name">val</tt> <tt class="py-op">=</tt> <tt class="py-name">validator</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-name">value</tt><tt class="py-op">)</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">val</tt><tt class="py-op">:</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">                <tt class="py-keyword">raise</tt> <tt id="link-20" class="py-name"><a title="esengine.exceptions.ValidationError" class="py-name" href="#" onclick="return doclink('link-20', 'ValidationError', 'link-7');">ValidationError</a></tt><tt class="py-op">(</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">                    <tt class="py-string">'Invalid %s, returned: %s'</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_field_name</tt><tt class="py-op">,</tt> <tt class="py-name">val</tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">                <tt class="py-op">)</tt> </tt>
+</div><a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line"> </tt>
+<a name="BaseField.to_dict"></a><div id="BaseField.to_dict-def"><a name="L54"></a><tt class="py-lineno">54</tt> <a class="py-toggle" href="#" id="BaseField.to_dict-toggle" onclick="return toggle('BaseField.to_dict');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.field.BaseField-class.html#to_dict">to_dict</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">value</tt><tt class="py-op">,</tt> <tt class="py-param">validate</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseField.to_dict-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="BaseField.to_dict-expanded"><a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line"><tt class="py-docstring">        Transform value from Python to be saved in E.S</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line"><tt class="py-docstring">        :param value: raw value</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line"><tt class="py-docstring">        :param validate: if should validate before transform</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line"><tt class="py-docstring">        :return: pure value</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt id="link-21" class="py-name" targets="Method esengine.bases.document.BaseDocument.validate()=esengine.bases.document.BaseDocument-class.html#validate,Method esengine.bases.field.BaseField.validate()=esengine.bases.field.BaseField-class.html#validate,Method esengine.embedded_document.EmbeddedDocument.validate()=esengine.embedded_document.EmbeddedDocument-class.html#validate"><a title="esengine.bases.document.BaseDocument.validate
+esengine.bases.field.BaseField.validate
+esengine.embedded_document.EmbeddedDocument.validate" class="py-name" href="#" onclick="return doclink('link-21', 'validate', 'link-21');">validate</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name"><a title="esengine.bases.document.BaseDocument.validate
+esengine.bases.field.BaseField.validate
+esengine.embedded_document.EmbeddedDocument.validate" class="py-name" href="#" onclick="return doclink('link-22', 'validate', 'link-21');">validate</a></tt><tt class="py-op">(</tt><tt class="py-name">value</tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">value</tt> </tt>
+</div><a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line"> </tt>
+<a name="BaseField.from_dict"></a><div id="BaseField.from_dict-def"><a name="L65"></a><tt class="py-lineno">65</tt> <a class="py-toggle" href="#" id="BaseField.from_dict-toggle" onclick="return toggle('BaseField.from_dict');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.field.BaseField-class.html#from_dict">from_dict</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">serialized</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseField.from_dict-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="BaseField.from_dict-expanded"><a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line"><tt class="py-docstring">        Transform data read from E.S to Python Object</tt> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line"><tt class="py-docstring">        :param serialized: Result from E.S (string)</tt> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line"><tt class="py-docstring">        :return: Instance or Instances of self._type</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">serialized</tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name"><a title="esengine.fields.ArrayField._multi" class="py-name" href="#" onclick="return doclink('link-23', '_multi', 'link-12');">_multi</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-op">[</tt> </tt>
+<a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_type</tt><tt class="py-op">(</tt><tt class="py-name">x</tt><tt class="py-op">)</tt> <tt class="py-keyword">if</tt> <tt class="py-name">x</tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt> <tt class="py-keyword">else</tt> <tt class="py-name">x</tt> <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt class="py-name">serialized</tt> </tt>
+<a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line">                <tt class="py-op">]</tt> </tt>
+<a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_type</tt><tt class="py-op">(</tt><tt class="py-name">serialized</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line"> </tt>
+<a name="L78"></a><tt class="py-lineno">78</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">property</tt> </tt>
+<a name="BaseField.mapping"></a><div id="BaseField.mapping-def"><a name="L79"></a><tt class="py-lineno">79</tt> <a class="py-toggle" href="#" id="BaseField.mapping-toggle" onclick="return toggle('BaseField.mapping');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="esengine.bases.field.BaseField-class.html#mapping">mapping</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="BaseField.mapping-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="BaseField.mapping-expanded"><a name="L80"></a><tt class="py-lineno">80</tt>  <tt class="py-line">        <tt class="py-name">m</tt> <tt class="py-op">=</tt> <tt id="link-24" class="py-name" targets="Class dict=dict-class.html,Variable esengine.utils.payload.base.Payload.dict=esengine.utils.payload.base.Payload-class.html#dict,Variable esengine.utils.payload.meta.BaseFilterQuery.dict=esengine.utils.payload.meta.BaseFilterQuery-class.html#dict"><a title="dict
+esengine.utils.payload.base.Payload.dict
+esengine.utils.payload.meta.BaseFilterQuery.dict" class="py-name" href="#" onclick="return doclink('link-24', 'dict', 'link-24');">dict</a></tt><tt class="py-op">(</tt><tt class="py-op">**</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-25" class="py-name"><a title="esengine.bases.field.BaseField._default_mapping
+esengine.fields.BooleanField._default_mapping
+esengine.fields.DateField._default_mapping
+esengine.fields.FloatField._default_mapping
+esengine.fields.IntegerField._default_mapping
+esengine.fields.LongField._default_mapping
+esengine.fields.StringField._default_mapping" class="py-name" href="#" onclick="return doclink('link-25', '_default_mapping', 'link-9');">_default_mapping</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L81"></a><tt class="py-lineno">81</tt>  <tt class="py-line">        <tt class="py-name">m</tt><tt class="py-op">.</tt><tt id="link-26" class="py-name" targets="Method esengine.bases.result.ResultSet.update()=esengine.bases.result.ResultSet-class.html#update,Method esengine.document.Document.update()=esengine.document.Document-class.html#update"><a title="esengine.bases.result.ResultSet.update
+esengine.document.Document.update" class="py-name" href="#" onclick="return doclink('link-26', 'update', 'link-26');">update</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_mapping</tt><tt class="py-op">)</tt> </tt>
+<a name="L82"></a><tt class="py-lineno">82</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">m</tt> </tt>
+</div></div><a name="L83"></a><tt class="py-lineno">83</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="esengine-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Jan  7 15:01:18 2016
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
