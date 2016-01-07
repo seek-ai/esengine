@@ -1,10 +1,11 @@
 # coding: utf-8
+import os
+import re
 
 try:
     from setuptools import setup, find_packages
 except ImportError:
     from distutils.core import setup, find_packages
-
 
 try:
     import pypandoc
@@ -13,9 +14,26 @@ except (IOError, ImportError):
     long_description = "Elasticsearch ODM inspired on MongoEngine"
 
 
+def fpath(name):
+    return os.path.join(os.path.dirname(__file__), name)
+
+
+def read(fname):
+    return open(fpath(fname)).read()
+
+# grep eseengine/__init__.py since python 3.x cannot import it
+file_text = read(fpath('esengine/__init__.py'))
+
+
+def grep(attrname):
+    pattern = r"{0}\W*=\W*'([^']+)'".format(attrname)
+    strval, = re.findall(pattern, file_text)
+    return strval
+
+
 setup(
     name='esengine',
-    version="0.0.8",
+    version=grep('__version__'),
     url='https://github.com/catholabs/esengine',
     license='MIT',
     author="Catholabs",
