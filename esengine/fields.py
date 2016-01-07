@@ -155,11 +155,16 @@ class GeoPointField(BaseField):
             class StringValidator(FieldValidator):
                 @staticmethod
                 def validate_string(field, value):
-                    values = [float(item.strip()) for item in value.split(',')]
-                    if not len(values) == 2:
-                        raise ValidationError(
-                            '2 elements "lat,lon" required in %s' % field._field_name  # noqa
-                        )
+                    if value:
+                        values = [
+                            float(item.strip())
+                            for item in value.split(',')
+                        ]
+                        if not len(values) == 2:
+                            raise ValidationError(
+                                '2 elements "lat,lon" required in %s' %
+                                field._field_name
+                            )
 
                 def validate_value(self, field, value):
                     if not field._multi:
@@ -173,12 +178,15 @@ class GeoPointField(BaseField):
         elif self.mode == 'array':
             self._multi = True
             self._type = float
+            self._default = []
 
             def validate_array_item(field, value):
-                if not len(value) == 2:
-                    raise ValidationError(
-                        '2 elements [lon, lat] required in %s' % field._field_name  # noqa
-                    )
+                if value:
+                    if not len(value) == 2:
+                        raise ValidationError(
+                            '2 elements [lon, lat] required in %s' %
+                            field._field_name
+                        )
 
             def array_validator(field, value):
                 if any([isinstance(item, list) for item in value]):
@@ -191,15 +199,18 @@ class GeoPointField(BaseField):
 
         else:
             self._type = dict
+            self._default = {}
 
             class DictValidator(FieldValidator):
                 @staticmethod
                 def validate_dict(field, value):
-                    for key in 'lat', 'lon':
-                        if not isinstance(value.get(key), float):
-                            raise ValidationError(
-                                '%s: %s requires a float' % (field._field_name, key)  # noqa
-                            )
+                    if value:
+                        for key in 'lat', 'lon':
+                            if not isinstance(value.get(key), float):
+                                raise ValidationError(
+                                    '%s: %s requires a float' %
+                                    (field._field_name, key)
+                                )
 
                 def validate_value(self, field, value):
                     if not field._multi:
