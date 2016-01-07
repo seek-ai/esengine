@@ -7,12 +7,9 @@ class BaseDocument(object):
     _strict = False
     _validators = None
 
-    def _initialize_multi_fields(self):
-        for key, field_class in self.__class__._fields.items():
-            if field_class._multi:
-                setattr(self, key, [])
-            else:
-                setattr(self, key, None)
+    def _initialize_defaults_fields(self):
+        for key, field_instance in self.__class__._fields.items():
+            setattr(self, key, field_instance._default)
 
     def __init__(self, *args, **kwargs):
         klass = self.__class__.__name__
@@ -26,7 +23,7 @@ class BaseDocument(object):
                 'To avoid mapping problems, '
                 'it is recommended to define the id field as a StringField'
             )
-        self._initialize_multi_fields()
+        self._initialize_defaults_fields()
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 

@@ -6,17 +6,27 @@ from esengine.exceptions import FieldTypeMismatch, ValidationError
 
 class BaseField(object):
     _type = unicode
+    _default = None
     _default_mapping = {'type': 'string'}
 
     def __init__(self, field_type=None, required=False, multi=False,
-                 field_name=None, validators=None, mapping=None, **kwargs):
+                 field_name=None, validators=None, mapping=None,
+                 default=None, **kwargs):
         self._validators = validators or []
         self._field_name = field_name
         self._mapping = mapping or {}
+
         if field_type is not None:
             self._type = field_type
+
         self._required = required or getattr(self, '_required', False)
         self._multi = multi or getattr(self, '_multi', False)
+
+        if default:
+            self._default = default
+        elif self._multi:
+            self._default = []
+
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
@@ -74,6 +84,7 @@ class BaseField(object):
                     self._type(x) if x is not None else x for x in serialized
                 ]
             return self._type(serialized)
+        return self._default
 
     @property
     def mapping(self):
