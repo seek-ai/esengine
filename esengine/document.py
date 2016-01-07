@@ -115,7 +115,7 @@ class Document(BaseDocument):
         body = body or {}
         body.update(kwargs)
         updated_data = self.update_by_id(
-            self.id, body=body, es=es, meta=meta, **kwargs
+            self.id, body=body, es=es, meta=meta
         )
         if 'script' not in body:
             for key, value in iteritems(body):
