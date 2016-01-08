@@ -1,4 +1,5 @@
 import warnings
+from six import iteritems
 from esengine.fields import StringField
 from esengine.exceptions import ValidationError
 
