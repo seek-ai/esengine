@@ -8,9 +8,21 @@ class BaseDocument(object):
     _strict = False
     _validators = None
 
-    def _initialize_defaults_fields(self):
-        for key, field_instance in self.__class__._fields.items():
-            setattr(self, key, field_instance._default)
+    def _initialize_defaults_fields(self, ignore=None):
+        ignore = ignore or []
+        for key, field_instance in iteritems(self.__class__._fields):
+            if key not in ignore:
+                default = self.get_default_value_for_field(field_instance)
+                setattr(self, key, default)
+
+    def get_default_value_for_field(self, field_instance):
+        default = field_instance._default
+        if callable(default):
+            try:
+                default = field_instance._default(self, field_instance)
+            except TypeError:
+                default = field_instance._default()
+        return default
 
     def __init__(self, *args, **kwargs):
         klass = self.__class__.__name__
@@ -24,9 +36,9 @@ class BaseDocument(object):
                 'To avoid mapping problems, '
                 'it is recommended to define the id field as a StringField'
             )
-        self._initialize_defaults_fields()
-        for key, value in kwargs.iteritems():
+        for key, value in iteritems(kwargs):
             setattr(self, key, value)
+        self._initialize_defaults_fields(ignore=kwargs.keys())
 
     def __setattr__(self, key, value):
         if (not key.startswith('_')) and key not in self._fields:
@@ -45,7 +57,7 @@ class BaseDocument(object):
         if validate:
             self.validate()
         result = {}
-        for field_name, field_instance in self._fields.iteritems():
+        for field_name, field_instance in iteritems(self._fields):
             value = getattr(self, field_name)
             result.update({field_name: field_instance.to_dict(value)})
         return result
@@ -58,7 +70,7 @@ class BaseDocument(object):
         :return: Instance of Document
         """
         params = {}
-        for field_name, field_instance in cls._fields.iteritems():
+        for field_name, field_instance in iteritems(cls._fields):
             serialized = dct.get(field_name)
             value = field_instance.from_dict(serialized)
             params[field_name] = value

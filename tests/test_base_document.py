@@ -83,7 +83,7 @@ def test_raise_if_attr_not_in_fields():
 
 
 def test_doc_setattr_():
-    def pass_func(self):
+    def pass_func(self, ignore=None):
         pass
 
     class Doc(BaseDocument):
