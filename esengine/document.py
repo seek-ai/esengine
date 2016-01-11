@@ -480,7 +480,7 @@ class Document(BaseDocument):
         >>> docs = (Document(value=value) for value in [1, 2, 3])
         >>> Document.delete_all(docs)
 
-        :param docs: Iterator of Document instances
+        :param docs: Iterator of Document instances or a list of ids
         :param es: ES client or None (if implemented a default in Model)
         :param kwargs: Extra params to be passed to streaming_bulk
         :return: ES metadata
@@ -490,7 +490,7 @@ class Document(BaseDocument):
                 '_op_type': 'delete',
                 '_index': cls._index,
                 '_type': cls._doctype,
-                '_id': doc.id,
+                '_id': getattr(doc, 'id', doc),
             }
             for doc in docs
         ]
