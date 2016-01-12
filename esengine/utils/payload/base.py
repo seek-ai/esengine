@@ -69,13 +69,22 @@ class Payload(object):
         self._struct['_source'] = fields
         return self
 
-    def sort(self, field, **kwargs):
-        if 'sort' not in self._struct:
+    def sort(self, field, reset=False, **kwargs):
+        """
+        Sort he Payload
+        :param field: Field to sort
+        :param reset: Should reset sort list
+        :param kwargs: "order" and other sort params
+        :return: Payload instance (self)
+        """
+        if reset or 'sort' not in self._struct:
             self._struct['sort'] = []
+
         if not kwargs:
             self._struct['sort'].append(field)
         else:
             self._struct['sort'].append({field: kwargs})
+
         return self
 
     @property
@@ -126,8 +135,12 @@ class Payload(object):
         return model.search(query=query, **kwargs)
 
     def count(self, model=None, **kwargs):
+        model = model or self._model
+        query = self.dict.get('query')
+        if not query:
+            raise PayloadError("query should be specified for count")
         kwargs['perform_count'] = True
-        return self.search(model=model, **kwargs)
+        return model.search(query={"query": query}, **kwargs)
 
     def paginate(self, page=1, per_page=10):
         return Pagination(iterable=self, page=page, per_page=per_page)
