@@ -1,5 +1,7 @@
+from esengine.exceptions import PayloadError
 from esengine.utils.payload.queries import Query
 from esengine.utils.payload.meta_util import unroll_struct
+from esengine.utils.pagination import Pagination
 
 
 class Payload(object):
@@ -116,4 +118,16 @@ class Payload(object):
 
     def search(self, model=None, **kwargs):
         model = model or self._model
-        return model.search(query=self.dict, **kwargs)
+        query = self.dict
+        if not query:
+            raise PayloadError(
+                "query, filter, aggregate or suggest should be specified!"
+            )
+        return model.search(query=query, **kwargs)
+
+    def count(self, model=None, **kwargs):
+        kwargs['perform_count'] = True
+        return self.search(model=model, **kwargs)
+
+    def paginate(self, page=1, per_page=10):
+        return Pagination(iterable=self, page=page, per_page=per_page)

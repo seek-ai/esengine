@@ -492,13 +492,13 @@ Sometimes you need to force indices-shards refresh for testing, you can use
 Document.refresh()
 ```
 
-# Payload builder
+#### Payload builder
 
 Sometimes queries turns in to complex and verbose data structures, to help you
 (use with moderation) you can use Payload utils to build queries.
 
 
-## Example using a raw query:
+###### Example using a raw query:
 
 ```python
 query = {
@@ -519,7 +519,7 @@ query = {
 Person.search(query=query, size=10)
 ```
 
-## Same example using payload utils
+###### Same example using payload utils
 
 ```python
 from esengine import Payload, Query, Filter
@@ -542,7 +542,7 @@ payload = Payload(
 payload.search()
 ```
 
-## More examples
+###### More examples
 
 You can use Payload, Query or Filter direct in search
 
@@ -559,7 +559,7 @@ Person.search(Filter.ids([1, 2, 3]))
 
 ```
 
-## chaining
+###### chaining
 
 Payload object is chainable so you can do:
 ```python
@@ -568,6 +568,101 @@ Document.search(payload)
 # or the equivalent
 payload.search(Document)
 ```
+
+
+#### Pagination
+
+You can paginate a payload, lets say you have indexed 500 documents under 'test' category and now you need to retrieve 50 per page.
+
+> Result will be included in **pagination.items** 
+
+```python
+from esengine import Payload, Filter
+from models import Doc
+
+payload = Payload(Doc, filter=Filter.term('category', 'test'))
+
+# Total documents
+payload.count()
+500
+
+# Paginate it
+current_page = 1  # you have to increase it on each pagination
+pagination = payload.paginate(page=current_page, per_page=50)
+
+pagination.total
+500
+
+pagination.pages
+10
+
+pagination.has_prev
+False
+
+pagination.has_next
+True
+
+pagination.next_num
+2
+
+len(pagination.items)
+50
+
+for item in pagination.items:
+    # do something with item
+
+# Turn the page
+
+current_page += 1
+pagination = payload.paginate(page=current_page, per_page=50)
+pagination.page
+2
+pagination.has_prev
+True
+
+# Another option to move pages
+
+pagination  = pagination.next_page()
+pagination.page
+3
+
+pagination = pagination.prev_page()
+pagination.page
+2
+
+# Turn the page in place
+
+pagination.backward()
+pagination.page
+1
+
+pagination.forward()
+pagination.page
+2
+```
+
+##### Create a paginator in Jinja template
+
+So you want to create buttons for pagination in your jinja template
+
+```html+jinja
+{% macro render_pagination(pagination, endpoint) %}
+  <div class=pagination>
+  {%- for page in pagination.iter_pages() %}
+    {% if page %}
+      {% if page != pagination.page %}
+        <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+      {% else %}
+        <strong>{{ page }}</strong>
+      {% endif %}
+    {% else %}
+      <span class=ellipsis>…</span>
+    {% endif %}
+  {%- endfor %}
+  </div>
+{% endmacro %}
+```
+
 
 # Contribute
 
