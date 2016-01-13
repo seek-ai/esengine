@@ -99,7 +99,7 @@ FILTERS = {
 class Filter(BaseFilterQuery):
     __metaclass__ = MetaFilterQuery
 
-    _eq_type = 'filter'
+    _ee_type = 'filter'
     _definitions = FILTERS
     _exception = NoFilter
 

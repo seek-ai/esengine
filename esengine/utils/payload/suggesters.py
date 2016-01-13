@@ -24,6 +24,6 @@ SUGGESTERS = {
 class Suggester(BaseSuggester):
     __metaclass__ = MetaSuggester
 
-    _eq_type = 'suggester'
+    _ee_type = 'suggester'
     _definitions = SUGGESTERS
     _exception = NoSuggester

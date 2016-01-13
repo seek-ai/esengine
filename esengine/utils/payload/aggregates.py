@@ -91,6 +91,6 @@ AGGREGATES = {
 class Aggregate(BaseAggregate):
     __metaclass__ = MetaAggregate
 
-    _eq_type = 'aggregate'
+    _ee_type = 'aggregate'
     _definitions = AGGREGATES
     _exception = NoAggregate

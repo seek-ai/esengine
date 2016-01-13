@@ -146,6 +146,6 @@ QUERIES = {
 class Query(BaseFilterQuery):
     __metaclass__ = MetaFilterQuery
 
-    _eq_type = 'query'
+    _ee_type = 'query'
     _definitions = QUERIES
     _exception = NoQuery

@@ -16,7 +16,7 @@ def _check_type(key, type_, arg):
         # Empty string means string type
         if not type_:
             type_ = str
-        elif not hasattr(arg, '_eq_type') or arg._eq_type != type_[1:]:
+        elif not hasattr(arg, '_ee_type') or arg._ee_type != type_[1:]:
             raise InvalidArg(
                 '{0} should be a {1}'.format(key, type_[1:].title())
             )
@@ -120,7 +120,7 @@ def unroll_struct(struct):
         return [unroll_struct(v) for v in struct]
     elif isinstance(struct, dict):
         return {k: unroll_struct(v) for k, v in struct.iteritems()}
-    elif getattr(struct, '_eq_type', None):
+    elif getattr(struct, '_ee_type', None):
         return unroll_struct(struct.as_dict())
     else:
         return struct
