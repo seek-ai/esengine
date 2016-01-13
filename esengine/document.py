@@ -43,6 +43,14 @@ class Document(BaseDocument):
     _validators = None
 
     @classmethod
+    def having(cls, **kwargs):
+        meta_attributes = ['index', 'doctype', 'es', 'autoid', 'validators',
+                           'strict', 'fields']
+        for k, v in kwargs.items():
+            setattr(cls, "_" + k if k in meta_attributes else k, v)
+        return cls
+
+    @classmethod
     def get_es(cls, es):
         """
         This proxy-method allows the client overwrite

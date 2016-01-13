@@ -107,13 +107,12 @@ The above command will install esengine and the elasticsearch library specific f
 # Usage
 
 ```python
+# importing
+
 from elasticsearch import ElasticSearch
 from esengine import Document, StringField
-```
 
-## Defining a document
-
-```python
+# Defining a document
 class Person(Document):
     # define _meta attributes
     _doctype = "person"  # optional, it can be set after using "having" method
@@ -122,10 +121,24 @@ class Person(Document):
     
     # define fields
     name = StringField()
-    
+
+# Initializing mappings and settings
+Person.init()
 ```
 
 > If you do not specify an "id" field, ESEngine will automatically add "id" as StringField. It is recommended that when specifying you use StringField for ids.
+
+
+## TIP: import base module
+
+A good practice is to import the base module, look the same example
+
+```python
+import esengine as ee
+
+class Person(ee.Document):
+    name = ee.StringField()
+```
 
 ## Fields
 
@@ -454,13 +467,32 @@ class Person(Document):
     
 ```
 
-##### You can use **init** class method to initialize/update mappings, settings and analyzers    
+##### You can use **init()** class method to initialize/update mappings, settings and analyzers    
 
 ```
 Person.init()  # if not defined in model, pass an **es=es_client** here
 ```
 
 > Include above in your the last line of your model files or cron jobs or migration scripts
+
+
+#### Dynamic meta attributes
+
+In ESEngine Document all attributes starting with _ is a meta attribute, sometimes you can't define them hardcoded in your models and want them to be dynamic.
+you can achieve this by subclassing your base document, but sometimes you really need to change at runtime.
+
+> Sometimes it is useful for sharding.
+
+```python
+from models import Person
+
+BrazilianUsers = Person.having(index='another_index', doctype='brasilian_people', es=Elasticsearch(host='brazil_datacenter'))
+AmericanUsers = Person.having(index='another_index', doctype='american_people', es=Elasticsearch(host='us_datacenter'))
+
+brazilian_users = BrasilianUsers.filter(active=True)
+american_users = AmericanUsers.search(query=query)
+
+```
 
 #### Validators
 
