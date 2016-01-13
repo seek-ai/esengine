@@ -12,7 +12,7 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">Esengine</h1>
-      <h2 class="project-tagline">A basic ODM (Object Document Mapper) for Elasticsearch based on MongoEngine.</h2>
+      <h2 class="project-tagline">ElasticSearch ODM (Object Document Mapper) for Python - pip install esengine</h2>
       <a href="https://github.com/catholabs/esengine" class="btn">View on GitHub</a>
       <a href="https://github.com/catholabs/esengine/zipball/master" class="btn">Download .zip</a>
       <a href="https://github.com/catholabs/esengine/tarball/master" class="btn">Download .tar.gz</a>
@@ -51,25 +51,29 @@
 <h3>
 <a id="communication" class="anchor" href="#communication" aria-hidden="true"><span class="octicon octicon-link"></span></a>Communication</h3>
 
-<p>ESengine does not communicate direct with ElasticSearch, it only creates the basic structure, 
-to communicate it relies on an ES client providing the transport methods (index, delete, update etc). </p>
+<p>ESengine does not communicate directly with ElasticSearch, it only creates the basic structure, 
+To communicate it relies on an ES client providing the transport methods (index, delete, update etc). </p>
 
 <h3>
 <a id="es-client" class="anchor" href="#es-client" aria-hidden="true"><span class="octicon octicon-link"></span></a>ES client</h3>
 
 <p>ESengine does not enforce the use of the official ElasticSearch client,
-but you are encouraged to use it because it is well maintained and has the support to <strong>bulk</strong> operations. But you are free to use another client or create your own.</p>
+but you are encouraged to use it because it is well maintained and has the support to <strong>bulk</strong> operations. But you are free to use another client or create your own (useful for tests).</p>
 
 <h3>
 <a id="querying-the-data" class="anchor" href="#querying-the-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Querying the data</h3>
 
 <p>ESengine does not enforce or encourage you to use a DSL language for queries, out of the box you have to
-write the elasticsearch <strong>payload</strong> representation as a raw Python dictionary. However ESEngine comes with a <strong>utils.payload</strong> helper module to help you building payloads in a less verbose way.</p>
+write the elasticsearch <strong>payload</strong> representation as a raw Python dictionary. However ESEngine comes with <strong>utils.payload</strong> helper module to help you building payloads in a less verbose and Pythonic way.</p>
 
 <h3>
 <a id="why-not-elasticsearch_dsl" class="anchor" href="#why-not-elasticsearch_dsl" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why not elasticsearch_dsl?</h3>
 
-<p>ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but its DSL objects leads to a confuse query building, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. DSL enforce you to use the official ES client and there are cases when a different client implementation perform better or you need to run tests using a Mock. Also, to make things really easy, all the syntax sugar in DSL can lead in to performance problems.</p>
+<p>ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but because it is built on top of operator overiding, sometimes leads to a <strong>confuse query building</strong>, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. </p>
+
+<p>ElasticSearch_DSL as a high level abstraction promotes <strong>Think only of Python objects, dont't worry about Elastic queries</strong> while ESengine promotes <strong>Know well the Elastic queries and then write them as Python objects</strong>.</p>
+
+<p>ElasticSearch_DSL is more powerful and more complete, tight more with ES specifications while ESEngine is simpler, lightweight shipping only the basics.</p>
 
 <h3>
 <a id="project-stage" class="anchor" href="#project-stage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project Stage</h3>
@@ -80,7 +84,7 @@ write the elasticsearch <strong>payload</strong> representation as a raw Python 
 <a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting started</h1>
 
 <h2>
-<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>install</h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>ESengine needs a client to communicate with E.S, you can use one of the following:</p>
 
@@ -96,27 +100,9 @@ write the elasticsearch <strong>payload</strong> representation as a raw Python 
 depends on the version of elasticsearch you are using.</p>
 
 <h3>
-<a id="elasticsearch-2x" class="anchor" href="#elasticsearch-2x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 2.x</h3>
+<a id="in-short" class="anchor" href="#in-short" aria-hidden="true"><span class="octicon octicon-link"></span></a>in short</h3>
 
-<div class="highlight highlight-source-shell"><pre>pip install esengine[es2]</pre></div>
-
-<h3>
-<a id="elasticsearch-1x" class="anchor" href="#elasticsearch-1x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 1.x</h3>
-
-<div class="highlight highlight-source-shell"><pre>pip install esengine[es1]</pre></div>
-
-<h3>
-<a id="elasticsearch-090x" class="anchor" href="#elasticsearch-090x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 0.90.x</h3>
-
-<div class="highlight highlight-source-shell"><pre>pip install esengine[es0]</pre></div>
-
-<p>The above command will install esengine and the elasticsearch library specific for you ES version.</p>
-
-<blockquote>
-<p>Alternatively you can only install elasticsearch library before esengine</p>
-</blockquote>
-
-<p>pip install <code>&lt;version-specific-es&gt;</code> </p>
+<p>Install the client and then install ESEngine</p>
 
 <ul>
 <li>for 2.0 + use "elasticsearch&gt;=2.0.0,&lt;3.0.0"</li>
@@ -124,25 +110,48 @@ depends on the version of elasticsearch you are using.</p>
 <li>under 1.0 use "elasticsearch&lt;1.0.0"</li>
 </ul>
 
-<p>Then install esengine</p>
+<p>For the latest use:</p>
 
-<div class="highlight highlight-source-shell"><pre>pip install esengine</pre></div>
+<div class="highlight highlight-source-shell"><pre>$ pip install elasticsearch
+$ pip install esengine
+</pre></div>
+
+<h3>
+<a id="or-install-them-together" class="anchor" href="#or-install-them-together" aria-hidden="true"><span class="octicon octicon-link"></span></a>Or install them together</h3>
+
+<h4>
+<a id="elasticsearch-2x" class="anchor" href="#elasticsearch-2x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 2.x</h4>
+
+<div class="highlight highlight-source-shell"><pre>pip install esengine[es2]</pre></div>
+
+<h4>
+<a id="elasticsearch-1x" class="anchor" href="#elasticsearch-1x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 1.x</h4>
+
+<div class="highlight highlight-source-shell"><pre>pip install esengine[es1]</pre></div>
+
+<h4>
+<a id="elasticsearch-090x" class="anchor" href="#elasticsearch-090x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Elasticsearch 0.90.x</h4>
+
+<div class="highlight highlight-source-shell"><pre>pip install esengine[es0]</pre></div>
+
+<p>The above command will install esengine and the elasticsearch library specific for you ES version.</p>
 
 <h1>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
 
 <div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> elasticsearch <span class="pl-k">import</span> ElasticSearch
-<span class="pl-k">from</span> esengine <span class="pl-k">import</span> Document, StringField
-
-es <span class="pl-k">=</span> ElasticSearch(<span class="pl-smi">host</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>host<span class="pl-pds">'</span></span>, <span class="pl-smi">port</span><span class="pl-k">=</span>port)</pre></div>
+<span class="pl-k">from</span> esengine <span class="pl-k">import</span> Document, StringField</pre></div>
 
 <h2>
 <a id="defining-a-document" class="anchor" href="#defining-a-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defining a document</h2>
 
 <div class="highlight highlight-source-python"><pre><span class="pl-k">class</span> <span class="pl-en">Person</span>(<span class="pl-e">Document</span>):
-    _doctype <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>person<span class="pl-pds">"</span></span>
-    _index <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>universe<span class="pl-pds">"</span></span>
+    <span class="pl-c"># define _meta attributes</span>
+    _doctype <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>person<span class="pl-pds">"</span></span>  <span class="pl-c"># optional, it can be set after using "having" method</span>
+    _index <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>universe<span class="pl-pds">"</span></span>  <span class="pl-c"># optional, it can be set after using "having" method</span>
+    _es <span class="pl-k">=</span> ElasticSearch(<span class="pl-smi">host</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>host<span class="pl-pds">'</span></span>, <span class="pl-smi">port</span><span class="pl-k">=</span>port)  <span class="pl-c"># optional, it can be explicit passed to methods</span>
 
+    <span class="pl-c"># define fields</span>
     name <span class="pl-k">=</span> StringField()
 </pre></div>
 
@@ -151,10 +160,23 @@ es <span class="pl-k">=</span> ElasticSearch(<span class="pl-smi">host</span><sp
 </blockquote>
 
 <h2>
-<a id="special-fields" class="anchor" href="#special-fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>Special Fields</h2>
+<a id="fields" class="anchor" href="#fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fields</h2>
 
 <h3>
-<a id="geopointfield" class="anchor" href="#geopointfield" aria-hidden="true"><span class="octicon octicon-link"></span></a>GeoPointField</h3>
+<a id="base-fields" class="anchor" href="#base-fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>Base Fields</h3>
+
+<div class="highlight highlight-source-python"><pre>name <span class="pl-k">=</span> StringField()
+age <span class="pl-k">=</span> IntegerField()
+weight <span class="pl-k">=</span> FloatField()
+factor <span class="pl-k">=</span> LongField()
+active <span class="pl-k">=</span> BooleanField()
+birthday <span class="pl-k">=</span> DateField()</pre></div>
+
+<h3>
+<a id="special-fields" class="anchor" href="#special-fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>Special Fields</h3>
+
+<h4>
+<a id="geopointfield" class="anchor" href="#geopointfield" aria-hidden="true"><span class="octicon octicon-link"></span></a>GeoPointField</h4>
 
 <p>A field to hold GeoPoint with modes dict|array|string and its mappings</p>
 
@@ -162,30 +184,68 @@ es <span class="pl-k">=</span> ElasticSearch(<span class="pl-smi">host</span><sp
     location <span class="pl-k">=</span> GeoPointField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>dict<span class="pl-pds">'</span></span>)  <span class="pl-c"># default</span>
     <span class="pl-c"># An object representation with lat and lon explicitly named</span>
 
-Obj.location <span class="pl-k">=</span> {<span class="pl-s"><span class="pl-pds">"</span>lat<span class="pl-pds">"</span></span>: <span class="pl-c1">40.722</span>, <span class="pl-s"><span class="pl-pds">"</span>lon<span class="pl-pds">"</span></span>: <span class="pl-k">-</span><span class="pl-c1">73.989</span>}}
+Obj.init() <span class="pl-c"># important to put the proper mapping for geo location</span>
+
+obj <span class="pl-k">=</span> Obj()
+
+obj.location <span class="pl-k">=</span> {<span class="pl-s"><span class="pl-pds">"</span>lat<span class="pl-pds">"</span></span>: <span class="pl-c1">40.722</span>, <span class="pl-s"><span class="pl-pds">"</span>lon<span class="pl-pds">"</span></span>: <span class="pl-k">-</span><span class="pl-c1">73.989</span>}}
 
 <span class="pl-k">class</span> <span class="pl-en">Obj</span>(<span class="pl-e">Document</span>):
     location <span class="pl-k">=</span> GeoPointField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>string<span class="pl-pds">'</span></span>)
     <span class="pl-c"># A string representation, with "lat,lon"</span>
 
-Obj.location <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>40.715, -74.011<span class="pl-pds">"</span></span>
+obj.location <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>40.715, -74.011<span class="pl-pds">"</span></span>
 
 <span class="pl-k">class</span> <span class="pl-en">Obj</span>(<span class="pl-e">Document</span>):
     location <span class="pl-k">=</span> GeoPointField(<span class="pl-smi">mode</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>array<span class="pl-pds">'</span></span>)
     <span class="pl-c"># An array representation with [lon,lat].</span>
 
-Obj.location <span class="pl-k">=</span> [<span class="pl-k">-</span><span class="pl-c1">73.983</span>, <span class="pl-c1">40.719</span>]</pre></div>
+obj.location <span class="pl-k">=</span> [<span class="pl-k">-</span><span class="pl-c1">73.983</span>, <span class="pl-c1">40.719</span>]</pre></div>
+
+<h4>
+<a id="objectfield" class="anchor" href="#objectfield" aria-hidden="true"><span class="octicon octicon-link"></span></a>ObjectField</h4>
+
+<p>A field to hold nested one-dimension objects, schema-less or with properties validation.</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-c"># accepts only dictionaries having strct "street" and "number" keys</span>
+address <span class="pl-k">=</span> ObjectField(<span class="pl-smi">properties</span><span class="pl-k">=</span>{<span class="pl-s"><span class="pl-pds">"</span>street<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>string<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>number<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>integer<span class="pl-pds">"</span></span>})
+
+<span class="pl-c"># Accepts any Python dictionary</span>
+extravalues <span class="pl-k">=</span> ObjectField() </pre></div>
+
+<h4>
+<a id="arrayfield" class="anchor" href="#arrayfield" aria-hidden="true"><span class="octicon octicon-link"></span></a>ArrayField</h4>
+
+<p>A Field to hold arrays (python lists)</p>
+
+<p>In the base, any field can accept <strong>multi</strong> parameter</p>
+
+<div class="highlight highlight-source-python"><pre>colors <span class="pl-k">=</span> StringField(<span class="pl-smi">multi</span><span class="pl-k">=</span><span class="pl-c1">True</span>)   <span class="pl-c"># accepts ["blue", "green", "yellow", ....]</span></pre></div>
+
+<p>But sometimes (specially for nested objects) it is better to be explicit, and also it generates a better mapping</p>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-c"># accepts an array of strings ["blue", "green", "yellow", ....]</span>
+colors <span class="pl-k">=</span> ArrayField(StringField()) </pre></div>
+
+<p>It is available for any other field</p>
+
+<pre><code>locations = ArrayField(GeoPointField())
+numbers = ArrayField(IntegerField())
+fractions = ArrayField(FloatField())
+addresses = ArrayField(ObjectField(properties={"street": "string", "number": "integer"}))
+list_of_lists_of_strings = ArrayField(ArrayField(StringField()))
+</code></pre>
 
 <h2>
 <a id="indexing" class="anchor" href="#indexing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Indexing</h2>
 
 <div class="highlight highlight-source-python"><pre>person <span class="pl-k">=</span> Person(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>, <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>)
-person.save(<span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
+person.save()  <span class="pl-c"># or pass .save(es=es_client_instance) if not specified in model </span></pre></div>
 
 <h2>
 <a id="getting-by-id" class="anchor" href="#getting-by-id" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting by id</h2>
 
-<div class="highlight highlight-source-python"><pre>Person.get(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>, <span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
+<div class="highlight highlight-source-python"><pre>Person.get(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>)</pre></div>
 
 <h2>
 <a id="filtering-by-ids" class="anchor" href="#filtering-by-ids" aria-hidden="true"><span class="octicon octicon-link"></span></a>filtering by IDS</h2>
@@ -196,7 +256,7 @@ power_trio <span class="pl-k">=</span> Person.filter(<span class="pl-smi">ids</s
 <h2>
 <a id="filtering-by-fields" class="anchor" href="#filtering-by-fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>filtering by fields</h2>
 
-<div class="highlight highlight-source-python"><pre>Person.filter(<span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>, <span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
+<div class="highlight highlight-source-python"><pre>Person.filter(<span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>)</pre></div>
 
 <h2>
 <a id="searching" class="anchor" href="#searching" aria-hidden="true"><span class="octicon octicon-link"></span></a>Searching</h2>
@@ -219,56 +279,22 @@ in form of a Python dictionary.</p>
         }
     }
 }
-Person.search(query, <span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">10</span>, <span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
+Person.search(query, <span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">10</span>)</pre></div>
 
 <h2>
-<a id="getting-all-documents" class="anchor" href="#getting-all-documents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting all documents</h2>
+<a id="getting-all-documents-match_all" class="anchor" href="#getting-all-documents-match_all" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting all documents (match_all)</h2>
 
-<div class="highlight highlight-source-python"><pre>Person.all(<span class="pl-smi">es</span><span class="pl-k">=</span>es)
+<div class="highlight highlight-source-python"><pre>Person.all()
 
 <span class="pl-c"># with more arguments</span>
 
-Person.all(<span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">20</span>, <span class="pl-smi">es</span><span class="pl-k">=</span>es)
+Person.all(<span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">20</span>)
 </pre></div>
 
 <h2>
 <a id="counting" class="anchor" href="#counting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Counting</h2>
 
-<div class="highlight highlight-source-python"><pre>Person.count(<span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>Gonzo<span class="pl-pds">'</span></span>, <span class="pl-smi">es</span><span class="pl-k">=</span>es)</pre></div>
-
-<h2>
-<a id="using-a-default-connection" class="anchor" href="#using-a-default-connection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using a default connection</h2>
-
-<p>By default ES engine does not try to implicit create a connection for you, so you have to pass in <strong>es=es</strong> argument.</p>
-
-<p>You can easily achieve this overwriting the <strong>get_es</strong> method and returning a 
-default connection or using any kind of technique as RoundRobin or Mocking for tests
-Also you can set the <strong>_es</strong> attribute pointing to a function generating the connection client
-or the client instance as the following example:</p>
-
-<div class="highlight highlight-source-python"><pre>
-<span class="pl-k">from</span> elasticsearch <span class="pl-k">import</span> ElasticSearch
-<span class="pl-k">from</span> esengine <span class="pl-k">import</span> Document, StringField
-<span class="pl-k">from</span> esengine.utils <span class="pl-k">import</span> validate_client
-
-
-<span class="pl-k">class</span> <span class="pl-en">Person</span>(<span class="pl-e">Document</span>):
-    _doctype <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>person<span class="pl-pds">"</span></span>
-    _index <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>universe<span class="pl-pds">"</span></span>
-    _es <span class="pl-k">=</span> Elasticsearch(<span class="pl-smi">host</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>10.0.0.0<span class="pl-pds">'</span></span>)
-
-    name <span class="pl-k">=</span> StringField()
-</pre></div>
-
-<h3>
-<a id="now-you-can-use-the-document-transport-methods-ommiting-es-instance" class="anchor" href="#now-you-can-use-the-document-transport-methods-ommiting-es-instance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Now you can use the document transport methods ommiting ES instance</h3>
-
-<div class="highlight highlight-source-python"><pre>person <span class="pl-k">=</span> Person(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>, <span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>)
-person.save()
-
-Person.get(<span class="pl-smi">id</span><span class="pl-k">=</span><span class="pl-c1">1234</span>)
-
-Person.filter(<span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>Gonzo<span class="pl-pds">"</span></span>)</pre></div>
+<div class="highlight highlight-source-python"><pre>Person.count(<span class="pl-smi">name</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>Gonzo<span class="pl-pds">'</span></span>)</pre></div>
 
 <h2>
 <a id="updating" class="anchor" href="#updating" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating</h2>
@@ -430,18 +456,24 @@ You can create a cron job to refresh mappings once a day or run it every time yo
 <h5>
 <a id="using-the-document" class="anchor" href="#using-the-document" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using the document</h5>
 
-<div class="highlight highlight-source-python"><pre>Person.put_mapping()</pre></div>
+<div class="highlight highlight-source-python"><pre><span class="pl-k">class</span> <span class="pl-en">Person</span>(<span class="pl-e">Document</span>):
+    <span class="pl-c"># define _meta attributes</span>
+    _doctype <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>person<span class="pl-pds">"</span></span>  <span class="pl-c"># optional, it can be set after using "having" method</span>
+    _index <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>universe<span class="pl-pds">"</span></span>  <span class="pl-c"># optional, it can be set after using "having" method</span>
+    _es <span class="pl-k">=</span> ElasticSearch(<span class="pl-smi">host</span><span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>host<span class="pl-pds">'</span></span>, <span class="pl-smi">port</span><span class="pl-k">=</span>port)  <span class="pl-c"># optional, it can be explicit passed to methods</span>
+
+    <span class="pl-c"># define fields</span>
+    name <span class="pl-k">=</span> StringField()
+</pre></div>
 
 <h5>
-<a id="using-mapping" class="anchor" href="#using-mapping" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Mapping</h5>
+<a id="you-can-use-init-class-method-to-initializeupdate-mappings-settings-and-analyzers" class="anchor" href="#you-can-use-init-class-method-to-initializeupdate-mappings-settings-and-analyzers" aria-hidden="true"><span class="octicon octicon-link"></span></a>You can use <strong>init</strong> class method to initialize/update mappings, settings and analyzers</h5>
 
-<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> esengine.mapping <span class="pl-k">import</span> Mapping
-mapping <span class="pl-k">=</span> Mapping(Person, <span class="pl-smi">enable_all</span><span class="pl-k">=</span><span class="pl-c1">False</span>)
-<span class="pl-k">print</span> mapping.generate()  <span class="pl-c"># shows mapping payload</span>
-mapping.save()  <span class="pl-c"># put mapping</span></pre></div>
+<pre><code>Person.init()  # if not defined in model, pass an **es=es_client** here
+</code></pre>
 
 <blockquote>
-<p>Include above in your cron jobs or migration scripts</p>
+<p>Include above in your the last line of your model files or cron jobs or migration scripts</p>
 </blockquote>
 
 <h4>
@@ -684,6 +716,16 @@ pagination.page
 
     </section>
 
-  
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-72359632-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
