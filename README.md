@@ -25,20 +25,24 @@ Out of the box ESengine takes care only of the Modeling and CRUD operations incl
 - basic CRUD operations (Create, Read, Update, Delete)
 
 ### Communication
-ESengine does not communicate direct with ElasticSearch, it only creates the basic structure, 
-to communicate it relies on an ES client providing the transport methods (index, delete, update etc). 
+ESengine does not communicate directly with ElasticSearch, it only creates the basic structure, 
+To communicate it relies on an ES client providing the transport methods (index, delete, update etc). 
 
 ### ES client
 ESengine does not enforce the use of the official ElasticSearch client,
-but you are encouraged to use it because it is well maintained and has the support to **bulk** operations. But you are free to use another client or create your own.
+but you are encouraged to use it because it is well maintained and has the support to **bulk** operations. But you are free to use another client or create your own (useful for tests).
 
 ### Querying the data
 ESengine does not enforce or encourage you to use a DSL language for queries, out of the box you have to
-write the elasticsearch **payload** representation as a raw Python dictionary. However ESEngine comes with a **utils.payload** helper module to help you building payloads in a less verbose way.
+write the elasticsearch **payload** representation as a raw Python dictionary. However ESEngine comes with **utils.payload** helper module to help you building payloads in a less verbose and Pythonic way.
 
 ### Why not elasticsearch_dsl?
 
-ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but its DSL objects leads to a confuse query building, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. DSL enforce you to use the official ES client and there are cases when a different client implementation perform better or you need to run tests using a Mock. Also, to make things really easy, all the syntax sugar in DSL can lead in to performance problems.
+ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but because it is built on top of operator overiding, sometimes leads to a **confuse query building**, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. 
+
+ElasticSearch_DSL as a high level abstraction promotes **Think only of Python objects, dont't worry about Elastic queries** while ESengine promotes **Know well the Elastic queries and then write them as Python objects**.
+
+ElasticSearch_DSL is more powerful and more complete, tight more with ES specifications while ESEngine is simpler, lightweight shipping only the basics.
 
 ### Project Stage
 
@@ -47,7 +51,7 @@ It is in beta-Release, working in production, but missing a lot of features, you
 
 # Getting started
 
-## install
+## Installation
 
 ESengine needs a client to communicate with E.S, you can use one of the following:
 
@@ -60,19 +64,39 @@ Because of bulk operations you are recommendded to use
 **elasticsearch-py** (Official E.S Python library) so the instalation 
 depends on the version of elasticsearch you are using.
 
-### Elasticsearch 2.x
+
+### in short
+
+Install the client and then install ESEngine
+
+- for 2.0 + use "elasticsearch>=2.0.0,<3.0.0"
+- for 1.0 + use "elasticsearch>=1.0.0,<2.0.0"
+- under 1.0 use "elasticsearch<1.0.0"
+
+
+For the latest use:
+
+```sh
+$ pip install elasticsearch
+$ pip install esengine
+
+```
+
+### Or install them together
+
+#### Elasticsearch 2.x
 
 ```bash
 pip install esengine[es2]
 ```
 
-### Elasticsearch 1.x
+#### Elasticsearch 1.x
 
 ```bash
 pip install esengine[es1]
 ```
 
-### Elasticsearch 0.90.x
+#### Elasticsearch 0.90.x
 
 ```bash
 pip install esengine[es0]
@@ -80,47 +104,45 @@ pip install esengine[es0]
 
 The above command will install esengine and the elasticsearch library specific for you ES version.
 
-
-> Alternatively you can only install elasticsearch library before esengine
-
-pip install ``<version-specific-es>`` 
-
-- for 2.0 + use "elasticsearch>=2.0.0,<3.0.0"
-- for 1.0 + use "elasticsearch>=1.0.0,<2.0.0"
-- under 1.0 use "elasticsearch<1.0.0"
-
-Then install esengine
-
-```bash
-pip install esengine
-```
-
 # Usage
 
 ```python
 from elasticsearch import ElasticSearch
 from esengine import Document, StringField
-
-es = ElasticSearch(host='host', port=port)
 ```
 
 ## Defining a document
 
 ```python
 class Person(Document):
-    _doctype = "person"
-    _index = "universe"
+    # define _meta attributes
+    _doctype = "person"  # optional, it can be set after using "having" method
+    _index = "universe"  # optional, it can be set after using "having" method
+    _es = ElasticSearch(host='host', port=port)  # optional, it can be explicit passed to methods
     
+    # define fields
     name = StringField()
     
 ```
 
 > If you do not specify an "id" field, ESEngine will automatically add "id" as StringField. It is recommended that when specifying you use StringField for ids.
 
+## Fields
 
-## Special Fields
+### Base Fields
 
-### GeoPointField
+```python
+name = StringField()
+age = IntegerField()
+weight = FloatField()
+factor = LongField()
+active = BooleanField()
+birthday = DateField()
+```
+
+### Special Fields
+
+#### GeoPointField
 
 A field to hold GeoPoint with modes dict|array|string and its mappings
 
@@ -129,32 +151,75 @@ class Obj(Document):
     location = GeoPointField(mode='dict')  # default
     # An object representation with lat and lon explicitly named
 
-Obj.location = {"lat": 40.722, "lon": -73.989}}
+Obj.init() # important to put the proper mapping for geo location
+
+obj = Obj()
+
+obj.location = {"lat": 40.722, "lon": -73.989}}
 
 class Obj(Document):
     location = GeoPointField(mode='string')
     # A string representation, with "lat,lon"
 
-Obj.location = "40.715, -74.011"
+obj.location = "40.715, -74.011"
 
 class Obj(Document):
     location = GeoPointField(mode='array')
     # An array representation with [lon,lat].
 
-Obj.location = [-73.983, 40.719]
+obj.location = [-73.983, 40.719]
+```
+
+#### ObjectField
+
+A field to hold nested one-dimension objects, schema-less or with properties validation.
+
+```python
+# accepts only dictionaries having strct "street" and "number" keys
+address = ObjectField(properties={"street": "string", "number": "integer"})
+
+# Accepts any Python dictionary
+extravalues = ObjectField() 
+```
+
+#### ArrayField
+
+A Field to hold arrays (python lists)
+
+In the base, any field can accept **multi** parameter
+
+```python
+colors = StringField(multi=True)   # accepts ["blue", "green", "yellow", ....]
+```
+
+But sometimes (specially for nested objects) it is better to be explicit, and also it generates a better mapping
+
+```python
+# accepts an array of strings ["blue", "green", "yellow", ....]
+colors = ArrayField(StringField()) 
+```
+
+It is available for any other field
+
+```
+locations = ArrayField(GeoPointField())
+numbers = ArrayField(IntegerField())
+fractions = ArrayField(FloatField())
+addresses = ArrayField(ObjectField(properties={"street": "string", "number": "integer"}))
+list_of_lists_of_strings = ArrayField(ArrayField(StringField()))
 ```
 
 ## Indexing
 
 ```python
 person = Person(id=1234, name="Gonzo")
-person.save(es=es)
+person.save()  # or pass .save(es=es_client_instance) if not specified in model 
 ```
 
 ## Getting by id
 
 ```python
-Person.get(id=1234, es=es)
+Person.get(id=1234)
 ```
 
 ## filtering by IDS
@@ -168,7 +233,7 @@ power_trio = Person.filter(ids=ids)
 ## filtering by fields
 
 ```python
-Person.filter(name="Gonzo", es=es)
+Person.filter(name="Gonzo")
 ```
 
 ## Searching
@@ -192,17 +257,17 @@ query = {
         }
     }
 }
-Person.search(query, size=10, es=es)
+Person.search(query, size=10)
 ```
 
-## Getting all documents
+## Getting all documents (match_all)
 
 ```python
-Person.all(es=es)
+Person.all()
 
 # with more arguments
 
-Person.all(size=20, es=es)
+Person.all(size=20)
 
 ```
 
@@ -210,47 +275,8 @@ Person.all(size=20, es=es)
 ## Counting
 
 ```python
-Person.count(name='Gonzo', es=es)
+Person.count(name='Gonzo')
 ```
-
-## Using a default connection
-
-By default ES engine does not try to implicit create a connection for you, so you have to pass in **es=es** argument.
-
-
-You can easily achieve this overwriting the **get_es** method and returning a 
-default connection or using any kind of technique as RoundRobin or Mocking for tests
-Also you can set the **_es** attribute pointing to a function generating the connection client
-or the client instance as the following example:
-
-```python
-
-from elasticsearch import ElasticSearch
-from esengine import Document, StringField
-from esengine.utils import validate_client
-
-
-class Person(Document):
-    _doctype = "person"
-    _index = "universe"
-    _es = Elasticsearch(host='10.0.0.0')
-    
-    name = StringField()
-    
-```
-        
-### Now you can use the document transport methods ommiting ES instance
-
-
-```python
-person = Person(id=1234, name="Gonzo")
-person.save()
-         
-Person.get(id=1234)
-
-Person.filter(name="Gonzo")
-```
-
 
 ## Updating
 
@@ -417,19 +443,24 @@ You can create a cron job to refresh mappings once a day or run it every time yo
 ##### Using the document
 
 ```python
-Person.put_mapping()
+class Person(Document):
+    # define _meta attributes
+    _doctype = "person"  # optional, it can be set after using "having" method
+    _index = "universe"  # optional, it can be set after using "having" method
+    _es = ElasticSearch(host='host', port=port)  # optional, it can be explicit passed to methods
+    
+    # define fields
+    name = StringField()
+    
 ```
 
-##### Using Mapping
+##### You can use **init** class method to initialize/update mappings, settings and analyzers    
 
-```python
-from esengine.mapping import Mapping
-mapping = Mapping(Person, enable_all=False)
-print mapping.generate()  # shows mapping payload
-mapping.save()  # put mapping
+```
+Person.init()  # if not defined in model, pass an **es=es_client** here
 ```
 
-> Include above in your cron jobs or migration scripts
+> Include above in your the last line of your model files or cron jobs or migration scripts
 
 #### Validators
 
