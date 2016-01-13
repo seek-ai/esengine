@@ -83,6 +83,16 @@ class ResultSet(object):
     def count(self):
         return min(self._size, self.meta.get('hits', {}).get('total'))
 
+    def to_dict(self, *args, **kwargs):
+        """
+        returns a list of Documents transformed in dicts
+        [{}, {}, ...]
+        :param args: passed to item
+        :param kwargs: passed to item
+        :return:
+        """
+        return [item.to_dict(*args, **kwargs) for item in self.values]
+
     def __unicode__(self):
         return unicode(self.__unicode__())
 

@@ -48,19 +48,36 @@ class BaseDocument(object):
             value = field_instance.from_dict(value)
         super(BaseDocument, self).__setattr__(key, value)
 
-    def to_dict(self, validate=True):
+    def to_dict(self, validate=True, only=None, exclude=None):
         """
         Transform value from Python to Dict to be saved in E.S
         :param validate: If should validate before transform
+        :param only: if specified only those fields will be included
+        :param exclude: fields to exclude from dict
         :return: dict
         """
         if validate:
             self.validate()
-        result = {}
-        for field_name, field_instance in iteritems(self._fields):
-            value = getattr(self, field_name)
-            result.update({field_name: field_instance.to_dict(value)})
-        return result
+
+        if only:
+            fields = {
+                k: v for k, v in iteritems(self._fields)
+                if k in only
+            }
+        elif exclude:
+            fields = {
+                k: v for k, v in iteritems(self._fields)
+                if k not in exclude
+            }
+        else:
+            fields = self._fields
+
+        return {
+            field_name: field_instance.to_dict(
+                getattr(self, field_name), validate=validate
+            )
+            for field_name, field_instance in iteritems(fields)
+        }
 
     @classmethod
     def from_dict(cls, dct):

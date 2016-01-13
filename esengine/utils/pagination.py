@@ -168,6 +168,6 @@ class Pagination(object):
 
     def to_dict(self):
         return {
-            "items": [item.to_dict() for item in self.items],
+            "items": self.items.to_dict(),
             "meta": self.meta
         }
