@@ -700,6 +700,6 @@ So you want to create buttons for pagination in your jinja template
 ESEngine is OpenSource! join us!
 <a href="http://smallactsmanifesto.org" title="Small Acts Manifesto"><img src="http://smallactsmanifesto.org/static/images/smallacts-badge-80x15-blue.png" style="border: none;" alt="Small Acts Manifesto" /></a>
 
-**MADE WITH #LOVE AND #PYTHON (which is the same) AT**  
+**MADE WITH #LOVE AND #PYTHON (which is the same) AT [CathoLabs](http://catholabs.com)**  
 
 ![catholabs](http://catholabs.com/_themes/catholabs/img/logo_black.png)
