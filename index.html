@@ -58,7 +58,7 @@ to communicate it relies on an ES client providing the transport methods (index,
 <a id="es-client" class="anchor" href="#es-client" aria-hidden="true"><span class="octicon octicon-link"></span></a>ES client</h3>
 
 <p>ESengine does not enforce the use of the official ElasticSearch client,
-but you are encouraged to use it because it is well maintained and has the support to <strong>bulk</strong> operations. Bu you are free to use another client or create your own.</p>
+but you are encouraged to use it because it is well maintained and has the support to <strong>bulk</strong> operations. But you are free to use another client or create your own.</p>
 
 <h3>
 <a id="querying-the-data" class="anchor" href="#querying-the-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Querying the data</h3>
@@ -69,7 +69,7 @@ write the elasticsearch <strong>payload</strong> representation as a raw Python 
 <h3>
 <a id="why-not-elasticsearch_dsl" class="anchor" href="#why-not-elasticsearch_dsl" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why not elasticsearch_dsl?</h3>
 
-<p>ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but its DSL objects leads to a confuse query building, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. DSL enforce you to use the official ES client and there are cases when a different client implementation perform better or you need to run tests using a Mock. Also, to make things really easy, all the synrax sugar in DSL can lead in to performance problems.</p>
+<p>ElasticSearch DSL is an excellent tool, a very nice effort by the maintainers of the official ES library, it is handy in most of the cases, but its DSL objects leads to a confuse query building, sometimes it is better to write raw_queries or use a simpler payload builder having more control and visibility of what os being generated. DSL enforce you to use the official ES client and there are cases when a different client implementation perform better or you need to run tests using a Mock. Also, to make things really easy, all the syntax sugar in DSL can lead in to performance problems.</p>
 
 <h3>
 <a id="project-stage" class="anchor" href="#project-stage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project Stage</h3>
@@ -503,14 +503,14 @@ Traceback: ValidationError(....)
 <div class="highlight highlight-source-python"><pre><span class="pl-c"># Will refresh all indices</span>
 Document.refresh()</pre></div>
 
-<h1>
-<a id="payload-builder" class="anchor" href="#payload-builder" aria-hidden="true"><span class="octicon octicon-link"></span></a>Payload builder</h1>
+<h4>
+<a id="payload-builder" class="anchor" href="#payload-builder" aria-hidden="true"><span class="octicon octicon-link"></span></a>Payload builder</h4>
 
 <p>Sometimes queries turns in to complex and verbose data structures, to help you
 (use with moderation) you can use Payload utils to build queries.</p>
 
-<h2>
-<a id="example-using-a-raw-query" class="anchor" href="#example-using-a-raw-query" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example using a raw query:</h2>
+<h6>
+<a id="example-using-a-raw-query" class="anchor" href="#example-using-a-raw-query" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example using a raw query:</h6>
 
 <div class="highlight highlight-source-python"><pre>query <span class="pl-k">=</span> {
     <span class="pl-s"><span class="pl-pds">"</span>query<span class="pl-pds">"</span></span>: {
@@ -529,8 +529,8 @@ Document.refresh()</pre></div>
 
 Person.search(<span class="pl-smi">query</span><span class="pl-k">=</span>query, <span class="pl-smi">size</span><span class="pl-k">=</span><span class="pl-c1">10</span>)</pre></div>
 
-<h2>
-<a id="same-example-using-payload-utils" class="anchor" href="#same-example-using-payload-utils" aria-hidden="true"><span class="octicon octicon-link"></span></a>Same example using payload utils</h2>
+<h6>
+<a id="same-example-using-payload-utils" class="anchor" href="#same-example-using-payload-utils" aria-hidden="true"><span class="octicon octicon-link"></span></a>Same example using payload utils</h6>
 
 <div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> esengine <span class="pl-k">import</span> Payload, Query, Filter
 payload <span class="pl-k">=</span> Payload(<span class="pl-smi">query</span><span class="pl-k">=</span>Query.filtered(<span class="pl-smi">query</span><span class="pl-k">=</span>Query.match_all(), <span class="pl-smi">filter</span><span class="pl-k">=</span>Filter.ids([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>])))
@@ -551,8 +551,8 @@ payload <span class="pl-k">=</span> Payload(
 )
 payload.search()</pre></div>
 
-<h2>
-<a id="more-examples" class="anchor" href="#more-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>More examples</h2>
+<h6>
+<a id="more-examples" class="anchor" href="#more-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>More examples</h6>
 
 <p>You can use Payload, Query or Filter direct in search</p>
 
@@ -567,8 +567,8 @@ Person.search(Query.match_all())
 Person.search(Filter.ids([<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>]))
 </pre></div>
 
-<h2>
-<a id="chaining" class="anchor" href="#chaining" aria-hidden="true"><span class="octicon octicon-link"></span></a>chaining</h2>
+<h6>
+<a id="chaining" class="anchor" href="#chaining" aria-hidden="true"><span class="octicon octicon-link"></span></a>chaining</h6>
 
 <p>Payload object is chainable so you can do:</p>
 
@@ -576,6 +576,99 @@ Person.search(Filter.ids([<span class="pl-c1">1</span>, <span class="pl-c1">2</s
 Document.search(payload) 
 <span class="pl-c"># or the equivalent</span>
 payload.search(Document)</pre></div>
+
+<h4>
+<a id="pagination" class="anchor" href="#pagination" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pagination</h4>
+
+<p>You can paginate a payload, lets say you have indexed 500 documents under 'test' category and now you need to retrieve 50 per page.</p>
+
+<blockquote>
+<p>Result will be included in <strong>pagination.items</strong> </p>
+</blockquote>
+
+<div class="highlight highlight-source-python"><pre><span class="pl-k">from</span> esengine <span class="pl-k">import</span> Payload, Filter
+<span class="pl-k">from</span> models <span class="pl-k">import</span> Doc
+
+payload <span class="pl-k">=</span> Payload(Doc, <span class="pl-smi">filter</span><span class="pl-k">=</span>Filter.term(<span class="pl-s"><span class="pl-pds">'</span>category<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>))
+
+<span class="pl-c"># Total documents</span>
+payload.count()
+<span class="pl-c1">500</span>
+
+<span class="pl-c"># Paginate it</span>
+current_page <span class="pl-k">=</span> <span class="pl-c1">1</span>  <span class="pl-c"># you have to increase it on each pagination</span>
+pagination <span class="pl-k">=</span> payload.paginate(<span class="pl-smi">page</span><span class="pl-k">=</span>current_page, <span class="pl-smi">per_page</span><span class="pl-k">=</span><span class="pl-c1">50</span>)
+
+pagination.total
+<span class="pl-c1">500</span>
+
+pagination.pages
+<span class="pl-c1">10</span>
+
+pagination.has_prev
+<span class="pl-c1">False</span>
+
+pagination.has_next
+<span class="pl-c1">True</span>
+
+pagination.next_num
+<span class="pl-c1">2</span>
+
+<span class="pl-c1">len</span>(pagination.items)
+<span class="pl-c1">50</span>
+
+<span class="pl-k">for</span> item <span class="pl-k">in</span> pagination.items:
+    <span class="pl-c"># do something with item</span>
+
+<span class="pl-c"># Turn the page</span>
+
+current_page <span class="pl-k">+=</span> <span class="pl-c1">1</span>
+pagination <span class="pl-k">=</span> payload.paginate(<span class="pl-smi">page</span><span class="pl-k">=</span>current_page, <span class="pl-smi">per_page</span><span class="pl-k">=</span><span class="pl-c1">50</span>)
+pagination.page
+<span class="pl-c1">2</span>
+pagination.has_prev
+<span class="pl-c1">True</span>
+
+<span class="pl-c"># Another option to move pages</span>
+
+pagination  <span class="pl-k">=</span> pagination.next_page()
+pagination.page
+<span class="pl-c1">3</span>
+
+pagination <span class="pl-k">=</span> pagination.prev_page()
+pagination.page
+<span class="pl-c1">2</span>
+
+<span class="pl-c"># Turn the page in place</span>
+
+pagination.backward()
+pagination.page
+<span class="pl-c1">1</span>
+
+pagination.forward()
+pagination.page
+<span class="pl-c1">2</span></pre></div>
+
+<h5>
+<a id="create-a-paginator-in-jinja-template" class="anchor" href="#create-a-paginator-in-jinja-template" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create a paginator in Jinja template</h5>
+
+<p>So you want to create buttons for pagination in your jinja template</p>
+
+<div class="highlight highlight-text-html-django"><pre><span class="pl-e">{%</span> <span class="pl-s">macro</span> <span class="pl-s">render_pagination</span>(<span class="pl-s">pagination</span>, <span class="pl-s">endpoint</span>) <span class="pl-e">%}</span>
+  &lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s">pagination</span>&gt;
+  <span class="pl-e">{%</span>- <span class="pl-k">for</span> <span class="pl-s">page</span> <span class="pl-k">in</span> <span class="pl-s">pagination</span>.<span class="pl-s">iter_pages</span>() <span class="pl-e">%}</span>
+    <span class="pl-e">{%</span> <span class="pl-k">if</span> <span class="pl-s">page</span> <span class="pl-e">%}</span>
+      <span class="pl-e">{%</span> <span class="pl-k">if</span> <span class="pl-s">page</span> != <span class="pl-s">pagination</span>.<span class="pl-s">page</span> <span class="pl-e">%}</span>
+        &lt;<span class="pl-ent">a</span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>{{ url_for(endpoint, page=page) }}<span class="pl-pds">"</span></span>&gt;{{ page }}&lt;/<span class="pl-ent">a</span>&gt;
+      <span class="pl-e">{%</span> <span class="pl-k">else</span> <span class="pl-e">%}</span>
+        &lt;<span class="pl-ent">strong</span>&gt;{{ page }}&lt;/<span class="pl-ent">strong</span>&gt;
+      <span class="pl-e">{%</span> <span class="pl-k">endif</span> <span class="pl-e">%}</span>
+    <span class="pl-e">{%</span> <span class="pl-k">else</span> <span class="pl-e">%}</span>
+      &lt;<span class="pl-ent">span</span> <span class="pl-e">class</span>=<span class="pl-s">ellipsis</span>&gt;…&lt;/<span class="pl-ent">span</span>&gt;
+    <span class="pl-e">{%</span> <span class="pl-k">endif</span> <span class="pl-e">%}</span>
+  <span class="pl-e">{%</span>- <span class="pl-k">endfor</span> <span class="pl-e">%}</span>
+  &lt;/<span class="pl-ent">div</span>&gt;
+<span class="pl-e">{%</span> <span class="pl-s">endmacro</span> <span class="pl-e">%}</span></pre></div>
 
 <h1>
 <a id="contribute" class="anchor" href="#contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contribute</h1>
