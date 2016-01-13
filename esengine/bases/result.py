@@ -2,6 +2,7 @@
 import time
 import copy
 import elasticsearch.helpers as eh
+from six import text_type
 
 
 class ResultSet(object):
@@ -93,8 +94,29 @@ class ResultSet(object):
         """
         return [item.to_dict(*args, **kwargs) for item in self.values]
 
+    def get_values(self, *fields):
+        """
+        if args is only one field .get_values('id') return a list of lists
+        [123, 456, 789]
+        If args is more than one field return a list of tuples
+        .get_values("id", "name")
+        [(123, "John"), (789, "mary"), ...]
+        :param fields: a list of fields
+        :return:
+        """
+        if not fields:
+            raise AttributeError("At least one field is required")
+
+        if len(fields) > 1:
+            return [
+                tuple(getattr(value, field) for field in fields)
+                for value in self.values
+            ]
+        else:
+            return [getattr(value, fields[0]) for value in self.values]
+
     def __unicode__(self):
-        return unicode(self.__unicode__())
+        return text_type(self.__unicode__())
 
     def __str__(self):
         return "<ResultSet: {i.values}>".format(i=self)

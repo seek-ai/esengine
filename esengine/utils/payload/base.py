@@ -144,3 +144,31 @@ class Payload(object):
 
     def paginate(self, page=1, per_page=10):
         return Pagination(iterable=self, page=page, per_page=per_page)
+
+    def get_values(self, *fields, **kwargs):
+        """
+        if args is only one field .get_values('id') return a list of lists
+        [123, 456, 789]
+        If args is more than one field return a list of tuples
+        .get_values("id", "name")
+        [(123, "John"), (789, "mary"), ...]
+        :param kwargs: Document class
+        :param fields: a list of fields
+        :return:
+        """
+
+        values = [
+            hit.get('_source')
+            for hit in self.search(_source=fields, **kwargs)._hits
+        ]
+
+        if not fields:
+            raise AttributeError("At least one field is required")
+
+        if len(fields) > 1:
+            return [
+                tuple(value.get(field) for field in fields)
+                for value in values
+            ]
+        else:
+            return [value.get(fields[0]) for value in values]
