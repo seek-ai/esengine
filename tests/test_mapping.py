@@ -67,34 +67,34 @@ def test_change_format():
     assert mapping['doc_type']['properties']['datefield']['format'] == pattern
 
 
-def test_create_all_prerequiriments():
+def test_configure_prerequiriments():
     mapping = Mapping()
     try:
-        mapping.create_all(10, None)
+        mapping.configure(10, None)
     except AttributeError as e:
         assert str(e) == 'models_to_mapping must be iterable'
 
 
-def test_create_all_prerequiriments_throw_on_index_existence():
+def test_configure_prerequiriments_throw_on_index_existence():
     mapping = Mapping()
     try:
         models = [Doc, Doc1]
         es = ESMock()
         es.indices.exists_ret = True
-        mapping.create_all(models, True, es)
+        mapping.configure(models, True, es)
     except ValueError as e:
         assert str(e) == 'Settings are supported only on index creation'
 
 
-def test_create_all_without_settings():
+def test_configure_without_settings():
     mapping = Mapping()
     models = [Doc, Doc1]
-    mapping.create_all(models, None)
+    mapping.configure(models, None)
     for model in models:
         assert model.called
 
 
-def test_create_all():
+def test_configure():
     mapping = Mapping()
     models = [Doc, Doc1]
     es = ESMock()
@@ -105,7 +105,7 @@ def test_create_all():
             "my_analizer": "Another test"
         }
     }
-    mapping.create_all(models, settings, es)
+    mapping.configure(models, settings, es)
     expected_mappings = {
         'doc_type': {
             '_all': {'enabled': True},
@@ -155,3 +155,12 @@ class ESMock(object):
                 self.create_return[index] = body
 
     indices = Indice()
+
+    def index(self, *args, **kwargs):
+        pass
+
+    def search(self, *args, **kwargs):
+        pass
+
+    def get(self, *args, **kwargs):
+        pass
