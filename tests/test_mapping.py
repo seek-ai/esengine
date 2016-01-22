@@ -50,7 +50,11 @@ def test_mapping():
                 'geopointfield': {'type': 'geo_point'},
                 'integerfield': {'type': 'integer'},
                 'longfield': {'type': 'long'},
-                'stringfield': {'type': 'string'}
+                'stringfield': {
+                    "index": "analyzed",
+                    "store": "yes",
+                    'type': 'string'
+                }
             }
         }
     }
@@ -113,7 +117,11 @@ def test_create_all():
                 'geopointfield': {'type': 'geo_point'},
                 'integerfield': {'type': 'integer'},
                 'longfield': {'type': 'long'},
-                'stringfield': {'type': 'string'}
+                'stringfield': {
+                    "index": "analyzed",
+                    "store": "yes",
+                    'type': 'string'
+                }
             }
         },
         'doc_type1': {

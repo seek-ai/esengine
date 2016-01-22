@@ -25,7 +25,7 @@ class LongField(BaseField):
 
 class StringField(BaseField):
     _type = unicode
-    _default_mapping = {'type': 'string'}
+    _default_mapping = {"index": "analyzed", "store": "yes", 'type': 'string'}
 
 
 class FloatField(BaseField):
