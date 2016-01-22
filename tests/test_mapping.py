@@ -62,8 +62,9 @@ def test_mapping():
 
 def test_change_format():
     mapping = Mapping(DocDate, enable_all=False).generate()
+    pattern = 'yyyy-MM-dd||epoch_millis'
     assert mapping['doc_type']['_all']['enabled'] is False
-    assert mapping['doc_type']['properties']['datefield']['format'] == 'yyyy-MM-dd||epoch_millis'
+    assert mapping['doc_type']['properties']['datefield']['format'] == pattern
 
 
 def test_create_all_prerequiriments():
