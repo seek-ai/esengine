@@ -250,13 +250,21 @@ class DateField(BaseField):
         return getattr(self, 'date_format', None)
 
     def to_dict(self, value, validate=True):
-        if validate:
+        if self._multi:
+            if not value:
+                return []
             self.validate(value)
-        if value:
+            if self._date_format:
+                return [x.strftime(self._date_format) for x in value]
+            return [x.isoformat() for x in value]
+        else:
+            if not value:
+                return None
+            if validate:
+                self.validate(value)
             if self._date_format:
                 return value.strftime(self._date_format)
-            else:
-                return value.isoformat()
+            return value.isoformat()
 
     def from_dict(self, serialized):
         if serialized:
