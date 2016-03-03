@@ -65,11 +65,50 @@ class Mapping(object):
                 body=self.generate()
             )
 
+    def build_configuration(self, models_to_mapping, custom_settings, es):
+        """
+        Build request body to add custom settings (filters, analizers, etc) to index.
+
+        Build request body to add custom settings, like filters and analizers,
+        to index.
+
+        Args:
+            models_to_mapping: A list with the esengine.Document objects that
+            we want generate mapping.
+
+            custom_settings: a dict containing the configuration that will be
+            sent to elasticsearch/_settings (www.elastic.co/guide/en/
+                elasticsearch/reference/current/indices-update-settings.html)
+
+            es: elasticsearch client intance.
+        """  # noqa
+        indexes = set()
+        configuration = {}
+        mapped_models = [x for x in models_to_mapping]
+        for model in mapped_models:
+            indexes.add(model._index)
+            es = model.get_es(es)
+        for index in indexes:
+            if es.indices.exists(index=index):
+                msg = 'Settings are supported only on index creation'
+                raise ValueError(msg)
+        mappings_by_index = collections.defaultdict(dict)
+        for model in mapped_models:
+            mapping = self._generate(model)
+            mappings_by_index[model._index].update(mapping)
+        for index, mappings in mappings_by_index.items():
+            settings = {
+                "settings": custom_settings,
+                "mappings": mappings
+            }
+            configuration[index] = settings
+        return configuration
+
     def configure(self, models_to_mapping, custom_settings=None, es=None):
         """
-        Add custon settings like filters and analizers to index.
+        Add custom settings like filters and analizers to index.
 
-        Add custon settings, like filters and analizers, to index. Be aware
+        Add custom settings, like filters and analizers, to index. Be aware
         that elasticsearch only allow this operation on index creation.
 
         Args:
@@ -85,26 +124,15 @@ class Mapping(object):
         if not isinstance(models_to_mapping, collections.Iterable):
             raise AttributeError('models_to_mapping must be iterable')
 
-        mapped_models = [x for x in models_to_mapping]
         if custom_settings:
-            indexes = set()
-            for model in mapped_models:
-                indexes.add(model._index)
-                es = model.get_es(es)
-            for index in indexes:
-                if es.indices.exists(index=index):
-                    msg = 'Settings are supported only on index creation'
-                    raise ValueError(msg)
-            mappings_by_index = collections.defaultdict(dict)
-            for model in mapped_models:
-                mapping = self._generate(model)
-                mappings_by_index[model._index].update(mapping)
-            for index, mappings in mappings_by_index.items():
-                settings = {
-                    "settings": custom_settings,
-                    "mappings": mappings
-                }
+            configurations = self.build_configuration(
+                models_to_mapping,
+                custom_settings,
+                es
+            )
+            for index, settings in configurations.items():
                 es.indices.create(index=index, body=settings)
         else:
+            mapped_models = [x for x in models_to_mapping]
             for model in mapped_models:
                 model.put_mapping()
