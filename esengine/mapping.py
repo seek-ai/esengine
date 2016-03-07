@@ -65,7 +65,7 @@ class Mapping(object):
                 body=self.generate()
             )
 
-    def build_configuration(self, models_to_mapping, custom_settings, es):
+    def build_configuration(self, models_to_mapping, custom_settings, es=None):
         """
         Build request body to add custom settings (filters, analizers, etc) to index.
 
@@ -125,6 +125,10 @@ class Mapping(object):
             raise AttributeError('models_to_mapping must be iterable')
 
         if custom_settings:
+            for model in models_to_mapping:
+                es = model.get_es(es)
+                if es:
+                    break
             configurations = self.build_configuration(
                 models_to_mapping,
                 custom_settings,
