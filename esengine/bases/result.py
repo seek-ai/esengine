@@ -1,6 +1,5 @@
 # coding: utf-8
 import time
-import copy
 import elasticsearch.helpers as eh
 from six import text_type
 
@@ -27,7 +26,7 @@ class ResultSet(object):
         meta = {key: resp[key] for key in resp if key != HITS}
         if HITS in resp:
             hits = resp[HITS]
-            meta[HITS] = {key:hits[key] for key in hits if key != HITS}
+            meta[HITS] = {key: hits[key] for key in hits if key != HITS}
         return meta
 
     @property
@@ -74,7 +73,7 @@ class ResultSet(object):
                     'doc': kwargs
                 }
                 for doc in self.values
-            ]
+                ]
             return eh.bulk(self._es, actions, **meta if meta else {})
 
     def delete(self, meta=None, **kwargs):
@@ -119,7 +118,7 @@ class ResultSet(object):
             return [
                 tuple(getattr(value, field) for field in fields)
                 for value in self.values
-            ]
+                ]
         else:
             return [getattr(value, fields[0]) for value in self.values]
 
@@ -128,4 +127,3 @@ class ResultSet(object):
 
     def __str__(self):
         return "<ResultSet: {i.values}>".format(i=self)
-
