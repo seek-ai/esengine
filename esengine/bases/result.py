@@ -4,23 +4,31 @@ import copy
 import elasticsearch.helpers as eh
 from six import text_type
 
+HITS = 'hits'
+
 
 class ResultSet(object):
     def __init__(self, resp, model, query=None,
                  size=None, es=None, meta=None):
-        resp = copy.deepcopy(resp)
         self._model = model
-        self._values = self._hits = resp.get('hits', {}).pop('hits', [])
+        self._values = self._hits = resp.get(HITS, {}).get(HITS, [])
         self._query = query
         self._es = model.get_es(es)
         self._size = size or len(self._values)
-        self._meta = resp
+        self._meta = self._extract_meta(resp)
         if meta:
             self._meta.update(meta)
         self._all_values = []
 
     def __iter__(self):
         return self.values
+
+    def _extract_meta(self, resp):
+        meta = {key: resp[key] for key in resp if key != HITS}
+        if HITS in resp:
+            hits = resp[HITS]
+            meta[HITS] = {key:hits[key] for key in hits if key != HITS}
+        return meta
 
     @property
     def meta(self):
@@ -120,3 +128,4 @@ class ResultSet(object):
 
     def __str__(self):
         return "<ResultSet: {i.values}>".format(i=self)
+
