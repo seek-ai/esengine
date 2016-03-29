@@ -73,7 +73,7 @@ class ResultSet(object):
                     'doc': kwargs
                 }
                 for doc in self.values
-                ]
+            ]
             return eh.bulk(self._es, actions, **meta if meta else {})
 
     def delete(self, meta=None, **kwargs):
@@ -118,7 +118,7 @@ class ResultSet(object):
             return [
                 tuple(getattr(value, field) for field in fields)
                 for value in self.values
-                ]
+            ]
         else:
             return [getattr(value, fields[0]) for value in self.values]
 
