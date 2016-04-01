@@ -7,6 +7,7 @@ from esengine.exceptions import ValidationError
 class BaseDocument(object):
     _strict = False
     _validators = None
+    _query_fields = None
 
     def _initialize_defaults_fields(self, ignore=None):
         ignore = ignore or []
@@ -105,6 +106,7 @@ class BaseDocument(object):
         instance = cls.from_dict(dct=hit.get('_source', {}))
         instance._id = instance.id = hit.get('_id')
         instance._score = hit.get('_score')
+        instance._query_fields = hit.get('fields', None)
         return instance
 
     def validate(self):

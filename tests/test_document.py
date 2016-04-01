@@ -19,6 +19,14 @@ def test_doc_search(Doc, QUERY, MockES):
         assert doc.id in MockES.test_ids
 
 
+def test_doc_search_with_script_fields(Doc, QUERY_SCRIPT_FIELDS, MockESf, FIELD_NAME):
+    docs = Doc.search(QUERY_SCRIPT_FIELDS, es=MockESf())
+    for doc in docs:
+        query_fields = doc._query_fields
+        assert FIELD_NAME in query_fields
+        assert query_fields[FIELD_NAME] in MockESf.double_ids
+
+
 def test_document_save(Doc, MockES):
     Doc(id=MockES.test_id).save(es=MockES())
 
