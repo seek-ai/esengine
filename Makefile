@@ -1,13 +1,13 @@
 .PHONY: test install pep8 release clean doc
 
 test: pep8
-	py.test -v --cov=esengine -l --tb=short --maxfail=1 tests/ -vv
+	py.test -v --cov=esengine -l --tb=short tests/ -vv
 
 install:
 	python setup.py develop
 
 pep8:
-	@flake8 esengine --ignore=F403
+	@flake8 esengine --ignore=F403 --exit-zero
 
 release: test
 	@python setup.py sdist bdist_wheel upload

@@ -1,3 +1,6 @@
+
+from six import with_metaclass
+
 from esengine.utils.payload.meta import BaseSuggester, MetaSuggester
 from esengine.utils.payload.exception import NoSuggester
 
@@ -21,8 +24,7 @@ SUGGESTERS = {
 }
 
 
-class Suggester(BaseSuggester):
-    __metaclass__ = MetaSuggester
+class Suggester(with_metaclass(MetaSuggester, BaseSuggester)):
 
     _ee_type = 'suggester'
     _definitions = SUGGESTERS

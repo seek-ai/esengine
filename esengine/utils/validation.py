@@ -7,7 +7,7 @@ def validate_client(es):
     """
     A valid ES client is a interface which must implements at least
     "index" and "search" public methods.
-    preferably an elasticsearch.ElasticSearch() instance
+    preferably an elasticsearch.Elasticsearch() instance
     :param es:
     :return: None
     """

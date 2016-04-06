@@ -1,3 +1,7 @@
+
+from six import iteritems
+from six import string_types
+
 from esengine.utils.payload.exception import InvalidArg, MissingArg
 
 
@@ -12,7 +16,7 @@ def _check_input(arg):
 
 
 def _check_type(key, type_, arg):
-    if isinstance(type_, basestring):
+    if isinstance(type_, string_types):
         # Empty string means string type
         if not type_:
             type_ = str
@@ -104,7 +108,7 @@ def make_struct(definition, *args, **kwargs):
 
         # Update any remaining kwargs (excluding Nones)
         struct.update({
-            k: v for k, v in kwargs.iteritems()
+            k: v for k, v in iteritems(kwargs)
             if _check_input(v)
         })
 
@@ -119,7 +123,7 @@ def unroll_struct(struct):
     if type(struct) in (list, tuple):
         return [unroll_struct(v) for v in struct]
     elif isinstance(struct, dict):
-        return {k: unroll_struct(v) for k, v in struct.iteritems()}
+        return {k: unroll_struct(v) for k, v in iteritems(struct)}
     elif getattr(struct, '_ee_type', None):
         return unroll_struct(struct.as_dict())
     else:
@@ -131,7 +135,7 @@ def _unroll_spec(spec):
 
     for arg in spec:
         if isinstance(arg, dict):
-            for key, expected_type in arg.iteritems():
+            for key, expected_type in iteritems(arg):
                 if isinstance(key, tuple):
                     for sub_key in key:
                         out_spec.append((sub_key, expected_type))
@@ -144,7 +148,7 @@ def _unroll_spec(spec):
 
 
 def unroll_definitions(definitions):
-    for key, spec in definitions.iteritems():
+    for key, spec in iteritems(definitions):
         if isinstance(spec, dict):
             for arg_type in ['args', 'kwargs']:
                 if arg_type in spec:

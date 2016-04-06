@@ -117,7 +117,7 @@ class Person(Document):
     # define _meta attributes
     _doctype = "person"  # optional, it can be set after using "having" method
     _index = "universe"  # optional, it can be set after using "having" method
-    _es = ElasticSearch(host='host', port=port)  # optional, it can be explicit passed to methods
+    _es = Elasticsearch((host='host', port=port)  # optional, it can be explicit passed to methods
     
     # define fields
     name = StringField()
@@ -460,7 +460,7 @@ class Person(Document):
     # define _meta attributes
     _doctype = "person"  # optional, it can be set after using "having" method
     _index = "universe"  # optional, it can be set after using "having" method
-    _es = ElasticSearch(host='host', port=port)  # optional, it can be explicit passed to methods
+    _es = Elasticsearch(host='host', port=port)  # optional, it can be explicit passed to methods
     
     # define fields
     name = StringField()

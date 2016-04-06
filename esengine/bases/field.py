@@ -1,11 +1,13 @@
 from collections import Iterable
 
+from six import text_type
+from six import iteritems
+
 from esengine.exceptions import RequiredField, InvalidMultiField
 from esengine.exceptions import FieldTypeMismatch, ValidationError
 
-
 class BaseField(object):
-    _type = unicode
+    _type = text_type
     _default = None
     _default_mapping = {'type': 'string'}
 
@@ -27,7 +29,7 @@ class BaseField(object):
         elif self._multi:
             self._default = []
 
-        for key, value in kwargs.iteritems():
+        for key, value in iteritems(kwargs):
             setattr(self, key, value)
 
     def validate_field_type(self, value):

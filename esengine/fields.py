@@ -3,6 +3,8 @@
 from dateutil import parser
 from datetime import datetime
 from six import string_types
+from six import integer_types
+from six import text_type
 from esengine.bases.field import BaseField
 from esengine.exceptions import ValidationError, FieldTypeMismatch
 from esengine.utils.validation import FieldValidator
@@ -14,17 +16,17 @@ __all__ = [
 
 
 class IntegerField(BaseField):
-    _type = int
+    _type = integer_types
     _default_mapping = {'type': 'integer'}
 
 
 class LongField(BaseField):
-    _type = long
+    _type = integer_types
     _default_mapping = {'type': 'long'}
 
 
 class StringField(BaseField):
-    _type = unicode
+    _type = text_type
     _default_mapping = {"index": "analyzed", "store": "yes", 'type': 'string'}
 
 
@@ -113,7 +115,7 @@ class ArrayField(BaseField):
     def __init__(self, field=None, *args, **kwargs):
         self.field = field
         self._default_mapping = {'type': 'string'}
-        self._type = unicode
+        self._type = text_type
         if field:
             if isinstance(field, ObjectField):
                 self.field._default_mapping['type'] = 'nested'
@@ -150,7 +152,7 @@ class GeoPointField(BaseField):
         self.mode = kwargs.pop('mode', 'dict')
         super(GeoPointField, self).__init__(*args, **kwargs)
         if self.mode == 'string':
-            self._type = unicode
+            self._type = text_type
 
             class StringValidator(FieldValidator):
                 @staticmethod

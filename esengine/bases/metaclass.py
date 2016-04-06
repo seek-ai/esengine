@@ -1,3 +1,6 @@
+
+from six import iteritems
+
 from esengine.fields import StringField
 from esengine.bases.field import BaseField
 
@@ -13,12 +16,12 @@ class ModelMetaclass(type):
                 break
 
         for base in bases:
-            for key, value in base.__dict__.iteritems():
+            for key, value in iteritems(base.__dict__):
                 if isinstance(value, BaseField):
                     value._field_name = key
                     attrs['_fields'][key] = value
 
-        for key, value in attrs.iteritems():
+        for key, value in iteritems(attrs):
             if isinstance(value, BaseField):
                 value._field_name = key
                 attrs['_fields'][key] = value

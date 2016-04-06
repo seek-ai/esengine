@@ -1,5 +1,7 @@
 import pytest
 
+from six import string_types
+
 from esengine.bases.document import BaseDocument
 from esengine.bases.field import BaseField
 from esengine.fields import StringField, IntegerField
@@ -56,7 +58,7 @@ def test_doc_set_kwargs():
 
         def __setattr__(self, key, value):
             if key not in self._fields:
-                if isinstance(value, basestring):
+                if isinstance(value, string_types):
                     self._fields[key] = StringField()
                 elif isinstance(value, int):
                     self._fields[key] = IntegerField()
