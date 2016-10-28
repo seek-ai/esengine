@@ -125,6 +125,21 @@ class ArrayField(BaseField):
 
         super(ArrayField, self).__init__(*args, **kwargs)
 
+    def from_dict(self, serialized):
+        """
+        Transform data read from E.S to Python Object
+        :param serialized: Result from E.S (string)
+        :return: Instance or Instances of self._type
+        """
+        if serialized is not None:
+            return [
+                self.field.from_dict(x)
+                if x is not None 
+                else x
+                for x in serialized
+            ]
+        return self._default
+
 
 class GeoPointField(BaseField):
     """
