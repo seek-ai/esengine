@@ -134,7 +134,7 @@ class ArrayField(BaseField):
         if serialized is not None:
             return [
                 self.field.from_dict(x)
-                if x is not None 
+                if x is not None
                 else x
                 for x in serialized
             ]
