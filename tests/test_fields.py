@@ -239,7 +239,7 @@ def test_array_field():
     assert doc.empyt_array == example["empyt_array"]
 
 
-def test_date_field_from_dict_acept_none():
+def test_date_field_from_dict_accept_none():
     field = DateField(multi=True)
     serialized = [None]
     assert field.from_dict(serialized) == []
