@@ -1,6 +1,9 @@
 import pytest
 from datetime import datetime
-from esengine.fields import DateField, GeoPointField
+from esengine import Document
+from esengine.fields import (
+    DateField, GeoPointField, ArrayField, LongField, StringField
+)
 from esengine.exceptions import ValidationError, FieldTypeMismatch
 
 
@@ -139,16 +142,16 @@ def test_geo_field_dict_multi():
     field = GeoPointField(field_name='test', multi=True)
     value = [
         {
-           "lat": 40.722,
-           "lon": -73.989
+            "lat": 40.722,
+            "lon": -73.989
         },
         {
-           "lat": 40.722,
-           "lon": -73.989
+            "lat": 40.722,
+            "lon": -73.989
         },
         {
-           "lat": 40.722,
-           "lon": -73.989
+            "lat": 40.722,
+            "lon": -73.989
         }
     ]
     assert field.to_dict(value) == value
@@ -170,15 +173,15 @@ def test_geo_field_dict_multi_invalid():
     field = GeoPointField(field_name='test', multi=True)
     value = [
         {
-           "lat": 40.722,
-           "lon": -73.989
+            "lat": 40.722,
+            "lon": -73.989
         },
         {
-           "lat": 40.722,
-           "lon": -73.989
+            "lat": 40.722,
+            "lon": -73.989
         },
         {
-           "lat": 40.722
+            "lat": 40.722
         }
     ]
     with pytest.raises(ValidationError) as ex:
@@ -208,3 +211,35 @@ def test_geo_field_array_type_multi_invalid_type():
     with pytest.raises(FieldTypeMismatch) as ex:
         field.to_dict(value)
     assert str(ex.value) == "`test` expected `<type 'float'>`, actual `<type 'type'>`"  # noqa
+
+
+def test_array_field():
+    class DocWithArrays(Document):
+        _index = 'text_indice'
+        _doctype = 'DocWithArrays'
+        date_array = ArrayField(DateField())
+        long_array = ArrayField(LongField())
+        str_array = ArrayField(StringField())
+        empyt_array = ArrayField(StringField())
+
+    example = {
+        "date_array": ["2016-10-04 15:15:05", u'1967-07-28'],
+        "long_array": [10, 20, '42'],
+        "str_array": ['asdf'],
+        "empyt_array": []
+    }
+    doc = DocWithArrays.from_dict(example)
+    dates = [
+        datetime.strptime(example["date_array"][0], "%Y-%m-%d %H:%M:%S"),
+        datetime.strptime(example["date_array"][1], "%Y-%m-%d")
+    ]
+    assert doc.date_array == dates
+    assert doc.long_array == [long(x) for x in example["long_array"]]
+    assert doc.str_array == example["str_array"]
+    assert doc.empyt_array == example["empyt_array"]
+
+
+def test_date_field_from_dict_accept_none():
+    field = DateField(multi=True)
+    serialized = [None]
+    assert field.from_dict(serialized) == []
