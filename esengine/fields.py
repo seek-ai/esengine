@@ -141,6 +141,47 @@ class ArrayField(BaseField):
         return self._default
 
 
+class GeoPointStringValidator(FieldValidator):
+    @staticmethod
+    def validate_string(field, value):
+        if value:
+            values = [
+                float(item.strip())
+                for item in value.split(',')
+            ]
+            if not len(values) == 2:
+                raise ValidationError(
+                    '2 elements "lat,lon" required in %s' %
+                    field._field_name
+                )
+
+    def validate_value(self, field, value):
+        if not field._multi:
+            self.validate_string(field, value)
+
+    def validate_item(self, field, item):
+        self.validate_string(field, item)
+
+
+class GeoPointDictValidator(FieldValidator):
+    @staticmethod
+    def validate_dict(field, value):
+        if value:
+            for key in 'lat', 'lon':
+                if not isinstance(value.get(key), float):
+                    raise ValidationError(
+                        '%s: %s requires a float' %
+                        (field._field_name, key)
+                    )
+
+    def validate_value(self, field, value):
+        if not field._multi:
+            self.validate_dict(field, value)
+
+    def validate_item(self, field, item):
+        self.validate_dict(field, item)
+
+
 class GeoPointField(BaseField):
     """
     A field to hold GeoPoint
@@ -166,75 +207,18 @@ class GeoPointField(BaseField):
         super(GeoPointField, self).__init__(*args, **kwargs)
         if self.mode == 'string':
             self._type = unicode
-
-            class StringValidator(FieldValidator):
-                @staticmethod
-                def validate_string(field, value):
-                    if value:
-                        values = [
-                            float(item.strip())
-                            for item in value.split(',')
-                        ]
-                        if not len(values) == 2:
-                            raise ValidationError(
-                                '2 elements "lat,lon" required in %s' %
-                                field._field_name
-                            )
-
-                def validate_value(self, field, value):
-                    if not field._multi:
-                        self.validate_string(field, value)
-
-                def validate_item(self, field, item):
-                    self.validate_string(field, item)
-
-            self._validators.append(StringValidator())
+            self._validators.append(GeoPointStringValidator())
 
         elif self.mode == 'array':
             self._multi = True
             self._type = float
             self._default = []
-
-            def validate_array_item(field, value):
-                if value:
-                    if not len(value) == 2:
-                        raise ValidationError(
-                            '2 elements [lon, lat] required in %s' %
-                            field._field_name
-                        )
-
-            def array_validator(field, value):
-                if any([isinstance(item, list) for item in value]):
-                    # it is a multi location geo array
-                    [validate_array_item(field, item) for item in value]
-                else:
-                    validate_array_item(field, value)
-
-            self._validators.append(array_validator)
+            self._validators.append(_array_validator)
 
         else:
             self._type = dict
             self._default = {}
-
-            class DictValidator(FieldValidator):
-                @staticmethod
-                def validate_dict(field, value):
-                    if value:
-                        for key in 'lat', 'lon':
-                            if not isinstance(value.get(key), float):
-                                raise ValidationError(
-                                    '%s: %s requires a float' %
-                                    (field._field_name, key)
-                                )
-
-                def validate_value(self, field, value):
-                    if not field._multi:
-                        self.validate_dict(field, value)
-
-                def validate_item(self, field, item):
-                    self.validate_dict(field, item)
-
-            self._validators.append(DictValidator())
+            self._validators.append(GeoPointDictValidator())
 
     def validate_field_type(self, value):
         if self.mode == 'array' and isinstance(value, list):
@@ -248,6 +232,23 @@ class GeoPointField(BaseField):
                     [validate(item) for item in value]
         else:
             super(GeoPointField, self).validate_field_type(value)
+
+
+def _validate_array_item(field, value):
+    if value:
+        if not len(value) == 2:
+            raise ValidationError(
+                '2 elements [lon, lat] required in %s' %
+                field._field_name
+            )
+
+
+def _array_validator(field, value):
+    if any([isinstance(item, list) for item in value]):
+        # it is a multi location geo array
+        [_validate_array_item(field, item) for item in value]
+    else:
+        _validate_array_item(field, value)
 
 
 class DateField(BaseField):
@@ -286,6 +287,8 @@ class DateField(BaseField):
             if self._multi:
                 values = []
                 for elem in serialized:
+                    if elem is None:
+                        continue
                     if isinstance(elem, self._type):
                         values.append(elem)
                     elif isinstance(elem, string_types):
@@ -299,6 +302,8 @@ class DateField(BaseField):
                         )
                 return values
             else:
+                if serialized is None:
+                    return None
                 if isinstance(serialized, self._type):
                     return serialized
                 elif isinstance(serialized, string_types):

@@ -142,16 +142,16 @@ def test_geo_field_dict_multi():
     field = GeoPointField(field_name='test', multi=True)
     value = [
         {
-           "lat": 40.722,
-           "lon": -73.989
+            "lat": 40.722,
+            "lon": -73.989
         },
         {
-           "lat": 40.722,
-           "lon": -73.989
+            "lat": 40.722,
+            "lon": -73.989
         },
         {
-           "lat": 40.722,
-           "lon": -73.989
+            "lat": 40.722,
+            "lon": -73.989
         }
     ]
     assert field.to_dict(value) == value
@@ -237,3 +237,9 @@ def test_array_field():
     assert doc.long_array == [long(x) for x in example["long_array"]]
     assert doc.str_array == example["str_array"]
     assert doc.empyt_array == example["empyt_array"]
+
+
+def test_date_field_from_dict_acept_none():
+    field = DateField(multi=True)
+    serialized = [None]
+    assert field.from_dict(serialized) == []
