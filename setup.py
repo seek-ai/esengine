@@ -34,7 +34,7 @@ def grep(attrname):
 setup(
     name='esengine',
     version=grep('__version__'),
-    url='https://github.com/catholabs/esengine',
+    url='https://github.com/seek-ai/esengine',
     license='MIT',
     author="Catholabs",
     author_email="catholabs@catho.com",
