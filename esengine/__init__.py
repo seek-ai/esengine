@@ -1,4 +1,4 @@
-__version__ = '0.0.18'
+__version__ = '0.0.19'
 from esengine.embedded_document import EmbeddedDocument  # noqa
 from esengine.document import Document  # noqa
 from esengine.mapping import Mapping  # noqa
