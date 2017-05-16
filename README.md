@@ -7,7 +7,7 @@
 [![PyPI](https://img.shields.io/pypi/v/esengine.svg)](https://pypi.python.org/pypi/esengine)
 [![versions](https://img.shields.io/pypi/pyversions/esengine.svg)](https://pypi.python.org/pypi/esengine)
 [![downloads](https://img.shields.io/pypi/dw/esengine.svg)](https://pypi.python.org/pypi/esengine)
-[![Travis CI](http://img.shields.io/travis/catholabs/esengine.svg)](https://travis-ci.org/catholabs/esengine)
+[![Travis CI](http://img.shields.io/travis/seek-ai/esengine.svg)](https://travis-ci.org/seek-ai/esengine)
 [![Coverage Status](http://img.shields.io/coveralls/catholabs/esengine.svg)](https://coveralls.io/r/catholabs/esengine)
 [![Code Health](https://landscape.io/github/catholabs/esengine/master/landscape.svg?style=flat)](https://landscape.io/github/catholabs/esengine/master)
 
