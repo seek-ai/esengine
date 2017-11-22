@@ -1,6 +1,8 @@
 from esengine.utils.payload.meta import BaseFilterQuery, MetaFilterQuery
 from esengine.utils.payload.exception import NoFilter
 
+from six import with_metaclass
+
 
 FILTERS = {
     'and_': ['_filter'],
@@ -96,9 +98,7 @@ FILTERS = {
 }
 
 
-class Filter(BaseFilterQuery):
-    __metaclass__ = MetaFilterQuery
-
+class Filter(with_metaclass(MetaFilterQuery, BaseFilterQuery)):
     _ee_type = 'filter'
     _definitions = FILTERS
     _exception = NoFilter

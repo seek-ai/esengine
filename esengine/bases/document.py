@@ -1,7 +1,9 @@
-import warnings
-from six import iteritems
+from esengine.bases.py3 import *  # noqa
 from esengine.fields import StringField
 from esengine.exceptions import ValidationError
+
+import warnings
+from six import iteritems
 
 
 class BaseDocument(object):
