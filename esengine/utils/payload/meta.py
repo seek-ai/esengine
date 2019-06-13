@@ -12,13 +12,15 @@ class MetaFilterQuery(type):
         if key == '__test__':
             return None
 
-        if key not in self._definitions:
-            raise self._exception(key)
-
+        self._validate_key(key)
         return lambda *args, **kwargs: self(
             key,
             make_struct(self._definitions[key], *args, **kwargs)
         )
+
+    def _validate_key(self, key):
+        if key != "__slots__" and key not in self._definitions:
+            raise self._exception(key)
 
 
 class MetaAggregate(MetaFilterQuery):
@@ -26,9 +28,7 @@ class MetaAggregate(MetaFilterQuery):
         if key == '__test__':
             return None
 
-        if key not in self._definitions:
-            raise self._exception(key)
-
+        self._validate_key(key)
         return lambda *args, **kwargs: self(
             key,
             args[0],
@@ -41,9 +41,7 @@ class MetaSuggester(MetaFilterQuery):
         if key == '__test__':
             return None
 
-        if key not in self._definitions:
-            raise self._exception(key)
-
+        self._validate_key(key)
         return lambda *args, **kwargs: self(
             key,
             args[0],
