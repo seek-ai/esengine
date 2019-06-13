@@ -1,6 +1,8 @@
 from esengine.utils.payload.meta import BaseFilterQuery, MetaFilterQuery
 from esengine.utils.payload.exception import NoQuery
 
+from six import with_metaclass
+
 QUERIES = {
     'match': {
         'field': True,
@@ -143,9 +145,7 @@ QUERIES = {
 }
 
 
-class Query(BaseFilterQuery):
-    __metaclass__ = MetaFilterQuery
-
+class Query(with_metaclass(MetaFilterQuery, BaseFilterQuery)):
     _ee_type = 'query'
     _definitions = QUERIES
     _exception = NoQuery

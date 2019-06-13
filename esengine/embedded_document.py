@@ -5,13 +5,14 @@ from esengine.bases.metaclass import ModelMetaclass
 from esengine.exceptions import RequiredField, InvalidMultiField
 from esengine.exceptions import FieldTypeMismatch
 
+from six import with_metaclass, iteritems
 
-class EmbeddedDocument(BaseField):
-    __metaclass__ = ModelMetaclass
+
+class EmbeddedDocument(with_metaclass(ModelMetaclass, BaseField)):
 
     def _to_dict_element(self, real_obj):
         result = {}
-        for field_name, field_class in self._fields.iteritems():
+        for field_name, field_class in iteritems(self._fields):
             value = getattr(real_obj, field_name)
             result.update({field_name: field_class.to_dict(value)})
         return result
@@ -26,7 +27,7 @@ class EmbeddedDocument(BaseField):
         if not isinstance(elem, EmbeddedDocument):
             raise FieldTypeMismatch(self._field_name, self.__class__._type,
                                     elem.__class__)
-        for field_name, field_class in self._fields.iteritems():
+        for field_name, field_class in iteritems(self._fields):
             value = getattr(elem, field_name)
             field_class.validate(value)
 
@@ -45,7 +46,7 @@ class EmbeddedDocument(BaseField):
 
     def _from_dict_element(self, dct):
         params = {}
-        for field_name, field_class in self._fields.iteritems():
+        for field_name, field_class in iteritems(self._fields):
             serialized = dct.get(field_name)
             value = field_class.from_dict(serialized)
             params[field_name] = value

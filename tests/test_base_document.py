@@ -1,5 +1,5 @@
 import pytest
-
+from esengine.bases.py3 import *  # noqa
 from esengine.bases.document import BaseDocument
 from esengine.bases.field import BaseField
 from esengine.fields import StringField, IntegerField
@@ -140,7 +140,7 @@ def test_doc_to_dict_call_validate():
     with pytest.raises(FieldTypeMismatch) as ex:
         doc.to_dict()
     assert str(ex.value) == (
-        "`simple` expected `<type 'int'>`, actual `<type 'str'>`"
+        "`simple` expected `" + str(int) + "`, actual `" + str(str) + "`"
     )
 
 

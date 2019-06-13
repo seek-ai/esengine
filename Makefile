@@ -7,7 +7,7 @@ install:
 	python setup.py develop
 
 pep8:
-	@flake8 esengine --ignore=F403
+	@flake8 esengine --ignore=F403 --ignore F821
 
 release: test
 	@python setup.py sdist bdist_wheel upload

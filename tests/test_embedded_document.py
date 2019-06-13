@@ -56,7 +56,7 @@ def test_raise_when_multi_fild_type_missmatch():
     field = TowFields(multi=True, field_name="test")
     with pytest.raises(FieldTypeMismatch) as ex:
         field.validate([10, 'asdf'])
-    tmpl = "`{field._field_name}` expected `{field._type}`, actual `<type 'int'>`"
+    tmpl = "`{field._field_name}` expected `{field._type}`, actual `" + str(int) + "`"  # noqa
     assert str(ex.value) == tmpl.format(
         field=field
     )

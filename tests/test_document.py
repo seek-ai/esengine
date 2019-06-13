@@ -1,5 +1,5 @@
 import pytest
-
+from esengine.bases.py3 import *  # noqa
 from esengine.document import Document
 from esengine.fields import StringField, IntegerField
 from esengine.exceptions import ClientError, ValidationError, RequiredField
@@ -9,7 +9,7 @@ def test_build_result(Doc, MockES):
     resp = MockES().search(index='index', doc_type='doc_type', size=2)
     results = Doc.build_result(resp, es=MockES(), size=2)
     for res in results:
-        print res, res.id
+        # print res, res.id
         assert res.id in MockES.test_ids
 
 
@@ -175,7 +175,8 @@ def test_validators(MockES):
     doc = Address(
         street="22, Acacia Avenue",
         city="London",
-        state="WestMinster"
+        state="WestMinster",
+        number=10
     )
 
     with pytest.raises(ValidationError) as ex:

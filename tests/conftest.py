@@ -9,6 +9,7 @@ DOUBLE_ID_FIELD = "double_id"
 _INDEX = 'index'
 _DOC_TYPE = 'doc_type'
 
+
 class ES(object):
     test_id = 100
     test_ids = [100, 101]
@@ -56,7 +57,7 @@ class ES(object):
 class ES_fields(object):
     test_id = 100
     test_ids = [100, 101]
-    double_ids = [id*2 for id in  test_ids]
+    double_ids = [id * 2 for id in test_ids]
 
     def index(self, *args, **kwargs):
         assert kwargs['index'] == _INDEX
@@ -149,7 +150,7 @@ def QUERY_SCRIPT_FIELDS():
         "query": {
             "match_all": {}
         },
-        "script_fields":{
+        "script_fields": {
             DOUBLE_ID_FIELD: {"script": "doc[\"id\"]*2"}
         }
     }

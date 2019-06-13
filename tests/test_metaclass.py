@@ -2,17 +2,19 @@ from esengine.bases.metaclass import ModelMetaclass
 from esengine.bases.field import BaseField
 from esengine.embedded_document import EmbeddedDocument
 
+from six import with_metaclass
+
 
 def test_derived_class_has_fields_attr():
-    class NoFields(object):
-        __metaclass__ = ModelMetaclass
+    class NoFields(with_metaclass(ModelMetaclass, object)):
+        pass
     assert hasattr(NoFields, '_fields')
     assert len(NoFields._fields) == 0
 
 
 def test_derived_class_has_correct_field_attr():
-    class OneField(object):
-        __metaclass__ = ModelMetaclass
+    class OneField(with_metaclass(ModelMetaclass, object)):
+        pass
         field = BaseField(field_type=int, required=False, multi=False)
     assert hasattr(OneField, '_fields')
     assert len(OneField._fields) == 1
@@ -33,8 +35,7 @@ def test_has_typefield_if_is_EmbeddedDocument(): # noqa
 
 
 def test_id_injected_when_autoid():
-    class Base(object):
-        __metaclass__ = ModelMetaclass
+    class Base(with_metaclass(ModelMetaclass, object)):
         _autoid = True
 
     class Derived(Base):
@@ -44,8 +45,7 @@ def test_id_injected_when_autoid():
 
 
 def test_id_not_injected_when_not_autoid():
-    class Base(object):
-        __metaclass__ = ModelMetaclass
+    class Base(with_metaclass(ModelMetaclass, object)):
         _autoid = False
 
     class Derived(Base):

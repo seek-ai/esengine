@@ -1,6 +1,7 @@
 import elasticsearch.helpers as eh
 
-from six import iteritems
+from six import iteritems, with_metaclass
+from esengine.bases.py3 import *  # noqa
 from esengine.bases.document import BaseDocument
 from esengine.bases.metaclass import ModelMetaclass
 from esengine.bases.result import ResultSet
@@ -10,7 +11,7 @@ from esengine.utils.payload import Payload, Filter
 from esengine.exceptions import ClientError
 
 
-class Document(BaseDocument):
+class Document(with_metaclass(ModelMetaclass, BaseDocument)):
     """
     Base Document to be extended in your models definitions
 
@@ -28,8 +29,6 @@ class Document(BaseDocument):
     >>> MyDoc.filter(name="Gonzo")
 
     """
-
-    __metaclass__ = ModelMetaclass
 
     # If _autoid is set to False the id Field will not be automatically
     # included in the Document model and you will need to specify a field

@@ -1,10 +1,13 @@
 import pytest
+from esengine.bases.py3 import *  # noqa
 from datetime import datetime
 from esengine import Document
 from esengine.fields import (
     DateField, GeoPointField, ArrayField, LongField, StringField
 )
 from esengine.exceptions import ValidationError, FieldTypeMismatch
+
+import sys
 
 
 def test_date_field_to_dict():
@@ -21,7 +24,7 @@ def test_date_field_from_dict():
     assert field.from_dict(str_date) == date
     with pytest.raises(ValueError) as ex:
         field.from_dict(10)
-    assert str(ex.value) == "Expected str or date. <type 'int'> found"
+    assert str(ex.value) == "Expected str or date. " + str(int) + " found"
 
 
 def test_date_multi_field_from_dict():
@@ -32,7 +35,7 @@ def test_date_multi_field_from_dict():
     assert field.from_dict(dates) == [date, date]
     with pytest.raises(ValueError) as ex:
         field.from_dict([10])
-    assert str(ex.value) == "Expected str or date. <type 'int'> found"
+    assert str(ex.value) == "Expected str or date. " + str(int) + " found"
 
 
 def test_geo_field_dict_type():
@@ -91,7 +94,7 @@ def test_geo_field_dict_invalid_type():
     value = [-73.989, 40.722]
     with pytest.raises(FieldTypeMismatch) as ex:
         field.to_dict(value)
-    assert str(ex.value) == "`test` expected `<type 'dict'>`, actual `<type 'list'>`"  # noqa
+    assert str(ex.value) == "`test` expected `" + str(dict) + "`, actual `" + str(list) + "`"  # noqa
 
 
 def test_geo_field_string_type():
@@ -110,10 +113,13 @@ def test_geo_field_string_value_missing():
 
 def test_geo_field_string_invalid_type():
     field = GeoPointField(field_name='test', mode='string')
-    value = u"test, error"
+    value = u"asdf, error"
     with pytest.raises(ValueError) as ex:
         field.to_dict(value)
-    assert str(ex.value) == 'could not convert string to float: test'
+    msg = 'could not convert string to float: asdf'
+    if sys.version_info > (3,):
+        msg = "could not convert string to float: 'asdf'"
+    assert str(ex.value) == msg
 
 
 def test_geo_field_array_type():
@@ -135,7 +141,10 @@ def test_geo_field_array_invalid_type():
     value = [40.715, list]
     with pytest.raises(FieldTypeMismatch) as ex:
         field.to_dict(value)
-    assert str(ex.value) == "`test` expected `<type 'float'>`, actual `<type 'type'>`"  # noqa
+    msg = "`test` expected `<type 'float'>`, actual `<type 'type'>`"
+    if sys.version_info > (3,):
+        msg = "`test` expected `<class 'float'>`, actual `<class 'type'>`"
+    assert str(ex.value) == msg
 
 
 def test_geo_field_dict_multi():
@@ -210,7 +219,10 @@ def test_geo_field_array_type_multi_invalid_type():
     value = [[40.715, -74.011], [40.715], list]
     with pytest.raises(FieldTypeMismatch) as ex:
         field.to_dict(value)
-    assert str(ex.value) == "`test` expected `<type 'float'>`, actual `<type 'type'>`"  # noqa
+    msg = "`test` expected `<type 'float'>`, actual `<type 'type'>`"
+    if sys.version_info > (3,):
+        msg = "`test` expected `<class 'float'>`, actual `<class 'type'>`"
+    assert str(ex.value) == msg
 
 
 def test_array_field():

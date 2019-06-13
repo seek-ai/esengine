@@ -1,7 +1,8 @@
-from collections import Iterable
-
+from esengine.bases.py3 import *  # noqa
 from esengine.exceptions import RequiredField, InvalidMultiField
 from esengine.exceptions import FieldTypeMismatch, ValidationError
+
+from collections import Iterable
 
 
 class BaseField(object):
@@ -27,7 +28,7 @@ class BaseField(object):
         elif self._multi:
             self._default = []
 
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(self, key, value)
 
     def validate_field_type(self, value):
