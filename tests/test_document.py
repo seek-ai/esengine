@@ -1,7 +1,7 @@
 import pytest
 from esengine.bases.py3 import *  # noqa
 from esengine.document import Document
-from esengine.fields import StringField, IntegerField
+from esengine.fields import KeywordField, IntegerField
 from esengine.exceptions import ClientError, ValidationError, RequiredField
 
 
@@ -166,10 +166,10 @@ def test_validators(MockES):
         _index = "index"
         _es = MockES()
         _validators = [if_city_state_is_required]
-        street = StringField(validators=[max_len_10])
+        street = KeywordField(validators=[max_len_10])
         number = IntegerField(required=True)
-        city = StringField()
-        state = StringField()
+        city = KeywordField()
+        state = KeywordField()
 
     # Invalid Street Length
     doc = Address(

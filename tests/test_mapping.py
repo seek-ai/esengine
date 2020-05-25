@@ -1,6 +1,6 @@
 from esengine import (
     Document, Mapping,
-    IntegerField, LongField, StringField, FloatField,
+    IntegerField, LongField, KeywordField, FloatField,
     DateField, BooleanField, GeoPointField
 )
 
@@ -18,7 +18,7 @@ class Doc(BaseDoc):
 
     integerfield = IntegerField()
     longfield = LongField()
-    stringfield = StringField()
+    KeywordField = KeywordField()
     floatfield = FloatField()
     datefield = DateField()
     booleanfield = BooleanField()
@@ -50,7 +50,7 @@ def test_mapping():
                 'geopointfield': {'type': 'geo_point'},
                 'integerfield': {'type': 'integer'},
                 'longfield': {'type': 'long'},
-                'stringfield': {
+                'KeywordField': {
                     "index": "analyzed",
                     "store": "yes",
                     'type': 'string'
@@ -118,7 +118,7 @@ def test_configure():
                 'geopointfield': {'type': 'geo_point'},
                 'integerfield': {'type': 'integer'},
                 'longfield': {'type': 'long'},
-                'stringfield': {
+                'KeywordField': {
                     "index": "analyzed",
                     "store": "yes",
                     'type': 'string'

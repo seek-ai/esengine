@@ -2,7 +2,7 @@
 import pytest
 import elasticsearch.helpers as eh_original
 from esengine import Document
-from esengine.fields import IntegerField, StringField, FloatField
+from esengine.fields import IntegerField, KeywordField, FloatField
 
 DOUBLE_ID_FIELD = "double_id"
 
@@ -111,7 +111,7 @@ class D(Document):
 class DW(D):
     _es = ES()
     id = IntegerField()  # ID hould be inherited
-    document_id = StringField()
+    document_id = KeywordField()
     house_number = IntegerField()
     height = FloatField()
 

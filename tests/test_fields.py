@@ -3,7 +3,7 @@ from esengine.bases.py3 import *  # noqa
 from datetime import datetime
 from esengine import Document
 from esengine.fields import (
-    DateField, GeoPointField, ArrayField, LongField, StringField
+    DateField, GeoPointField, ArrayField, LongField, KeywordField
 )
 from esengine.exceptions import ValidationError, FieldTypeMismatch
 
@@ -231,8 +231,8 @@ def test_array_field():
         _doctype = 'DocWithArrays'
         date_array = ArrayField(DateField())
         long_array = ArrayField(LongField())
-        str_array = ArrayField(StringField())
-        empyt_array = ArrayField(StringField())
+        str_array = ArrayField(KeywordField())
+        empyt_array = ArrayField(KeywordField())
 
     example = {
         "date_array": ["2016-10-04 15:15:05", u'1967-07-28'],

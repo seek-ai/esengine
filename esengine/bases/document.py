@@ -1,5 +1,5 @@
 from esengine.bases.py3 import *  # noqa
-from esengine.fields import StringField
+from esengine.fields import KeywordField
 from esengine.exceptions import ValidationError
 
 import warnings
@@ -34,10 +34,10 @@ class BaseDocument(object):
         if not hasattr(self, '_index'):
             raise ValueError('{} have no _index attribute'.format(klass))
         id_field = self.__class__._fields.get("id")
-        if id_field and not isinstance(id_field, StringField):
+        if id_field and not isinstance(id_field, KeywordField):
             warnings.warn(
                 'To avoid mapping problems, '
-                'it is recommended to define the id field as a StringField'
+                'it is recommended to define the id field as a KeywordField'
             )
         for key, value in iteritems(kwargs):
             setattr(self, key, value)

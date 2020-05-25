@@ -4,7 +4,7 @@ import time
 import datetime
 from elasticsearch import Elasticsearch
 from esengine import (
-    Document, StringField, IntegerField, BooleanField,
+    Document, KeywordField, IntegerField, BooleanField,
     FloatField, GeoPointField, DateField
 )
 
@@ -14,13 +14,13 @@ class ExampleDoc(Document):
     _doctype = 'example'
     _es = Elasticsearch()
 
-    name = StringField()
+    name = KeywordField()
     age = IntegerField()
     active = BooleanField()
     weight = FloatField()
     location = GeoPointField(mode="array")
     birthday = DateField(date_format="%Y-%m-%d")
-    city = StringField()
+    city = KeywordField()
 
 
 ExampleDoc.put_mapping()

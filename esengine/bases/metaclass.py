@@ -1,4 +1,4 @@
-from esengine.fields import StringField
+from esengine.fields import KeywordField
 from esengine.bases.field import BaseField
 
 from six import iteritems
@@ -11,7 +11,7 @@ class ModelMetaclass(type):
         for base in bases:
             if hasattr(base, '_autoid'):
                 if base._autoid and 'id' not in attrs:
-                    attrs['id'] = StringField(field_name='id')
+                    attrs['id'] = KeywordField(field_name='id')
                 break
 
         for base in bases:
