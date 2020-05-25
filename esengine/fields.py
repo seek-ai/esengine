@@ -8,8 +8,8 @@ from esengine.exceptions import ValidationError, FieldTypeMismatch
 from esengine.utils.validation import FieldValidator
 
 __all__ = [
-    'IntegerField', 'LongField', 'StringField', 'FloatField',
-    'DateField', 'BooleanField', 'GeoPointField', 'ArrayField', 'ObjectField'
+    'IntegerField', 'LongField', 'KeywordField', 'FloatField',
+    'DateField', 'UuidField', 'BooleanField', 'GeoPointField', 'ArrayField', 'ObjectField'
 ]
 
 
@@ -23,9 +23,14 @@ class LongField(BaseField):
     _default_mapping = {'type': 'long'}
 
 
-class StringField(BaseField):
+class UuidField(BaseField):
     _type = unicode
-    _default_mapping = {"index": "analyzed", "store": "yes", 'type': 'string'}
+    _default_mapping = {"store": "true", 'type': 'keyword'}
+
+
+class KeywordField(BaseField):
+    _type = unicode
+    _default_mapping = {"index": "true", "store": "true", 'type': 'keyword'}
 
 
 class FloatField(BaseField):
@@ -227,6 +232,7 @@ class GeoPointField(BaseField):
                     raise FieldTypeMismatch(self._field_name,
                                             self._type,
                                             val.__class__)
+
             if value is not None:
                 if any([isinstance(item, list) for item in value]):
                     [validate(item) for item in value]

@@ -2,7 +2,7 @@ import pytest
 from esengine.bases.py3 import *  # noqa
 from esengine.bases.document import BaseDocument
 from esengine.bases.field import BaseField
-from esengine.fields import StringField, IntegerField
+from esengine.fields import KeywordField, IntegerField
 
 from esengine.exceptions import FieldTypeMismatch
 
@@ -57,11 +57,11 @@ def test_doc_set_kwargs():
         def __setattr__(self, key, value):
             if key not in self._fields:
                 if isinstance(value, basestring):
-                    self._fields[key] = StringField()
+                    self._fields[key] = KeywordField()
                 elif isinstance(value, int):
                     self._fields[key] = IntegerField()
                 else:
-                    self._fields[key] = StringField(_multi=True)
+                    self._fields[key] = KeywordField(_multi=True)
             super(Doc, self).__setattr__(key, value)
 
     x = Doc(asdf='0', x=10, value=['a', 'b'], _value='aaa')

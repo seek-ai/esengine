@@ -89,7 +89,7 @@ class ResultSet(object):
         return eh.bulk(self._es, actions, **meta if meta else {})
 
     def count(self):
-        return min(self._size, self.meta.get('hits', {}).get('total'))
+        return min(self._size, self.meta.get('hits', {}).get('total')['value'])
 
     def to_dict(self, *args, **kwargs):
         """

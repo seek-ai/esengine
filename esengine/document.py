@@ -16,12 +16,12 @@ class Document(with_metaclass(ModelMetaclass, BaseDocument)):
     Base Document to be extended in your models definitions
 
     >>> from elasticsearch import Elasticsearch
-    >>> from esengine import Document, StringField
+    >>> from esengine import Document, KeywordField
     >>> class MyDoc(Document):
     ...   _autoid = True
     ...   _index = 'indexname'
     ...   _doctype = 'doctypename'
-    ...   name = StringField()
+    ...   name = KeywordField()
 
     >>> obj = MyDoc(name="Gonzo")
     >>> obj.save(es=Elasticsearch())
@@ -32,7 +32,7 @@ class Document(with_metaclass(ModelMetaclass, BaseDocument)):
 
     # If _autoid is set to False the id Field will not be automatically
     # included in the Document model and you will need to specify a field
-    # called 'id' preferably a StringField
+    # called 'id' preferably a KeywordField
     _autoid = True
 
     # _validators is a list of callable, each one executed receiving the

@@ -1,12 +1,12 @@
 from elasticsearch import Elasticsearch
-from esengine import Document, StringField, Payload, Query, Pagination
+from esengine import Document, KeywordField, Payload, Query, Pagination
 
 
 class Doc(Document):
     _index = 'test'
     _doctype = 'doc'
     _es = Elasticsearch()
-    name = StringField()
+    name = KeywordField()
 
 
 payload = Payload(Doc, query=Query.match_all())

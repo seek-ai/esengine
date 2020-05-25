@@ -110,7 +110,7 @@ The above command will install esengine and the elasticsearch library specific f
 # importing
 
 from elasticsearch import ElasticSearch
-from esengine import Document, StringField
+from esengine import Document, KeywordField
 
 # Defining a document
 class Person(Document):
@@ -120,13 +120,13 @@ class Person(Document):
     _es = ElasticSearch(host='host', port=port)  # optional, it can be explicit passed to methods
     
     # define fields
-    name = StringField()
+    name = KeywordField()
 
 # Initializing mappings and settings
 Person.init()
 ```
 
-> If you do not specify an "id" field, ESEngine will automatically add "id" as StringField. It is recommended that when specifying you use StringField for ids.
+> If you do not specify an "id" field, ESEngine will automatically add "id" as KeywordField. It is recommended that when specifying you use KeywordField for ids.
 
 
 ## TIP: import base module
@@ -137,7 +137,7 @@ A good practice is to import the base module, look the same example
 import esengine as ee
 
 class Person(ee.Document):
-    name = ee.StringField()
+    name = ee.KeywordField()
 ```
 
 ## Fields
@@ -145,7 +145,7 @@ class Person(ee.Document):
 ### Base Fields
 
 ```python
-name = StringField()
+name = KeywordField()
 age = IntegerField()
 weight = FloatField()
 factor = LongField()
@@ -202,14 +202,14 @@ A Field to hold arrays (python lists)
 In the base, any field can accept **multi** parameter
 
 ```python
-colors = StringField(multi=True)   # accepts ["blue", "green", "yellow", ....]
+colors = KeywordField(multi=True)   # accepts ["blue", "green", "yellow", ....]
 ```
 
 But sometimes (specially for nested objects) it is better to be explicit, and also it generates a better mapping
 
 ```python
 # accepts an array of strings ["blue", "green", "yellow", ....]
-colors = ArrayField(StringField()) 
+colors = ArrayField(KeywordField()) 
 ```
 
 It is available for any other field
@@ -219,7 +219,7 @@ locations = ArrayField(GeoPointField())
 numbers = ArrayField(IntegerField())
 fractions = ArrayField(FloatField())
 addresses = ArrayField(ObjectField(properties={"street": "string", "number": "integer"}))
-list_of_lists_of_strings = ArrayField(ArrayField(StringField()))
+list_of_lists_of_strings = ArrayField(ArrayField(KeywordField()))
 ```
 
 ## Indexing
@@ -463,7 +463,7 @@ class Person(Document):
     _es = ElasticSearch(host='host', port=port)  # optional, it can be explicit passed to methods
     
     # define fields
-    name = StringField()
+    name = KeywordField()
     
 ```
 
@@ -511,7 +511,7 @@ def category_validator(field_name, value):
         raise ValidationError("Invalid category!!!")
     
 class Obj(Document):
-    category = StringField(validators=[category_validator])
+    category = KeywordField(validators=[category_validator])
 
 obj = Obj()
 obj.category = "another"
@@ -536,8 +536,8 @@ def if_city_state_is_required(obj):
 class Obj(Document):
     _validators = [if_city_state_is_required]
     
-    city = StringField()
-    state = StringField()
+    city = KeywordField()
+    state = KeywordField()
 
 obj = Obj()
 obj.city = "Sao Paulo"
