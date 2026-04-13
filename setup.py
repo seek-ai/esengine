@@ -51,7 +51,7 @@ setup(
     },
     install_requires=["python-dateutil", "six==1.10.0"],
     tests_require=[
-        "pytest==2.8.3",
+        "pytest==9.0.3",
         "pytest-cov==2.2.0",
         "flake8==2.5.0",
         "pep8-naming==0.3.3",
